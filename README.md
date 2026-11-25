@@ -11,29 +11,30 @@ A full-stack ecosystem empowering local tourism micro-businesses, heritage homes
 ```text
 smart/
 ├── backend/
-│   ├── server.js               # Node.js REST API & static server
+│   ├── server.js               # Node.js REST API & static file server (Zero external dependencies)
 │   └── data/
-│       ├── places.json         # 53 Famous Indian destinations & experiences
-│       ├── products.json       # Authentic Indian GI-tagged handicrafts
-│       └── bookings.json       # Real-time traveler reservations & passes
+│       ├── places.json         # 53 Famous Indian destinations across all states & UTs
+│       ├── products.json       # Authentic Indian GI-tagged handicrafts & produce
+│       └── bookings.json       # Real-time traveler reservations & QR digital passes
 ├── frontend/
-│   ├── index.html              # Clean semantic frontend markup
+│   ├── index.html              # Clean semantic frontend markup (Mobile-responsive UI)
 │   ├── css/
-│   │   └── styles.css          # Modern design system & responsive layout
+│   │   └── styles.css          # Modern design system (Glassmorphism, emerald/saffron Indian theme)
 │   └── js/
-│       ├── firebase-config.js  # Firebase Auth & Firestore integration
-│       ├── data.js             # Initial dataset & offline fallback
-│       └── app.js              # UI engine, QR generation/scanner, charts & cart
-├── index.html                  # Root portal (for 1-click GitHub Pages deployment)
-├── package.json                # Project dependencies & startup scripts
+│       ├── firebase-config.js  # Firebase Auth & Firestore client integration
+│       ├── data.js             # Initial Indian dataset & offline fallback
+│       └── app.js              # UI controller, QR generator, camera scanner, charts & cart
+├── index.html                  # Standalone portal root (for 1-click GitHub Pages deployment)
+├── package.json                # Project startup scripts & configuration
 └── README.md                   # Full-stack documentation
 ```
 
 ---
 
-### How to Run the Backend Server
+### How to Run in Antigravity
 
-Start the Node.js server from the project root:
+#### 1. Running the Backend Server
+Start the Node.js backend server directly from the project root:
 
 ```bash
 npm start
@@ -47,6 +48,13 @@ The server will be running at:
 - **Destinations API**: `http://localhost:3000/api/places`
 - **Indian GI Products API**: `http://localhost:3000/api/products`
 - **Bookings API**: `http://localhost:3000/api/bookings`
+- **Macro Analytics API**: `http://localhost:3000/api/stats/summary`
+
+#### 2. Running / Viewing the Frontend
+- **Via Backend Server**: Open `http://localhost:3000` in your browser.
+- **Direct Browser / Live Server**: You can also open `frontend/index.html` directly in any modern browser.
+- **GitHub Pages**: The project includes a synchronized root `index.html` allowing zero-configuration hosting on GitHub Pages:  
+  **https://siddeshkh260-cloud.github.io/SMART-TOURIST18/**
 
 ---
 
@@ -69,7 +77,7 @@ The server will be running at:
 ### Key Features
 - **Tourist Explorer**: 53 famous places across all 28 states & UTs with state filter and ₹ INR pricing.
 - **Dynamic QR Code Pass**: Paperless traveler pass generated with `qrcode.js`.
-- **Host Pass Scanner**: Camera QR code scanning using `html5-qrcode`.
+- **Host Pass Scanner**: Camera QR code scanning using `html5-qrcode` and manual code verification.
 - **Smart AI Itinerary**: Custom trip planner across iconic Indian travel circuits.
 - **Indian GI Crafts Marketplace**: E-commerce cart for authentic regional produce.
 - **Firebase Auth & Firestore**: Live authentication with local fallback.

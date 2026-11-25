@@ -1,4 +1,4 @@
-// TourisMart India - Dataset & API Connector
+// TourisMart India - Frontend Dataset & Offline Fallback
 window.initialPlaces = [
   {
     "id": "ind_1",
@@ -743,6 +743,7 @@ window.initialPlaces = [
     "description": "Scuba dive into vibrant coral gardens with sea turtles at Elephant Beach. Relax on Radhanagar Beach, rated among Asia’s best beaches."
   }
 ];
+
 window.initialProducts = [
   {
     "id": "prod_1",
@@ -799,6 +800,7 @@ window.initialProducts = [
     "desc": "Sun-dried high-piperine Tellicherry black pepper with intense citrus notes."
   }
 ];
+
 window.initialBookings = [
   {
     "id": "TOUR-IND-8942",
