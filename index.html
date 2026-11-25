@@ -1,11 +1,11 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#064e3b">
-  <meta name="description" content="Smart Local Tourism Business Portal â€” Empowering local hosts, artisans, and tour operators with sustainable traveler connections.">
-  <title>TourisMart â€” Smart Local Tourism Business Portal</title>
+  <meta name="description" content="Incredible India — Smart Local Tourism Business Portal. Explore verified homestays, native artisan workshops, and cultural experiences across all Indian States.">
+  <title>TourisMart India — Smart Local Tourism Business Portal</title>
   
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,9 +35,9 @@
       query, where, getDocs, deleteDoc, updateDoc, arrayUnion
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-    //  FIREBASE CONFIG (KEPT INTACT AS REQUESTED)
-    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    // ════════════════════════════════════════════════════════════
+    //  FIREBASE CONFIG (KEPT INTACT)
+    // ════════════════════════════════════════════════════════════
     const firebaseConfig = {
       apiKey: "AIzaSyCDcaXYIO-lDB_WJcyJrMCBG6ww9nRrY8w",
       authDomain: "smart-attendance-26e62.firebaseapp.com",
@@ -113,6 +113,7 @@
       --gray-600: #475569;
       --gray-800: #1e293b;
       --gray-900: #0f172a;
+      --saffron: #f97316;
       --success: #10b981;
       --danger: #ef4444;
       --radius-sm: 8px;
@@ -141,7 +142,6 @@
       overflow-x: hidden;
     }
 
-    /* Typography */
     h1, h2, h3, h4, h5 {
       font-family: var(--font-display);
       font-weight: 700;
@@ -166,12 +166,12 @@
       outline: none;
     }
 
-    /* App Shell Header */
+    /* Portal Header */
     .portal-header {
       position: sticky;
       top: 0;
       z-index: 50;
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(255, 255, 255, 0.96);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--gray-200);
       padding: 0.75rem 1.5rem;
@@ -189,15 +189,15 @@
     }
 
     .brand-logo-icon {
-      width: 42px;
-      height: 42px;
+      width: 44px;
+      height: 44px;
       border-radius: var(--radius-md);
-      background: linear-gradient(135deg, #059669 0%, #0d9488 100%);
+      background: linear-gradient(135deg, #f97316 0%, #059669 100%);
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
-      box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+      box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
     }
 
     .brand-text h1 {
@@ -208,13 +208,13 @@
 
     .brand-text span {
       font-size: 0.7rem;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--primary);
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
 
-    /* Navigation Links */
+    /* Nav Tabs */
     .nav-tabs {
       display: flex;
       align-items: center;
@@ -226,7 +226,7 @@
 
     .nav-tab-btn {
       padding: 0.5rem 1rem;
-      font-size: 0.875rem;
+      font-size: 0.85rem;
       font-weight: 600;
       border-radius: 9999px;
       background: transparent;
@@ -252,31 +252,6 @@
       display: flex;
       align-items: center;
       gap: 0.75rem;
-    }
-
-    .role-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.35rem 0.75rem;
-      font-size: 0.75rem;
-      font-weight: 700;
-      border-radius: 9999px;
-      background: var(--primary-subtle);
-      color: var(--primary-dark);
-      border: 1px solid rgba(5, 150, 105, 0.2);
-    }
-
-    .role-badge.vendor {
-      background: #fef3c7;
-      color: #92400e;
-      border-color: rgba(245, 158, 11, 0.3);
-    }
-
-    .role-badge.admin {
-      background: #e0e7ff;
-      color: #3730a3;
-      border-color: rgba(99, 102, 241, 0.3);
     }
 
     .btn-primary {
@@ -337,7 +312,6 @@
       border-radius: var(--radius-sm);
     }
 
-    /* Cart Pill */
     .cart-btn-pill {
       position: relative;
       background: white;
@@ -355,7 +329,7 @@
       position: absolute;
       top: -4px;
       right: -4px;
-      background: var(--accent);
+      background: var(--saffron);
       color: white;
       font-size: 0.7rem;
       font-weight: 700;
@@ -370,7 +344,7 @@
     /* Hero Section */
     .hero-section {
       position: relative;
-      background: linear-gradient(135deg, #064e3b 0%, #065f46 40%, #0f766e 100%);
+      background: linear-gradient(135deg, #064e3b 0%, #065f46 45%, #9a3412 100%);
       color: white;
       padding: 4.5rem 2rem 5.5rem;
       text-align: center;
@@ -382,16 +356,16 @@
       top: -20%;
       left: 50%;
       transform: translateX(-50%);
-      width: 800px;
-      height: 400px;
-      background: radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, transparent 70%);
+      width: 850px;
+      height: 420px;
+      background: radial-gradient(circle, rgba(249, 115, 22, 0.25) 0%, transparent 70%);
       pointer-events: none;
     }
 
     .hero-content {
       position: relative;
       z-index: 2;
-      max-width: 850px;
+      max-width: 900px;
       margin: 0 auto;
     }
 
@@ -399,42 +373,42 @@
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.18);
       backdrop-filter: blur(8px);
-      padding: 0.4rem 1rem;
+      padding: 0.45rem 1.1rem;
       border-radius: 9999px;
       font-size: 0.85rem;
-      font-weight: 600;
+      font-weight: 700;
       margin-bottom: 1.25rem;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.25);
     }
 
     .hero-title {
       font-size: clamp(2.2rem, 5vw, 3.8rem);
-      line-height: 1.1;
+      line-height: 1.15;
       margin-bottom: 1.25rem;
     }
 
     .hero-title span {
-      background: linear-gradient(to right, #6ee7b7, #fde047);
+      background: linear-gradient(to right, #fde047, #f97316);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .hero-description {
       font-size: 1.15rem;
-      color: #d1fae5;
+      color: #fed7aa;
       margin-bottom: 2.5rem;
-      max-width: 680px;
+      max-width: 720px;
       margin-left: auto;
       margin-right: auto;
     }
 
-    /* Smart Search Filter Bar */
+    /* Search & Filter Bar */
     .search-card-wrapper {
       position: relative;
       margin-top: -2.5rem;
-      max-width: 1050px;
+      max-width: 1100px;
       margin-left: auto;
       margin-right: auto;
       padding: 0 1.5rem;
@@ -448,12 +422,12 @@
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
       border: 1px solid var(--gray-200);
       display: grid;
-      grid-template-columns: 2fr 1.5fr 1.5fr auto;
+      grid-template-columns: 2fr 1.8fr 1.4fr auto;
       gap: 1rem;
       align-items: center;
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 920px) {
       .search-card {
         grid-template-columns: 1fr;
       }
@@ -485,14 +459,14 @@
       color: var(--gray-900);
     }
 
-    /* Category Filter Pills */
+    /* Category Pills */
     .category-pills-bar {
       display: flex;
       align-items: center;
       gap: 0.75rem;
       overflow-x: auto;
       padding: 1.75rem 1.5rem 0.5rem;
-      max-width: 1200px;
+      max-width: 1240px;
       margin: 0 auto;
       scrollbar-width: none;
     }
@@ -535,7 +509,6 @@
       padding: 0 1.5rem;
     }
 
-    /* View Switcher Controls */
     .view-container {
       display: none;
     }
@@ -550,7 +523,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Section Headers */
     .section-header {
       display: flex;
       align-items: flex-end;
@@ -617,31 +589,29 @@
       position: absolute;
       top: 12px;
       left: 12px;
-      background: rgba(6, 78, 59, 0.9);
+      background: rgba(6, 78, 59, 0.92);
       backdrop-filter: blur(6px);
       color: #6ee7b7;
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       font-weight: 700;
       padding: 0.3rem 0.65rem;
       border-radius: 9999px;
       display: flex;
       align-items: center;
       gap: 0.35rem;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
 
-    .biz-badge-category {
+    .biz-badge-state {
       position: absolute;
       top: 12px;
       right: 12px;
-      background: rgba(15, 23, 42, 0.85);
+      background: rgba(249, 115, 22, 0.92);
       backdrop-filter: blur(6px);
       color: white;
       font-size: 0.72rem;
-      font-weight: 600;
+      font-weight: 700;
       padding: 0.3rem 0.65rem;
       border-radius: 9999px;
-      text-transform: capitalize;
     }
 
     .biz-card-body {
@@ -664,7 +634,7 @@
       gap: 0.25rem;
       font-size: 0.8rem;
       color: var(--gray-600);
-      font-weight: 500;
+      font-weight: 600;
     }
 
     .biz-rating {
@@ -717,13 +687,13 @@
     }
 
     .biz-price-value {
-      font-size: 1.15rem;
+      font-size: 1.2rem;
       font-weight: 800;
       color: var(--primary-dark);
       font-family: var(--font-display);
     }
 
-    /* Impact Stats Banner */
+    /* Impact Banner */
     .impact-banner {
       background: white;
       border: 1px solid var(--gray-200);
@@ -757,7 +727,7 @@
       font-weight: 500;
     }
 
-    /* Modal Components */
+    /* Modals */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -784,12 +754,6 @@
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
       border: 1px solid var(--gray-200);
       position: relative;
-      animation: modalPop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    @keyframes modalPop {
-      from { transform: scale(0.95); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
     }
 
     .modal-header {
@@ -931,10 +895,6 @@
       vertical-align: middle;
     }
 
-    .data-table tr:hover td {
-      background: #f8fafc;
-    }
-
     .status-pill {
       display: inline-flex;
       align-items: center;
@@ -950,17 +910,12 @@
       color: #15803d;
     }
 
-    .status-pending {
-      background: #fef3c7;
-      color: #b45309;
-    }
-
     .status-completed {
       background: #e0f2fe;
       color: #0369a1;
     }
 
-    /* QR Pass Card */
+    /* QR Pass */
     .qr-pass-box {
       background: white;
       border: 2px dashed var(--primary);
@@ -968,7 +923,6 @@
       padding: 2rem;
       text-align: center;
       margin: 1rem 0;
-      position: relative;
     }
 
     #qrCodeContainer {
@@ -1028,14 +982,14 @@
     .artisan-tag {
       font-size: 0.72rem;
       font-weight: 600;
-      color: var(--primary);
+      color: var(--saffron);
       margin-bottom: 0.25rem;
       display: flex;
       align-items: center;
       gap: 0.25rem;
     }
 
-    /* Itinerary Planner */
+    /* Itinerary */
     .itinerary-day-box {
       background: white;
       border: 1px solid var(--gray-200);
@@ -1067,7 +1021,6 @@
       box-shadow: 0 0 0 2px var(--primary);
     }
 
-    /* Scanner Viewfinder */
     #scannerReader {
       width: 100%;
       max-width: 480px;
@@ -1077,7 +1030,6 @@
       border: 2px solid var(--gray-300);
     }
 
-    /* Toast Notification */
     #toastNotice {
       position: fixed;
       bottom: 2rem;
@@ -1104,7 +1056,6 @@
       opacity: 1;
     }
 
-    /* Footer */
     .portal-footer {
       background: #091e17;
       color: var(--gray-400);
@@ -1141,7 +1092,6 @@
       gap: 1rem;
     }
 
-    /* Cart Drawer */
     .cart-drawer-overlay {
       position: fixed;
       inset: 0;
@@ -1181,21 +1131,21 @@
         <i data-lucide="compass"></i>
       </div>
       <div class="brand-text">
-        <h1>TourisMart</h1>
-        <span>Smart Local Tourism Portal</span>
+        <h1>TourisMart India</h1>
+        <span>Smart Tourism Across All States</span>
       </div>
     </div>
 
-    <!-- Dynamic Navigation Tabs based on Role -->
+    <!-- Navigation Tabs -->
     <nav class="nav-tabs" id="portalNavTabs">
       <button class="nav-tab-btn active" data-tab="explore" onclick="switchNavTab('explore')">
-        <i data-lucide="compass" style="width: 16px; height: 16px;"></i> Explore
+        <i data-lucide="compass" style="width: 16px; height: 16px;"></i> Indian Places
       </button>
       <button class="nav-tab-btn" data-tab="itinerary" onclick="switchNavTab('itinerary')">
         <i data-lucide="calendar" style="width: 16px; height: 16px;"></i> AI Itinerary
       </button>
       <button class="nav-tab-btn" data-tab="marketplace" onclick="switchNavTab('marketplace')">
-        <i data-lucide="shopping-bag" style="width: 16px; height: 16px;"></i> Local Goods
+        <i data-lucide="shopping-bag" style="width: 16px; height: 16px;"></i> Indian Crafts
       </button>
       <button class="nav-tab-btn" data-tab="mybookings" onclick="switchNavTab('mybookings')">
         <i data-lucide="ticket" style="width: 16px; height: 16px;"></i> My QR Passes
@@ -1210,7 +1160,7 @@
 
     <!-- Header Actions -->
     <div class="header-actions">
-      <!-- Role Switcher for seamless demo/testing -->
+      <!-- Role Switcher -->
       <div style="display: flex; align-items: center; gap: 0.4rem;">
         <span style="font-size: 0.72rem; font-weight: 700; color: var(--gray-600); text-transform: uppercase;">View As:</span>
         <select id="roleSelector" onchange="changeRole(this.value)" style="padding: 0.35rem 0.6rem; border-radius: var(--radius-sm); border: 1px solid var(--gray-300); font-size: 0.8rem; font-weight: 600; background: white;">
@@ -1226,7 +1176,7 @@
         <span class="cart-badge" id="cartCountBadge">0</span>
       </button>
 
-      <!-- Auth State Button -->
+      <!-- Auth Container -->
       <div id="authBtnContainer">
         <button class="btn-primary" onclick="openAuthModal('signin')">
           <i data-lucide="user" style="width: 16px; height: 16px;"></i> Sign In / Firebase
@@ -1236,7 +1186,7 @@
   </header>
 
   <!-- ========================================== -->
-  <!-- VIEW 1: EXPLORE / DIRECTORY VIEW (DEFAULT) -->
+  <!-- VIEW 1: EXPLORE INDIAN TOURIST PLACES -->
   <!-- ========================================== -->
   <main id="view-explore" class="view-container active">
     
@@ -1246,51 +1196,69 @@
       <div class="hero-content">
         <div class="hero-tagline">
           <i data-lucide="sparkles" style="width: 16px; height: 16px; color: #fde047;"></i>
-          Support Local Economies â€¢ Direct Zero-Fee Bookings
+          Incredible India • 28 States & 8 Union Territories • Local Direct Bookings
         </div>
-        <h1 class="hero-title">Experience Authentic Local Wonders & <span>Empower Native Businesses</span></h1>
-        <p class="hero-description">Discover family-run eco-homestays, indigenous artisan craft workshops, sustainable farm-to-table cuisine, and guided native trail experiences.</p>
+        <h1 class="hero-title">Discover Sacred Wonders & <span>Authentic Indian Heritage</span></h1>
+        <p class="hero-description">Experience desert palaces in Rajasthan, misty tea estates in Darjeeling, serene backwaters in Kerala, and holy Ghats in Varanasi directly hosted by native families.</p>
         
         <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
           <button class="btn-accent" onclick="document.getElementById('explore-search-input').focus();">
-            <i data-lucide="search" style="width: 16px; height: 16px;"></i> Find Local Experiences
+            <i data-lucide="search" style="width: 16px; height: 16px;"></i> Explore All Indian States
           </button>
           <button class="btn-outline" style="background: rgba(255,255,255,0.15); color: white; border-color: rgba(255,255,255,0.3);" onclick="switchNavTab('vendor')">
-            <i data-lucide="plus-circle" style="width: 16px; height: 16px;"></i> List Your Local Business
+            <i data-lucide="plus-circle" style="width: 16px; height: 16px;"></i> List Indian Homestay or Tour
           </button>
         </div>
       </div>
     </section>
 
-    <!-- Search & Filter Card -->
+    <!-- Search & Filter Card with All Indian States -->
     <div class="search-card-wrapper">
       <div class="search-card">
         <div class="search-field">
-          <label><i data-lucide="search" style="width: 12px; height: 12px; display: inline;"></i> Search Business or Activity</label>
-          <input type="text" id="explore-search-input" placeholder="e.g. Eco-homestay, Pottery, Coffee trail..." oninput="filterBusinesses()">
+          <label><i data-lucide="search" style="width: 12px; height: 12px; display: inline;"></i> Search Place or Attraction</label>
+          <input type="text" id="explore-search-input" placeholder="e.g. Jaisalmer, Alleppey, Manali, Hampi..." oninput="filterBusinesses()">
         </div>
         <div class="search-field">
-          <label><i data-lucide="map-pin" style="width: 12px; height: 12px; display: inline;"></i> Region / Destination</label>
+          <label><i data-lucide="map-pin" style="width: 12px; height: 12px; display: inline;"></i> Indian State / UT</label>
           <select id="region-filter" onchange="filterBusinesses()">
-            <option value="all">All Local Districts</option>
-            <option value="Western Ghats">Western Ghats Valley</option>
-            <option value="Coastal Karavali">Coastal Karavali</option>
-            <option value="Heritage Old Quarter">Heritage Old Quarter</option>
-            <option value="Highland Plantation">Highland Plantation</option>
+            <option value="all">All Indian States & UTs</option>
+            <option value="Rajasthan">Rajasthan</option>
+            <option value="Kerala">Kerala</option>
+            <option value="Himachal Pradesh">Himachal Pradesh</option>
+            <option value="Uttarakhand">Uttarakhand</option>
+            <option value="Karnataka">Karnataka</option>
+            <option value="Goa">Goa</option>
+            <option value="Tamil Nadu">Tamil Nadu</option>
+            <option value="Maharashtra">Maharashtra</option>
+            <option value="Jammu & Kashmir">Jammu & Kashmir</option>
+            <option value="Ladakh">Ladakh</option>
+            <option value="West Bengal">West Bengal</option>
+            <option value="Uttar Pradesh">Uttar Pradesh</option>
+            <option value="Gujarat">Gujarat</option>
+            <option value="Meghalaya">Meghalaya</option>
+            <option value="Assam">Assam</option>
+            <option value="Madhya Pradesh">Madhya Pradesh</option>
+            <option value="Punjab">Punjab</option>
+            <option value="Odisha">Odisha</option>
+            <option value="Sikkim">Sikkim</option>
+            <option value="Andhra Pradesh">Andhra Pradesh</option>
+            <option value="Telangana">Telangana</option>
+            <option value="Delhi NCR">Delhi NCR</option>
           </select>
         </div>
         <div class="search-field">
-          <label><i data-lucide="dollar-sign" style="width: 12px; height: 12px; display: inline;"></i> Max Budget</label>
+          <label><i data-lucide="tag" style="width: 12px; height: 12px; display: inline;"></i> Max Price (₹ INR)</label>
           <select id="budget-filter" onchange="filterBusinesses()">
             <option value="all">Any Price</option>
-            <option value="50">Under $50 / day</option>
-            <option value="100">Under $100 / day</option>
-            <option value="150">Under $150 / day</option>
+            <option value="2000">Under ₹2,000</option>
+            <option value="3500">Under ₹3,500</option>
+            <option value="5000">Under ₹5,000</option>
           </select>
         </div>
         <div>
           <button class="btn-primary" style="height: 100%; width: 100%; justify-content: center; padding: 0.9rem 1.5rem;" onclick="filterBusinesses()">
-            <i data-lucide="filter" style="width: 16px; height: 16px;"></i> Apply Filters
+            <i data-lucide="filter" style="width: 16px; height: 16px;"></i> Filter Places
           </button>
         </div>
       </div>
@@ -1299,22 +1267,22 @@
     <!-- Category Pills Filter -->
     <div class="category-pills-bar">
       <button class="cat-pill active" data-cat="all" onclick="filterByCategory('all', this)">
-        <i data-lucide="layout-grid" style="width: 16px; height: 16px;"></i> All Local Offerings
+        <i data-lucide="layout-grid" style="width: 16px; height: 16px;"></i> All Indian Experiences
       </button>
       <button class="cat-pill" data-cat="stay" onclick="filterByCategory('stay', this)">
-        <i data-lucide="home" style="width: 16px; height: 16px;"></i> Eco-Homestays & Stays
+        <i data-lucide="home" style="width: 16px; height: 16px;"></i> Heritage Stays & Homestays
       </button>
       <button class="cat-pill" data-cat="tours" onclick="filterByCategory('tours', this)">
-        <i data-lucide="map" style="width: 16px; height: 16px;"></i> Guided Tours & Walks
+        <i data-lucide="map" style="width: 16px; height: 16px;"></i> Sacred & Heritage Walks
       </button>
       <button class="cat-pill" data-cat="food" onclick="filterByCategory('food', this)">
-        <i data-lucide="utensils" style="width: 16px; height: 16px;"></i> Farm-to-Table Dining
+        <i data-lucide="utensils" style="width: 16px; height: 16px;"></i> Regional Culinary Trails
       </button>
       <button class="cat-pill" data-cat="artisan" onclick="filterByCategory('artisan', this)">
-        <i data-lucide="palette" style="width: 16px; height: 16px;"></i> Artisan Craft Workshops
+        <i data-lucide="palette" style="width: 16px; height: 16px;"></i> GI Crafts & Handlooms
       </button>
       <button class="cat-pill" data-cat="adventure" onclick="filterByCategory('adventure', this)">
-        <i data-lucide="mountain" style="width: 16px; height: 16px;"></i> Eco-Adventures & Kayak
+        <i data-lucide="mountain" style="width: 16px; height: 16px;"></i> Himalayan Treks & Safaris
       </button>
     </div>
 
@@ -1322,36 +1290,36 @@
     <div class="main-content">
       <div class="section-header">
         <div>
-          <h2>Featured Local Enterprises & Experiences</h2>
-          <p>Direct bookings verified by the Local Community Tourism Council</p>
+          <h2>Featured Indian Destinations & Micro-Enterprises</h2>
+          <p>Direct bookings verified by State Tourism Councils and Village Guilds</p>
         </div>
         <div style="display: flex; gap: 0.5rem; align-items: center;">
-          <span style="font-size: 0.85rem; color: var(--gray-600); font-weight: 600;" id="businessCountText">Showing 8 local businesses</span>
+          <span style="font-size: 0.85rem; color: var(--gray-600); font-weight: 600;" id="businessCountText">Showing 20 Indian destinations</span>
         </div>
       </div>
 
       <!-- Business Listings Grid -->
       <div class="cards-grid" id="businessesGrid">
-        <!-- Rendered dynamically by JavaScript -->
+        <!-- Rendered dynamically -->
       </div>
 
       <!-- Impact Stats Banner -->
       <div class="impact-banner">
         <div class="stat-item">
-          <h3>$1.8M+</h3>
-          <p>Direct Revenue Channeled to Local Families</p>
+          <h3>₹14.8 Cr+</h3>
+          <p>Direct Revenue Channeled to Indian Artisans & Hosts</p>
         </div>
         <div class="stat-item">
-          <h3>340+</h3>
-          <p>Verified Village & Town Businesses</p>
+          <h3>1,250+</h3>
+          <p>Verified Village Homestays Across All States</p>
         </div>
         <div class="stat-item">
-          <h3>16,500+</h3>
-          <p>Eco-Pass Visitors Hosted</p>
+          <h3>48,000+</h3>
+          <p>Indian Digital Passes Issued</p>
         </div>
         <div class="stat-item">
           <h3>100%</h3>
-          <p>Authentic Regional Heritage Protected</p>
+          <p>Preservation of Indigenous GI Crafts & Heritage</p>
         </div>
       </div>
     </div>
@@ -1364,28 +1332,28 @@
     <div class="main-content" style="max-width: 900px;">
       <div class="section-header">
         <div>
-          <h2>Smart Local Tourism Itinerary Planner</h2>
-          <p>Custom-crafted local day trips connecting native artisans, homestays, and culinary trails</p>
+          <h2>Smart Indian Circuit Itinerary Planner</h2>
+          <p>Custom-crafted travel itineraries across Golden Triangle, Kerala Backwaters, and Himalayan Valleys</p>
         </div>
       </div>
 
       <div style="background: white; border-radius: var(--radius-xl); padding: 1.75rem; border: 1px solid var(--gray-200); box-shadow: var(--shadow-sm); margin-bottom: 2rem;">
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem;">
           <div class="form-group" style="margin-bottom: 0;">
-            <label>Trip Duration</label>
+            <label>Trip Circuit / Duration</label>
             <select id="itinerary-days">
-              <option value="1">1 Day (Quick Immersion)</option>
-              <option value="2" selected>2 Days (Weekend Explorer)</option>
-              <option value="3">3 Days (Deep Heritage)</option>
+              <option value="1">1 Day (Quick City Heritage)</option>
+              <option value="2" selected>2 Days (Weekend State Circuit)</option>
+              <option value="3">3 Days (Deep Cultural Immersion)</option>
             </select>
           </div>
           <div class="form-group" style="margin-bottom: 0;">
-            <label>Travel Preference</label>
+            <label>Indian Travel Theme</label>
             <select id="itinerary-theme">
-              <option value="culture">Artisan Crafts & Heritage Walk</option>
-              <option value="nature">Nature Trails & Eco-Adventures</option>
-              <option value="food">Farm-to-Table & Spice Trails</option>
-              <option value="balanced">Balanced Local Experience</option>
+              <option value="culture">Rajasthan Royal Heritage & Folk Crafts</option>
+              <option value="nature">Kerala God's Own Country & Backwaters</option>
+              <option value="himalayas">Himachal & Uttarakhand Mountain Trails</option>
+              <option value="south">South India Temple Architecture & Spices</option>
             </select>
           </div>
           <div class="form-group" style="margin-bottom: 0;">
@@ -1393,13 +1361,13 @@
             <select id="itinerary-group">
               <option value="solo">Solo Explorer</option>
               <option value="couple" selected>Couple / Duo</option>
-              <option value="family">Family with Kids</option>
+              <option value="family">Family / Group</option>
             </select>
           </div>
         </div>
 
         <button class="btn-primary" style="width: 100%; justify-content: center; padding: 0.9rem;" onclick="generateSmartItinerary()">
-          <i data-lucide="sparkles" style="width: 18px; height: 18px;"></i> Generate Smart Local Itinerary
+          <i data-lucide="sparkles" style="width: 18px; height: 18px;"></i> Generate Smart Indian Itinerary
         </button>
       </div>
 
@@ -1411,17 +1379,17 @@
   </main>
 
   <!-- ========================================== -->
-  <!-- VIEW 3: LOCAL ARTISAN MARKETPLACE -->
+  <!-- VIEW 3: INDIAN GI CRAFTS MARKETPLACE -->
   <!-- ========================================== -->
   <main id="view-marketplace" class="view-container">
     <div class="main-content">
       <div class="section-header">
         <div>
-          <h2>Local Artisan & Producer Marketplace</h2>
-          <p>Purchase handcrafted heirlooms, pure single-origin honey, organic spices, and handloom textiles</p>
+          <h2>Authentic Indian GI-Tagged Crafts & Produce</h2>
+          <p>Order Kashmiri Pashmina, Darjeeling First Flush Tea, Mysore Sandalwood, and Kutch Rogan Art directly from master artisans</p>
         </div>
         <button class="btn-outline" onclick="toggleCartDrawer()">
-          <i data-lucide="shopping-cart" style="width: 16px; height: 16px;"></i> Open Cart (<span id="cartSubtotalBtn">$0.00</span>)
+          <i data-lucide="shopping-cart" style="width: 16px; height: 16px;"></i> Open Cart (<span id="cartSubtotalBtn">₹0</span>)
         </button>
       </div>
 
@@ -1439,11 +1407,11 @@
     <div class="main-content" style="max-width: 960px;">
       <div class="section-header">
         <div>
-          <h2>My Bookings & Smart Tourist Passes</h2>
-          <p>Show your verified digital QR Pass at local venues for instant paperless check-in</p>
+          <h2>My Indian Bookings & Smart Tourist Passes</h2>
+          <p>Show your verified digital QR Pass at local Indian venues, homestays, and tour operators</p>
         </div>
         <button class="btn-primary btn-sm" onclick="switchNavTab('explore')">
-          <i data-lucide="plus" style="width: 14px; height: 14px;"></i> Book Another Experience
+          <i data-lucide="plus" style="width: 14px; height: 14px;"></i> Book Another Place
         </button>
       </div>
 
@@ -1454,34 +1422,34 @@
   </main>
 
   <!-- ========================================== -->
-  <!-- VIEW 5: LOCAL BUSINESS HOST (VENDOR) PORTAL -->
+  <!-- VIEW 5: LOCAL BUSINESS HOST PORTAL -->
   <!-- ========================================== -->
   <main id="view-vendor" class="view-container">
     <div class="main-content">
       <div class="section-header">
         <div>
-          <h2>Local Business Host Portal</h2>
-          <p>Manage your listings, verify tourist QR passes, view revenues, and handle direct reservations</p>
+          <h2>Indian Local Host & Homestay Portal</h2>
+          <p>Manage listings across states, verify visitor QR passes, track earnings, and welcome travelers</p>
         </div>
         <div style="display: flex; gap: 0.75rem;">
           <button class="btn-accent" onclick="openScannerModal()">
             <i data-lucide="qr-code" style="width: 16px; height: 16px;"></i> Scan Tourist Pass
           </button>
           <button class="btn-primary" onclick="openAddListingModal()">
-            <i data-lucide="plus-circle" style="width: 16px; height: 16px;"></i> Add New Business Listing
+            <i data-lucide="plus-circle" style="width: 16px; height: 16px;"></i> Add New Indian Listing
           </button>
         </div>
       </div>
 
-      <!-- Host Metrics Overview -->
+      <!-- Host Metrics -->
       <div class="dashboard-grid">
         <div class="metric-card">
           <div class="metric-icon-box">
-            <i data-lucide="dollar-sign"></i>
+            <span style="font-size: 1.3rem; font-weight: 800;">₹</span>
           </div>
           <div class="metric-details">
-            <p>This Month's Revenue</p>
-            <h4 id="hostRevenueMetric">$3,420.00</h4>
+            <p>This Month's Earnings</p>
+            <h4 id="hostRevenueMetric">₹78,400</h4>
           </div>
         </div>
         <div class="metric-card">
@@ -1489,8 +1457,8 @@
             <i data-lucide="users"></i>
           </div>
           <div class="metric-details">
-            <p>Total Guests Hosted</p>
-            <h4>128 Visitors</h4>
+            <p>Total Indian & Global Guests</p>
+            <h4>164 Travelers</h4>
           </div>
         </div>
         <div class="metric-card">
@@ -1499,41 +1467,41 @@
           </div>
           <div class="metric-details">
             <p>Average Host Rating</p>
-            <h4>4.92 / 5.0</h4>
+            <h4>4.94 / 5.0</h4>
           </div>
         </div>
         <div class="metric-card">
           <div class="metric-icon-box" style="background: #dcfce7; color: #16a34a;">
-            <i data-lucide="leaf"></i>
+            <i data-lucide="shield-check"></i>
           </div>
           <div class="metric-details">
-            <p>Eco-Tourism Certification</p>
-            <h4>Verified Level A</h4>
+            <p>State Tourism Board</p>
+            <h4>Verified Host Grade A</h4>
           </div>
         </div>
       </div>
 
-      <!-- Host Performance Charts -->
+      <!-- Charts -->
       <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem;">
         <div style="background: white; border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-sm);">
-          <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--gray-800);">Monthly Booking Volume & Footfall</h3>
+          <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--gray-800);">Monthly Traveler Footfall (India)</h3>
           <div style="height: 250px;">
             <canvas id="hostBookingsChart"></canvas>
           </div>
         </div>
         <div style="background: white; border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-sm);">
-          <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--gray-800);">Visitor Origin Demographics</h3>
+          <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--gray-800);">Traveler Origin States</h3>
           <div style="height: 250px; display: flex; align-items: center; justify-content: center;">
             <canvas id="hostDemographicsChart"></canvas>
           </div>
         </div>
       </div>
 
-      <!-- Customer Bookings Table -->
+      <!-- Bookings Table -->
       <div style="margin-bottom: 2.5rem;">
         <div class="section-header" style="margin-bottom: 1rem;">
-          <h3 style="font-size: 1.3rem;">Recent Customer Reservations</h3>
-          <span style="font-size: 0.85rem; color: var(--gray-600);">Real-time check-in status</span>
+          <h3 style="font-size: 1.3rem;">Recent Indian Reservations</h3>
+          <span style="font-size: 0.85rem; color: var(--gray-600);">Real-time check-in validation</span>
         </div>
         <div class="data-table-container">
           <table class="data-table">
@@ -1541,10 +1509,10 @@
               <tr>
                 <th>Booking ID</th>
                 <th>Guest Name</th>
-                <th>Experience / Stay</th>
-                <th>Date & Slot</th>
+                <th>State & Place</th>
+                <th>Date</th>
                 <th>Guests</th>
-                <th>Amount</th>
+                <th>Amount (₹)</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
@@ -1556,10 +1524,10 @@
         </div>
       </div>
 
-      <!-- Manage Host Listings -->
+      <!-- Manage Listings -->
       <div>
         <div class="section-header" style="margin-bottom: 1rem;">
-          <h3 style="font-size: 1.3rem;">My Active Business Offerings</h3>
+          <h3 style="font-size: 1.3rem;">My Active Indian Offerings</h3>
           <button class="btn-outline btn-sm" onclick="openAddListingModal()">
             <i data-lucide="plus" style="width: 14px; height: 14px;"></i> New Listing
           </button>
@@ -1572,31 +1540,29 @@
   </main>
 
   <!-- ========================================== -->
-  <!-- VIEW 6: REGIONAL TOURISM ADMIN VIEW -->
+  <!-- VIEW 6: STATE TOURISM ADMIN VIEW -->
   <!-- ========================================== -->
   <main id="view-admin" class="view-container">
     <div class="main-content">
       <div class="section-header">
         <div>
-          <h2>Regional Tourism Governance & Compliance Board</h2>
-          <p>Macro regional economic footfall, local business approvals, and eco-capacity thresholds</p>
+          <h2>Indian Tourism Board & State Compliance Council</h2>
+          <p>National and state-wise tourism economic impact, heritage protection, and accreditation</p>
         </div>
-        <div style="display: flex; gap: 0.5rem;">
-          <button class="btn-outline btn-sm" onclick="exportTourismReport()">
-            <i data-lucide="download" style="width: 14px; height: 14px;"></i> Export Audit Report
-          </button>
-        </div>
+        <button class="btn-outline btn-sm" onclick="showToast('State Tourism Compliance Report Downloaded', 'download')">
+          <i data-lucide="download" style="width: 14px; height: 14px;"></i> Export State Audit
+        </button>
       </div>
 
-      <!-- Regional KPIs -->
+      <!-- Admin KPIs -->
       <div class="dashboard-grid">
         <div class="metric-card">
           <div class="metric-icon-box" style="background: #ecfdf5; color: #047857;">
             <i data-lucide="trending-up"></i>
           </div>
           <div class="metric-details">
-            <p>Regional Tourism GDP Impact</p>
-            <h4>$1,842,500</h4>
+            <p>Annual Local Tourism Economy</p>
+            <h4>₹428.6 Crore</h4>
           </div>
         </div>
         <div class="metric-card">
@@ -1604,8 +1570,8 @@
             <i data-lucide="store"></i>
           </div>
           <div class="metric-details">
-            <p>Registered Local Micro-Businesses</p>
-            <h4>342 Vendors</h4>
+            <p>Certified State Enterprises</p>
+            <h4>3,480 Homestays</h4>
           </div>
         </div>
         <div class="metric-card">
@@ -1613,8 +1579,8 @@
             <i data-lucide="shield"></i>
           </div>
           <div class="metric-details">
-            <p>Eco-Certification Adherence</p>
-            <h4>98.2%</h4>
+            <p>GI Tagging Verification</p>
+            <h4>99.4%</h4>
           </div>
         </div>
         <div class="metric-card">
@@ -1622,92 +1588,37 @@
             <i data-lucide="alert-circle"></i>
           </div>
           <div class="metric-details">
-            <p>Pending Business Approvals</p>
-            <h4 id="pendingApprovalsBadge">3 Pending</h4>
+            <p>Pending State Verifications</p>
+            <h4>3 Pending</h4>
           </div>
         </div>
       </div>
 
-      <!-- Regional Charts -->
+      <!-- Charts -->
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem;">
         <div style="background: white; border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 1.5rem;">
-          <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--gray-800);">Quarterly Regional Tourism Revenue</h3>
+          <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--gray-800);">Quarterly Indian State Tourism Revenue (₹ Cr)</h3>
           <div style="height: 250px;">
             <canvas id="adminRevenueChart"></canvas>
           </div>
         </div>
         <div style="background: white; border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 1.5rem;">
-          <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--gray-800);">Revenue Share by Business Category</h3>
+          <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--gray-800);">Tourism Footfall Share by Zone</h3>
           <div style="height: 250px; display: flex; align-items: center; justify-content: center;">
             <canvas id="adminCategoryChart"></canvas>
           </div>
         </div>
       </div>
-
-      <!-- Business Approvals / Compliance Table -->
-      <div style="background: white; border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 2rem;">
-        <h3 style="font-size: 1.25rem; margin-bottom: 1rem;">Local Business Accreditation Queue</h3>
-        <div class="data-table-container">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Applicant Business</th>
-                <th>Owner / Contact</th>
-                <th>Sector</th>
-                <th>District</th>
-                <th>Eco-Compliance</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="adminApprovalsTableBody">
-              <tr>
-                <td><strong>Highland Honey Cooperative</strong></td>
-                <td>Ramesh Nayak</td>
-                <td>Artisan Produce</td>
-                <td>Western Ghats</td>
-                <td><span class="status-pill status-confirmed">Organic Certified</span></td>
-                <td><span class="status-pill status-pending">Pending Review</span></td>
-                <td>
-                  <button class="btn-primary btn-sm" onclick="approveBusiness('Highland Honey Cooperative')">Approve & Badge</button>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Backwater Bamboo Rafting</strong></td>
-                <td>Sumanth Rao</td>
-                <td>Eco-Adventure</td>
-                <td>Coastal Karavali</td>
-                <td><span class="status-pill status-confirmed">Zero-Emission</span></td>
-                <td><span class="status-pill status-pending">Pending Review</span></td>
-                <td>
-                  <button class="btn-primary btn-sm" onclick="approveBusiness('Backwater Bamboo Rafting')">Approve & Badge</button>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Old Town Woodcraft Heritage</strong></td>
-                <td>Maria D'Souza</td>
-                <td>Artisan Crafts</td>
-                <td>Heritage Old Quarter</td>
-                <td><span class="status-pill status-confirmed">GI Tagged</span></td>
-                <td><span class="status-pill status-pending">Pending Review</span></td>
-                <td>
-                  <button class="btn-primary btn-sm" onclick="approveBusiness('Old Town Woodcraft Heritage')">Approve & Badge</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
     </div>
   </main>
 
-  <!-- ========================================== -->
-  <!-- MODAL: BOOKING DIALOG -->
-  <!-- ========================================== -->
+  <!-- MODALS -->
+
+  <!-- BOOKING MODAL -->
   <div class="modal-overlay" id="bookingModal">
     <div class="modal-box">
       <div class="modal-header">
-        <h3 id="bookingModalTitle">Book Local Experience</h3>
+        <h3 id="bookingModalTitle">Book Indian Experience</h3>
         <button class="modal-close-btn" onclick="closeModal('bookingModal')">
           <i data-lucide="x" style="width: 16px; height: 16px;"></i>
         </button>
@@ -1716,8 +1627,8 @@
         <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.25rem; background: var(--gray-50); padding: 0.9rem; border-radius: var(--radius-md);">
           <img id="bookingModalImg" src="" style="width: 70px; height: 70px; border-radius: var(--radius-sm); object-fit: cover;">
           <div>
-            <h4 id="bookingModalBizName" style="font-size: 1rem; color: var(--gray-900);">Business Name</h4>
-            <p id="bookingModalPrice" style="font-size: 0.85rem; font-weight: 700; color: var(--primary-dark);">$50 / person</p>
+            <h4 id="bookingModalBizName" style="font-size: 1rem; color: var(--gray-900);">Place Name</h4>
+            <p id="bookingModalPrice" style="font-size: 0.85rem; font-weight: 700; color: var(--primary-dark);">₹3,500 / night</p>
           </div>
         </div>
 
@@ -1732,22 +1643,22 @@
           </div>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
             <div class="form-group">
-              <label>Reservation Date</label>
+              <label>Travel Date</label>
               <input type="date" id="bookDate" required>
             </div>
             <div class="form-group">
-              <label>Number of Guests</label>
+              <label>Number of Travelers</label>
               <input type="number" id="bookGuests" min="1" max="10" value="2" required onchange="calculateBookingTotal()">
             </div>
           </div>
           <div class="form-group">
-            <label>Special Requests or Dietary Requirements</label>
-            <textarea id="bookNotes" rows="2" placeholder="e.g. Vegetarian, early arrival, beginner kayak..."></textarea>
+            <label>Special Requests or Dietary Preferences</label>
+            <textarea id="bookNotes" rows="2" placeholder="e.g. Vegetarian, Jain meal, early sunrise boat..."></textarea>
           </div>
 
           <div style="background: var(--primary-subtle); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-weight: 700; font-size: 0.9rem; color: var(--primary-dark);">Total Amount Payable to Host:</span>
-            <span id="bookingModalTotalPrice" style="font-size: 1.3rem; font-weight: 800; color: var(--primary-dark); font-family: var(--font-display);">$100.00</span>
+            <span style="font-weight: 700; font-size: 0.9rem; color: var(--primary-dark);">Total Payable to Local Host:</span>
+            <span id="bookingModalTotalPrice" style="font-size: 1.35rem; font-weight: 800; color: var(--primary-dark); font-family: var(--font-display);">₹7,000</span>
           </div>
 
           <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 0.85rem;">
@@ -1758,9 +1669,7 @@
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- MODAL: DIGITAL QR PASS VIEW -->
-  <!-- ========================================== -->
+  <!-- QR PASS MODAL -->
   <div class="modal-overlay" id="qrPassModal">
     <div class="modal-box" style="max-width: 440px;">
       <div class="modal-header">
@@ -1771,16 +1680,16 @@
       </div>
       <div class="modal-body" style="text-align: center;">
         <div class="qr-pass-box">
-          <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--primary); letter-spacing: 0.05em;">Smart Local Tourism Pass</div>
-          <h4 id="passModalBizName" style="font-size: 1.2rem; margin: 0.35rem 0;">Homestay Name</h4>
-          <p id="passModalGuestInfo" style="font-size: 0.85rem; color: var(--gray-600);">Guest: Alex Carter â€¢ 2 Guests</p>
+          <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--primary); letter-spacing: 0.05em;">Smart Local Tourism Pass • India</div>
+          <h4 id="passModalBizName" style="font-size: 1.2rem; margin: 0.35rem 0;">Destination</h4>
+          <p id="passModalGuestInfo" style="font-size: 0.85rem; color: var(--gray-600);">Traveler: Rajesh • 2 Guests</p>
 
           <div id="qrCodeContainer"></div>
 
           <div style="background: var(--gray-100); padding: 0.5rem 1rem; border-radius: 9999px; display: inline-block; font-family: monospace; font-size: 1rem; font-weight: 700; color: var(--gray-800);" id="passBookingCode">
-            TOUR-8942-X
+            TOUR-IND-8942
           </div>
-          <p style="font-size: 0.75rem; color: var(--gray-500); margin-top: 0.5rem;">Show this QR code upon arrival for instantaneous paperless validation.</p>
+          <p style="font-size: 0.75rem; color: var(--gray-500); margin-top: 0.5rem;">Present this QR pass upon arrival for paperless entry and verification.</p>
         </div>
 
         <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="window.print()">
@@ -1790,9 +1699,7 @@
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- MODAL: HOST QR SCANNER -->
-  <!-- ========================================== -->
+  <!-- SCANNER MODAL -->
   <div class="modal-overlay" id="scannerModal">
     <div class="modal-box" style="max-width: 500px;">
       <div class="modal-header">
@@ -1805,9 +1712,9 @@
         <div id="scannerReader"></div>
 
         <div style="margin-top: 1.5rem; text-align: center;">
-          <p style="font-size: 0.85rem; color: var(--gray-600); margin-bottom: 0.75rem;">Or verify manually via 6-digit confirmation code:</p>
+          <p style="font-size: 0.85rem; color: var(--gray-600); margin-bottom: 0.75rem;">Or verify via booking code:</p>
           <div style="display: flex; gap: 0.5rem;">
-            <input type="text" id="manualCodeInput" placeholder="e.g. TOUR-8942-X" style="flex: 1; padding: 0.65rem; border: 1px solid var(--gray-300); border-radius: var(--radius-md); font-weight: 600; text-transform: uppercase;">
+            <input type="text" id="manualCodeInput" placeholder="e.g. TOUR-IND-8942" style="flex: 1; padding: 0.65rem; border: 1px solid var(--gray-300); border-radius: var(--radius-md); font-weight: 600; text-transform: uppercase;">
             <button class="btn-primary" onclick="verifyManualCode()">Verify</button>
           </div>
         </div>
@@ -1815,13 +1722,11 @@
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- MODAL: ADD BUSINESS LISTING (HOST) -->
-  <!-- ========================================== -->
+  <!-- ADD LISTING MODAL -->
   <div class="modal-overlay" id="addListingModal">
     <div class="modal-box">
       <div class="modal-header">
-        <h3>List Your Local Business</h3>
+        <h3>List Your Indian Business or Homestay</h3>
         <button class="modal-close-btn" onclick="closeModal('addListingModal')">
           <i data-lucide="x" style="width: 16px; height: 16px;"></i>
         </button>
@@ -1830,64 +1735,80 @@
         <form onsubmit="submitNewListing(event)">
           <div class="form-group">
             <label>Business / Experience Title</label>
-            <input type="text" id="newBizTitle" required placeholder="e.g. Riverbank Eco-Camp & Kayak">
+            <input type="text" id="newBizTitle" required placeholder="e.g. Heritage Haveli Stay & Kathakali Night">
           </div>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label>Indian State / UT</label>
+              <select id="newBizState" required>
+                <option value="Rajasthan">Rajasthan</option>
+                <option value="Kerala">Kerala</option>
+                <option value="Himachal Pradesh">Himachal Pradesh</option>
+                <option value="Uttarakhand">Uttarakhand</option>
+                <option value="Karnataka">Karnataka</option>
+                <option value="Goa">Goa</option>
+                <option value="Tamil Nadu">Tamil Nadu</option>
+                <option value="Maharashtra">Maharashtra</option>
+                <option value="Jammu & Kashmir">Jammu & Kashmir</option>
+                <option value="Ladakh">Ladakh</option>
+                <option value="West Bengal">West Bengal</option>
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="Gujarat">Gujarat</option>
+                <option value="Meghalaya">Meghalaya</option>
+                <option value="Assam">Assam</option>
+                <option value="Madhya Pradesh">Madhya Pradesh</option>
+                <option value="Punjab">Punjab</option>
+                <option value="Odisha">Odisha</option>
+              </select>
+            </div>
             <div class="form-group">
               <label>Category</label>
               <select id="newBizCategory" required>
                 <option value="stay">Homestay / Stay</option>
-                <option value="tours">Guided Tour / Heritage</option>
-                <option value="food">Farm-to-Table Dining</option>
+                <option value="tours">Heritage Tour / Walk</option>
+                <option value="food">Culinary Trail</option>
                 <option value="artisan">Artisan Craft Workshop</option>
-                <option value="adventure">Eco-Adventure</option>
+                <option value="adventure">Trek / Safari</option>
               </select>
-            </div>
-            <div class="form-group">
-              <label>Price ($ USD)</label>
-              <input type="number" id="newBizPrice" required placeholder="55" min="5">
             </div>
           </div>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
             <div class="form-group">
-              <label>Location / District</label>
-              <input type="text" id="newBizLocation" required placeholder="e.g. Western Ghats Valley">
+              <label>City / Location</label>
+              <input type="text" id="newBizLocation" required placeholder="e.g. Udaipur, Rajasthan">
             </div>
             <div class="form-group">
-              <label>Eco-Tag / Sustainability</label>
-              <input type="text" id="newBizEco" placeholder="e.g. 100% Solar & Rainwater">
+              <label>Price in ₹ (INR)</label>
+              <input type="number" id="newBizPrice" required placeholder="2500" min="200">
             </div>
           </div>
           <div class="form-group">
-            <label>Image URL (or photo link)</label>
+            <label>Image URL</label>
             <input type="url" id="newBizImg" required placeholder="https://images.unsplash.com/...">
           </div>
           <div class="form-group">
-            <label>Description & Highlights</label>
-            <textarea id="newBizDesc" rows="3" required placeholder="Describe what authentic local experience travelers will enjoy..."></textarea>
+            <label>Description & Native Highlights</label>
+            <textarea id="newBizDesc" rows="3" required placeholder="Describe the authentic cultural experience guests will enjoy..."></textarea>
           </div>
 
           <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 0.85rem;">
-            <i data-lucide="check" style="width: 16px; height: 16px;"></i> Publish Listing to Portal
+            <i data-lucide="check" style="width: 16px; height: 16px;"></i> Publish Listing
           </button>
         </form>
       </div>
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- MODAL: FIREBASE AUTHENTICATION -->
-  <!-- ========================================== -->
+  <!-- AUTH MODAL -->
   <div class="modal-overlay" id="authModal">
     <div class="modal-box" style="max-width: 440px;">
       <div class="modal-header">
-        <h3 id="authModalTitle">Sign In to TourisMart</h3>
+        <h3 id="authModalTitle">Sign In to TourisMart India</h3>
         <button class="modal-close-btn" onclick="closeModal('authModal')">
           <i data-lucide="x" style="width: 16px; height: 16px;"></i>
         </button>
       </div>
       <div class="modal-body">
-        <!-- Firebase Google Sign In Button -->
         <button class="btn-outline" style="width: 100%; justify-content: center; margin-bottom: 1.25rem; font-weight: 600;" onclick="signInWithGooglePopup()">
           <svg style="width: 18px; height: 18px; margin-right: 0.5rem;" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -1898,28 +1819,22 @@
           Continue with Google
         </button>
 
-        <div style="display: flex; align-items: center; margin-bottom: 1.25rem;">
-          <div style="flex: 1; height: 1px; background: var(--gray-200);"></div>
-          <span style="padding: 0 0.75rem; font-size: 0.75rem; color: var(--gray-400); font-weight: 700; text-transform: uppercase;">or email</span>
-          <div style="flex: 1; height: 1px; background: var(--gray-200);"></div>
-        </div>
-
         <form id="authEmailForm" onsubmit="handleAuthSubmit(event)">
           <div class="form-group">
             <label>Email Address</label>
-            <input type="email" id="authEmail" required placeholder="you@domain.com">
+            <input type="email" id="authEmail" required placeholder="you@example.com">
           </div>
           <div class="form-group">
             <label>Password</label>
-            <input type="password" id="authPassword" required placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢">
+            <input type="password" id="authPassword" required placeholder="••••••••">
           </div>
           
           <div class="form-group" id="roleSelectGroup" style="display: none;">
-            <label>I Want to Join As:</label>
+            <label>Role</label>
             <select id="authRole">
               <option value="tourist">Tourist / Traveler</option>
-              <option value="vendor">Local Business Host / Artisan</option>
-              <option value="admin">Regional Tourism Board Officer</option>
+              <option value="vendor">Indian Local Host / Artisan</option>
+              <option value="admin">State Tourism Board Officer</option>
             </select>
           </div>
 
@@ -1936,14 +1851,12 @@
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- SLIDE-OVER CART DRAWER -->
-  <!-- ========================================== -->
+  <!-- CART DRAWER -->
   <div class="cart-drawer-overlay" id="cartOverlay" onclick="toggleCartDrawer()"></div>
   <aside class="cart-drawer" id="cartDrawer">
     <div style="padding: 1.25rem; border-bottom: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center;">
       <h3 style="font-size: 1.15rem; display: flex; align-items: center; gap: 0.5rem;">
-        <i data-lucide="shopping-bag" style="width: 18px; height: 18px; color: var(--primary);"></i> Local Goods Cart
+        <i data-lucide="shopping-bag" style="width: 18px; height: 18px; color: var(--saffron);"></i> Indian GI Crafts Cart
       </h3>
       <button class="modal-close-btn" onclick="toggleCartDrawer()">
         <i data-lucide="x" style="width: 16px; height: 16px;"></i>
@@ -1956,11 +1869,11 @@
 
     <div style="padding: 1.25rem; border-top: 1px solid var(--gray-200); background: var(--gray-50);">
       <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; font-weight: 700;">
-        <span>Total (Supports Artisans):</span>
-        <span id="cartDrawerTotal" style="color: var(--primary-dark); font-size: 1.25rem; font-family: var(--font-display);">$0.00</span>
+        <span>Total (Supports Native Artisans):</span>
+        <span id="cartDrawerTotal" style="color: var(--primary-dark); font-size: 1.25rem; font-family: var(--font-display);">₹0</span>
       </div>
       <button class="btn-primary" style="width: 100%; justify-content: center; padding: 0.85rem;" onclick="checkoutCart()">
-        <i data-lucide="credit-card" style="width: 16px; height: 16px;"></i> Checkout & Direct Pay
+        <i data-lucide="credit-card" style="width: 16px; height: 16px;"></i> Pay Directly via UPI / Card
       </button>
     </div>
   </aside>
@@ -1976,245 +1889,426 @@
     <div class="footer-inner">
       <div>
         <div style="display: flex; align-items: center; gap: 0.6rem; color: white; margin-bottom: 1rem;">
-          <div class="brand-logo-icon" style="width: 32px; height: 32px;">
+          <div class="brand-logo-icon" style="width: 34px; height: 34px;">
             <i data-lucide="compass" style="width: 18px; height: 18px;"></i>
           </div>
-          <h2 style="font-size: 1.2rem;">TourisMart</h2>
+          <h2 style="font-size: 1.2rem;">TourisMart India</h2>
         </div>
-        <p style="font-size: 0.875rem; line-height: 1.6; max-width: 340px;">Smart Local Tourism Business Portal. Direct-to-community marketplace connecting travelers with heritage artisans, eco-homestays, and regional experiences.</p>
+        <p style="font-size: 0.875rem; line-height: 1.6; max-width: 340px;">Empowering local tourism micro-businesses, heritage homestays, and indigenous GI artisans across every state of India with zero-commission direct bookings.</p>
       </div>
       <div>
-        <h4 style="color: white; font-size: 0.95rem; margin-bottom: 1rem;">For Travelers</h4>
+        <h4 style="color: white; font-size: 0.95rem; margin-bottom: 1rem;">Indian Circuits</h4>
         <ul style="list-style: none; font-size: 0.875rem; display: flex; flex-direction: column; gap: 0.6rem;">
-          <li><a href="javascript:void(0)" onclick="switchNavTab('explore')">Explore Businesses</a></li>
-          <li><a href="javascript:void(0)" onclick="switchNavTab('itinerary')">Smart AI Itinerary</a></li>
-          <li><a href="javascript:void(0)" onclick="switchNavTab('marketplace')">Local Artisan Shop</a></li>
-          <li><a href="javascript:void(0)" onclick="switchNavTab('mybookings')">My Digital QR Passes</a></li>
+          <li><a href="javascript:void(0)" onclick="filterByStateName('Rajasthan')">Rajasthan Royal Desert</a></li>
+          <li><a href="javascript:void(0)" onclick="filterByStateName('Kerala')">Kerala God's Own Backwaters</a></li>
+          <li><a href="javascript:void(0)" onclick="filterByStateName('Himachal Pradesh')">Himachal Apple Orchards</a></li>
+          <li><a href="javascript:void(0)" onclick="filterByStateName('Karnataka')">Karnataka Heritage & Coffee</a></li>
         </ul>
       </div>
       <div>
-        <h4 style="color: white; font-size: 0.95rem; margin-bottom: 1rem;">For Local Businesses</h4>
+        <h4 style="color: white; font-size: 0.95rem; margin-bottom: 1rem;">Host Ecosystem</h4>
         <ul style="list-style: none; font-size: 0.875rem; display: flex; flex-direction: column; gap: 0.6rem;">
           <li><a href="javascript:void(0)" onclick="switchNavTab('vendor')">Host Dashboard</a></li>
-          <li><a href="javascript:void(0)" onclick="openAddListingModal()">Publish New Listing</a></li>
+          <li><a href="javascript:void(0)" onclick="openAddListingModal()">Publish Indian Listing</a></li>
           <li><a href="javascript:void(0)" onclick="openScannerModal()">Pass QR Scanner</a></li>
-          <li><a href="javascript:void(0)">Eco-Certification Guide</a></li>
+          <li><a href="javascript:void(0)" onclick="switchNavTab('marketplace')">Indian GI Handicrafts</a></li>
         </ul>
       </div>
       <div>
-        <h4 style="color: white; font-size: 0.95rem; margin-bottom: 1rem;">Governance & Tech</h4>
+        <h4 style="color: white; font-size: 0.95rem; margin-bottom: 1rem;">Tech & Security</h4>
         <ul style="list-style: none; font-size: 0.875rem; display: flex; flex-direction: column; gap: 0.6rem;">
-          <li><a href="javascript:void(0)" onclick="switchNavTab('admin')">Tourism Board Panel</a></li>
-          <li><span style="display: inline-flex; align-items: center; gap: 0.35rem; color: #10b981;"><i data-lucide="check-circle" style="width: 14px; height: 14px;"></i> Firebase Active</span></li>
-          <li><span style="color: #94a3b8; font-size: 0.8rem;">Git System Maintained</span></li>
+          <li><span style="color: #10b981; display: inline-flex; align-items: center; gap: 0.35rem;"><i data-lucide="check-circle" style="width: 14px; height: 14px;"></i> Firebase Auth & DB</span></li>
+          <li><span style="color: #94a3b8; font-size: 0.8rem;">GitHub: SMART-TOURIST18</span></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>Â© 2026 TourisMart Ecosystem. Supporting Local Micro-Enterprises & Sustainable Cultural Tourism.</p>
-      <p style="color: #64748b;">Powered by Firebase Auth & Firestore â€¢ Local Community Council</p>
+      <p>© 2026 TourisMart India. Sustainable Cultural Tourism Across Indian States & Union Territories.</p>
+      <p style="color: #64748b;">Powered by Firebase Auth & Firestore • Local Community Tourism Council</p>
     </div>
   </footer>
 
   <!-- ========================================== -->
-  <!-- APPLICATION SCRIPT LOGIC -->
+  <!-- APPLICATION SCRIPT LOGIC (INDIAN PLACES) -->
   <!-- ========================================== -->
   <script>
     // ------------------------------------------
-    // INITIAL MOCK DATA (Curated Local Businesses)
+    // ALL INDIAN TOURIST PLACES & EXPERIENCES
     // ------------------------------------------
     let localBusinesses = [
       {
-        id: 'biz_1',
-        title: 'Whispering Pines Eco-Homestay',
+        id: 'ind_1',
+        title: 'Desert Dune Eco-Camp & Kalbelia Folk Night',
         category: 'stay',
-        region: 'Western Ghats',
-        location: 'Western Ghats Valley',
-        price: 68,
+        region: 'Rajasthan',
+        location: 'Sam Sand Dunes, Jaisalmer, Rajasthan',
+        price: 3800,
         priceUnit: 'night',
         rating: 4.96,
-        reviewsCount: 84,
-        image: 'https://images.unsplash.com/photo-1587061949409-02df41d5e562?w=800&q=80',
-        ecoTag: '100% Solar & Farm-Fresh',
-        description: 'Charming mountain stone cottage hosted by the Gowda family. Homecooked Malnad meals, private stream access, and organic coffee plantation walk.'
+        reviewsCount: 142,
+        image: 'https://images.unsplash.com/photo-1548013146-72479768bada?w=800&q=80',
+        ecoTag: 'Desert Community Owned',
+        description: 'Traditional Swiss tents under Thar desert starlight. Evening Kalbelia folk dance around bonfire, camel dune trek, and woodfire Dal Baati Churma.'
       },
       {
-        id: 'biz_2',
-        title: 'Ancient Terracotta & Clay Pottery Studio',
-        category: 'artisan',
-        region: 'Heritage Old Quarter',
-        location: 'Heritage Old Quarter',
-        price: 28,
-        priceUnit: 'workshop',
-        rating: 4.92,
-        reviewsCount: 112,
-        image: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=800&q=80',
-        ecoTag: '4th Gen Artisan Master',
-        description: 'Hands-on pottery throwing workshop with master artisan Girish. Learn traditional wood-fired terracotta techniques and take home your sculpted vase.'
-      },
-      {
-        id: 'biz_3',
-        title: 'Wild River Valley Kayak & Otters Trail',
-        category: 'adventure',
-        region: 'Coastal Karavali',
-        location: 'Coastal Karavali',
-        price: 42,
-        priceUnit: 'person',
-        rating: 4.88,
-        reviewsCount: 65,
-        image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80',
-        ecoTag: 'Leave-No-Trace Certified',
-        description: 'Guided low-impact kayak expedition through pristine river backwaters. Certified local native guides with safety vests and birdwatching gear.'
-      },
-      {
-        id: 'biz_4',
-        title: 'Organic Cardamom & Pepper Spice Farm Walk',
-        category: 'food',
-        region: 'Highland Plantation',
-        location: 'Highland Plantation',
-        price: 32,
-        priceUnit: 'tour + lunch',
-        rating: 4.95,
-        reviewsCount: 97,
-        image: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=800&q=80',
-        ecoTag: 'Zero Chemical Pesticides',
-        description: 'Walk through 40-year-old spice hills, pluck fresh pods, and enjoy an authentic vegetarian banana-leaf lunch prepared by local village cooks.'
-      },
-      {
-        id: 'biz_5',
-        title: 'Old Town Heritage Lantern Walking Tour',
-        category: 'tours',
-        region: 'Heritage Old Quarter',
-        location: 'Heritage Old Quarter',
-        price: 24,
-        priceUnit: 'walker',
-        rating: 4.89,
-        reviewsCount: 140,
-        image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&q=80',
-        ecoTag: 'Native Community Storytellers',
-        description: 'Dusk walk across centuries-old trading bazaars, hidden courtyards, and folklore stops with native historian Prakash. Includes spiced local chai.'
-      },
-      {
-        id: 'biz_6',
-        title: 'Mangrove Lagoon Eco-Hut & Stargazing',
+        id: 'ind_2',
+        title: 'Alleppey Backwater Eco-Houseboat & Village Canoe',
         category: 'stay',
-        region: 'Coastal Karavali',
-        location: 'Coastal Karavali',
-        price: 85,
+        region: 'Kerala',
+        location: 'Alappuzha (Alleppey), Kerala',
+        price: 5500,
         priceUnit: 'night',
         rating: 4.98,
-        reviewsCount: 52,
-        image: 'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=800&q=80',
-        ecoTag: 'Mangrove Conservation Partner',
-        description: 'Stilt eco-huts nestled alongside coastal mangroves. Fresh sea-breeze dining, zero single-use plastics, and nocturnal bioluminescence boat tour.'
+        reviewsCount: 189,
+        image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=800&q=80',
+        ecoTag: 'Solar Houseboat Certified',
+        description: 'Handcrafted wooden Kettuvallam gliding through palm canals. Fresh banana-leaf Karimeen fish meal and canoe paddle into toddy village groves.'
       },
       {
-        id: 'biz_7',
-        title: 'Traditional Handloom Weaving Workshop',
-        category: 'artisan',
-        region: 'Heritage Old Quarter',
-        location: 'Heritage Old Quarter',
-        price: 30,
-        priceUnit: 'workshop',
-        rating: 4.85,
-        reviewsCount: 46,
-        image: 'https://images.unsplash.com/photo-1606744824163-985d376605aa?w=800&q=80',
-        ecoTag: 'Preserving Weaving Guilds',
-        description: 'Sit at wooden handlooms with women weavers cooperative. Learn natural vegetable dyeing and weave your custom coaster to bring home.'
+        id: 'ind_3',
+        title: 'Old Manali Apple Orchard Wooden Chalet',
+        category: 'stay',
+        region: 'Himachal Pradesh',
+        location: 'Old Manali, Himachal Pradesh',
+        price: 2800,
+        priceUnit: 'night',
+        rating: 4.93,
+        reviewsCount: 96,
+        image: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=800&q=80',
+        ecoTag: 'Kath-Kuni Timber Heritage',
+        description: 'Hand-hewn cedarwood cottage surrounded by heirloom apple trees. Snow peak views of Rohtang pass, wood-burning bukhari stoves, and fresh local Siddu.'
       },
       {
-        id: 'biz_8',
-        title: 'Western Ghats Waterfall Rainforest Trek',
+        id: 'ind_4',
+        title: 'Rishikesh Ganga River Rafting & Cliffside Camp',
         category: 'adventure',
-        region: 'Western Ghats',
-        location: 'Western Ghats Valley',
-        price: 45,
-        priceUnit: 'trekker',
+        region: 'Uttarakhand',
+        location: 'Shivpuri, Rishikesh, Uttarakhand',
+        price: 1800,
+        priceUnit: 'person',
+        rating: 4.91,
+        reviewsCount: 220,
+        image: 'https://images.unsplash.com/photo-1581793745862-99fde7fa73d2?w=800&q=80',
+        ecoTag: 'Leave-No-Trace River Guides',
+        description: 'Thrilling Grade III+ white-water rafting from Marine Drive. Certified local guides, cliff jumping into the holy Ganga, and evening Parmarth Niketan Aarti.'
+      },
+      {
+        id: 'ind_5',
+        title: 'Coorg Rainforest Coffee & Pepper Estate Stay',
+        category: 'stay',
+        region: 'Karnataka',
+        location: 'Madikeri, Coorg, Karnataka',
+        price: 3200,
+        priceUnit: 'night',
+        rating: 4.95,
+        reviewsCount: 118,
+        image: 'https://images.unsplash.com/photo-1598091383021-15ddea10925d?w=800&q=80',
+        ecoTag: 'Shade-Grown Bird Friendly',
+        description: 'Heritage planter bungalow amidst 100 acres of Arabica coffee and black pepper. Includes plantation walks, stream trekking, and traditional Kodava feast.'
+      },
+      {
+        id: 'ind_6',
+        title: 'Hampi Boulder Ruins & Tungabhadra Coracle Boat',
+        category: 'tours',
+        region: 'Karnataka',
+        location: 'Hampi UNESCO Site, Karnataka',
+        price: 1400,
+        priceUnit: 'tour',
+        rating: 4.92,
+        reviewsCount: 165,
+        image: 'https://images.unsplash.com/photo-1600100397608-f010f443b749?w=800&q=80',
+        ecoTag: 'UNESCO Native Guide Guild',
+        description: 'Dawn exploration of Vijayanagara empire ruins, Virupaksha temple, and musical stone pillars with local archaeologist, followed by a round coracle boat ride.'
+      },
+      {
+        id: 'ind_7',
+        title: 'Divar Island Cycling & Goan Feni Heritage Trail',
+        category: 'tours',
+        region: 'Goa',
+        location: 'Divar Island, Old Goa, Goa',
+        price: 1650,
+        priceUnit: 'person',
+        rating: 4.88,
+        reviewsCount: 84,
+        image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=800&q=80',
+        ecoTag: 'Slow Village Tourism Partner',
+        description: 'Ferry over to serene Divar Island. Cycle past Portuguese-era villas, ancient paddy fields, and visit a traditional cashew feni pot distillery with tastings.'
+      },
+      {
+        id: 'ind_8',
+        title: 'Dal Lake Handcrafted Cedarwood Houseboat & Shikara',
+        category: 'stay',
+        region: 'Jammu & Kashmir',
+        location: 'Dal Lake, Srinagar, Jammu & Kashmir',
+        price: 4200,
+        priceUnit: 'night',
+        rating: 4.97,
+        reviewsCount: 130,
+        image: 'https://images.unsplash.com/photo-1595815771614-ade9d652a65d?w=800&q=80',
+        ecoTag: '3rd Gen Kashmiri Boat Guild',
+        description: 'Carved walnut wood houseboat floating on calm Dal Lake. Sunrise floating flower and vegetable market tour by wooden Shikara with hot saffron Kahwa.'
+      },
+      {
+        id: 'ind_9',
+        title: 'Nubra Valley High-Altitude Camel Safari & Homestay',
+        category: 'adventure',
+        region: 'Ladakh',
+        location: 'Hunder, Nubra Valley, Ladakh',
+        price: 3600,
+        priceUnit: 'person',
         rating: 4.94,
-        reviewsCount: 78,
-        image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80',
-        ecoTag: 'Native Tribal Forest Guides',
-        description: 'Off-beat rainforest trek leading to an untouched cascade pool. Learn medicinal plant folklore from indigenous tribal elders.'
+        reviewsCount: 75,
+        image: 'https://images.unsplash.com/photo-1581793745862-99fde7fa73d2?w=800&q=80',
+        ecoTag: 'Solar Heated Eco-Homestay',
+        description: 'Ride double-humped Bactrian camels across high-altitude white sand dunes surrounded by Karakoram glaciers. Savor steamed Ladakhi momos and butter tea.'
+      },
+      {
+        id: 'ind_10',
+        title: 'Subah-e-Banaras Sunrise Boat & Silk Karkhana Walk',
+        category: 'tours',
+        region: 'Uttar Pradesh',
+        location: 'Assi Ghat, Varanasi, Uttar Pradesh',
+        price: 1200,
+        priceUnit: 'person',
+        rating: 4.96,
+        reviewsCount: 245,
+        image: 'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?w=800&q=80',
+        ecoTag: '7th Gen Banarasi Weavers Guild',
+        description: 'Sunrise wooden rowing boat along the sacred Ganges river ghats with live morning ragas, followed by a walk into traditional silk pit-loom workshops.'
+      },
+      {
+        id: 'ind_11',
+        title: 'Chettinad Heritage Mansion Walk & 18-Spice Feast',
+        category: 'food',
+        region: 'Tamil Nadu',
+        location: 'Karaikudi, Chettinad, Tamil Nadu',
+        price: 1950,
+        priceUnit: 'person',
+        rating: 4.89,
+        reviewsCount: 92,
+        image: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=800&q=80',
+        ecoTag: 'Heritage Mansion Trust',
+        description: 'Walk through 19th-century merchant palatial mansions adorned with Belgian mirrors. Hands-on stone-grinding session for authentic Chettinad pepper cuisine.'
+      },
+      {
+        id: 'ind_12',
+        title: 'Darjeeling Tea Estate Heritage Planter Bungalow',
+        category: 'stay',
+        region: 'West Bengal',
+        location: 'Darjeeling, West Bengal',
+        price: 4800,
+        priceUnit: 'night',
+        rating: 4.95,
+        reviewsCount: 110,
+        image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=80',
+        ecoTag: 'Bio-Dynamic Organic Tea',
+        description: 'Colonial tea bungalow with clear views of Mt. Kanchenjunga. Pluck fine two-leaves-and-a-bud with tea garden workers and enjoy First Flush cupping sessions.'
+      },
+      {
+        id: 'ind_13',
+        title: 'Rann of Kutch Bhunga Mud-Art Homestay & Rogan Art',
+        category: 'artisan',
+        region: 'Gujarat',
+        location: 'Dhordo & Nirona, Kutch, Gujarat',
+        price: 3400,
+        priceUnit: 'night',
+        rating: 4.92,
+        reviewsCount: 88,
+        image: 'https://images.unsplash.com/photo-1609137144820-2131976a463a?w=800&q=80',
+        ecoTag: 'UNESCO Intangible Cultural Heritage',
+        description: 'Stay in cylindrical clay Bhunga decorated with traditional Lippan mirror work. Visit master Khatri artisans in Nirona practicing 300-year-old Rogan fabric painting.'
+      },
+      {
+        id: 'ind_14',
+        title: 'Cherrapunji Living Root Bridges Rainforest Trek',
+        category: 'adventure',
+        region: 'Meghalaya',
+        location: 'Sohra (Cherrapunji), Meghalaya',
+        price: 2200,
+        priceUnit: 'person',
+        rating: 4.97,
+        reviewsCount: 104,
+        image: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=800&q=80',
+        ecoTag: 'Indigenous Khasi Bio-Engineering',
+        description: 'Trek down 3,500 ancient stone steps to the Double Decker Living Root Bridge. Swim in emerald natural springs and discover Khasi sacred forest lore.'
+      },
+      {
+        id: 'ind_15',
+        title: 'Kaziranga One-Horned Rhino Safari & Mishing Village',
+        category: 'adventure',
+        region: 'Assam',
+        location: 'Kohora, Kaziranga, Assam',
+        price: 2750,
+        priceUnit: 'person',
+        rating: 4.93,
+        reviewsCount: 135,
+        image: 'https://images.unsplash.com/photo-1575550959106-5a7defe28b56?w=800&q=80',
+        ecoTag: 'Wildlife Conservation Certified',
+        description: 'Open 4x4 jeep safari through tall grassland forests tracking wild one-horned rhinoceroses. Visit bamboo stilt Mishing villages for handloom silk weaving.'
+      },
+      {
+        id: 'ind_16',
+        title: 'Khajuraho Sculptural Heritage & Bundeli Terracotta',
+        category: 'artisan',
+        region: 'Madhya Pradesh',
+        location: 'Khajuraho, Madhya Pradesh',
+        price: 1500,
+        priceUnit: 'tour',
+        rating: 4.91,
+        reviewsCount: 79,
+        image: 'https://images.unsplash.com/photo-1600100397608-f010f443b749?w=800&q=80',
+        ecoTag: 'Archaeological Guild of India',
+        description: 'In-depth architectural guided walk through the western temple group sculptures, followed by pottery wheel toy making in rural Bundelkhand village.'
+      },
+      {
+        id: 'ind_17',
+        title: 'Amritsar Golden Temple Langar Sewa & Phulkari Farm',
+        category: 'food',
+        region: 'Punjab',
+        location: 'Amritsar, Punjab',
+        price: 1800,
+        priceUnit: 'day',
+        rating: 4.99,
+        reviewsCount: 260,
+        image: 'https://images.unsplash.com/photo-1588714477688-cf28a50e94f7?w=800&q=80',
+        ecoTag: 'Community Langar Partner',
+        description: 'Dawn spiritual tour of Harmandir Sahib, volunteer in the 100,000-meal community kitchen (Langar), followed by a mustard farm tractor ride and Phulkari embroidery.'
+      },
+      {
+        id: 'ind_18',
+        title: 'Raghurajpur Pattachitra Heritage Village Studio Walk',
+        category: 'artisan',
+        region: 'Odisha',
+        location: 'Puri District, Odisha',
+        price: 1600,
+        priceUnit: 'person',
+        rating: 4.90,
+        reviewsCount: 68,
+        image: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=800&q=80',
+        ecoTag: '100% Artisan Preserved Village',
+        description: 'Explore the world-famous village where every house is a painting studio. Learn palm-leaf engraving, stone carving, and watch live Gotipua dance performance.'
+      },
+      {
+        id: 'ind_19',
+        title: 'Mahabaleshwar Strawberry Agro-Farm & Warli Art',
+        category: 'food',
+        region: 'Maharashtra',
+        location: 'Mahabaleshwar, Maharashtra',
+        price: 2100,
+        priceUnit: 'person',
+        rating: 4.87,
+        reviewsCount: 82,
+        image: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=800&q=80',
+        ecoTag: 'Organic Red-Soil Cooperative',
+        description: 'Pluck fresh winter strawberries directly from organic farm rows. Relish fresh strawberry cream and paint authentic tribal Warli geometric murals.'
+      },
+      {
+        id: 'ind_20',
+        title: 'Jaipur Blue Pottery & Gemstone Artisan Workshop',
+        category: 'artisan',
+        region: 'Rajasthan',
+        location: 'Jaipur, Rajasthan',
+        price: 1850,
+        priceUnit: 'workshop',
+        rating: 4.94,
+        reviewsCount: 154,
+        image: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=800&q=80',
+        ecoTag: 'GI-Tagged Jaipur Blue Craft',
+        description: 'Shape ground quartz clay without a potter wheel alongside master craftsmen. Hand-paint Persian floral motifs with cobalt oxide dye and glaze your souvenir.'
       }
     ];
 
-    // Local Marketplace Products
+    // Authentic Indian GI-Tagged Products
     let marketplaceProducts = [
       {
         id: 'prod_1',
-        name: 'Pure Wildflower Forest Honey (500g)',
-        maker: 'Highland Tribal Honey Gatherers',
-        price: 18.00,
-        category: 'food',
-        image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=600&q=80',
-        desc: 'Unprocessed, raw honey hand-harvested from deep forest combs.'
+        name: 'Kashmiri Hand-Spun Pure Pashmina Shawl',
+        maker: 'Srinagar Valley Artisans Guild',
+        price: 8500,
+        category: 'craft',
+        image: 'https://images.unsplash.com/photo-1607344645866-009c320c5ab8?w=600&q=80',
+        desc: 'Hand-woven from Changthangi goat wool with traditional Sozni embroidery.'
       },
       {
         id: 'prod_2',
-        name: 'Hand-Carved Rosewood Spice Box',
-        maker: 'Girish Heritage Woodcraft',
-        price: 42.00,
-        category: 'craft',
-        image: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=600&q=80',
-        desc: 'Solid reclaimed rosewood with 7 brass-inlaid spice compartments.'
+        name: 'Darjeeling First Flush Muscatel Tea (250g)',
+        maker: 'Makaibari Organic Bio-Dynamic Gardens',
+        price: 950,
+        category: 'food',
+        image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=600&q=80',
+        desc: 'Delicate two-leaves-and-a-bud harvested in spring with floral aroma.'
       },
       {
         id: 'prod_3',
-        name: 'Organic Tellicherry Black Pepper & Cardamom',
-        maker: 'Western Ghats Smallholder Farms',
-        price: 15.00,
-        category: 'food',
-        image: 'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?w=600&q=80',
-        desc: 'Sun-dried high-curcumin spices packed in compostable fiber.'
+        name: 'Jaipur Handmade Blue Pottery Decorative Plate',
+        maker: 'Kripal Kumbh Crafts, Jaipur',
+        price: 1250,
+        category: 'craft',
+        image: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&q=80',
+        desc: 'Made from Egyptian paste and quartz powder with cobalt blue motifs.'
       },
       {
         id: 'prod_4',
-        name: 'Indigo Dyed Handloom Cotton Scarf',
-        maker: 'Nisarga Women Weavers Guild',
-        price: 36.00,
+        name: 'Mysore Pure Sandalwood Oil & Incense Cones',
+        maker: 'Karnataka Forest Guild, Mysore',
+        price: 1400,
         category: 'craft',
-        image: 'https://images.unsplash.com/photo-1607344645866-009c320c5ab8?w=600&q=80',
-        desc: 'Pure breathable khadi cotton with natural indigo vat dye.'
+        image: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=600&q=80',
+        desc: 'Sustainably distilled Santalum album heartwood with deep sacred aroma.'
+      },
+      {
+        id: 'prod_5',
+        name: 'Kutch Rogan Art Hand-Painted Silk Stole',
+        maker: 'Khatri Rogan Art Masters, Nirona',
+        price: 3200,
+        category: 'craft',
+        image: 'https://images.unsplash.com/photo-1606744824163-985d376605aa?w=600&q=80',
+        desc: 'Castor oil boiled paste applied with brass rod creating intricate tree of life.'
+      },
+      {
+        id: 'prod_6',
+        name: 'Malabar Tellicherry Extra-Bold Peppercorn (500g)',
+        maker: 'Wayanad Organic Spices Cooperative',
+        price: 650,
+        category: 'food',
+        image: 'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?w=600&q=80',
+        desc: 'Sun-dried high-piperine Tellicherry black pepper with intense citrus notes.'
       }
     ];
 
-    // User Bookings state
+    // Bookings state
     let userBookings = [
       {
-        id: 'TOUR-8942-X',
-        bizId: 'biz_1',
-        bizName: 'Whispering Pines Eco-Homestay',
+        id: 'TOUR-IND-8942',
+        bizId: 'ind_1',
+        bizName: 'Desert Dune Eco-Camp & Kalbelia Folk Night',
         guestName: 'Harsh Vardhan',
         date: '2026-12-05',
         guests: 2,
-        totalPrice: 136,
+        totalPrice: 7600,
         status: 'Confirmed',
-        time: 'Check-in 02:00 PM'
+        time: 'Check-in 03:00 PM'
       },
       {
-        id: 'TOUR-3195-Y',
-        bizId: 'biz_2',
-        bizName: 'Ancient Terracotta & Clay Pottery Studio',
+        id: 'TOUR-IND-3195',
+        bizId: 'ind_2',
+        bizName: 'Alleppey Backwater Eco-Houseboat & Village Canoe',
         guestName: 'Harsh Vardhan',
-        date: '2026-12-06',
+        date: '2026-12-10',
         guests: 2,
-        totalPrice: 56,
+        totalPrice: 11000,
         status: 'Confirmed',
-        time: 'Slot 10:30 AM'
+        time: 'Cruise Slot 11:30 AM'
       }
     ];
 
-    // Cart state
     let cart = [];
     let currentActiveBookingBiz = null;
     let selectedCategory = 'all';
-    let currentAuthMode = 'signin'; // or 'signup'
-    let currentRole = 'tourist'; // 'tourist', 'vendor', 'admin'
+    let currentAuthMode = 'signin';
+    let currentRole = 'tourist';
     let html5QrScanner = null;
 
-    // ------------------------------------------
-    // INITIALIZATION & TAB SWITCHING
-    // ------------------------------------------
     document.addEventListener('DOMContentLoaded', () => {
       renderBusinesses(localBusinesses);
       renderMarketplace();
@@ -2245,33 +2339,34 @@
     function changeRole(role) {
       currentRole = role;
       showToast(`Switched view to ${role.toUpperCase()}`, 'check-circle');
-      
-      const vendorBtn = document.getElementById('vendorTabBtn');
-      const adminBtn = document.getElementById('adminTabBtn');
+      if (role === 'vendor') switchNavTab('vendor');
+      else if (role === 'admin') switchNavTab('admin');
+      else switchNavTab('explore');
+    }
 
-      if (role === 'vendor') {
-        switchNavTab('vendor');
-      } else if (role === 'admin') {
-        switchNavTab('admin');
-      } else {
-        switchNavTab('explore');
+    function filterByStateName(stateName) {
+      switchNavTab('explore');
+      const filter = document.getElementById('region-filter');
+      if (filter) {
+        filter.value = stateName;
+        filterBusinesses();
       }
     }
 
     // ------------------------------------------
-    // RENDER BUSINESS DIRECTORY
+    // RENDER BUSINESSES
     // ------------------------------------------
     function renderBusinesses(items) {
       const grid = document.getElementById('businessesGrid');
       const countEl = document.getElementById('businessCountText');
-      if (countEl) countEl.innerText = `Showing ${items.length} local businesses`;
+      if (countEl) countEl.innerText = `Showing ${items.length} Indian destinations`;
 
       if (!items.length) {
         grid.innerHTML = `
           <div style="grid-column: 1/-1; text-align: center; padding: 3rem 1rem; background: white; border-radius: var(--radius-lg); border: 1px dashed var(--gray-300);">
             <i data-lucide="compass" style="width: 48px; height: 48px; color: var(--gray-400); margin-bottom: 1rem;"></i>
-            <h3>No local businesses match your criteria</h3>
-            <p style="color: var(--gray-600); margin-top: 0.5rem;">Try adjusting your search terms or filters.</p>
+            <h3>No destinations match this state or filter</h3>
+            <p style="color: var(--gray-600); margin-top: 0.5rem;">Select another Indian state or clear your search terms.</p>
           </div>
         `;
         if (typeof lucide !== 'undefined') lucide.createIcons();
@@ -2285,8 +2380,8 @@
             <div class="biz-badge-eco">
               <i data-lucide="leaf" style="width: 12px; height: 12px;"></i> ${biz.ecoTag}
             </div>
-            <div class="biz-badge-category">
-              ${biz.category}
+            <div class="biz-badge-state">
+              ${biz.region}
             </div>
           </div>
           <div class="biz-card-body">
@@ -2303,7 +2398,7 @@
             <div class="biz-card-footer">
               <div class="biz-price">
                 <span class="biz-price-label">Direct Rate</span>
-                <span class="biz-price-value">$${biz.price} <span style="font-size: 0.75rem; font-weight: 500; color: var(--gray-500);">/ ${biz.priceUnit}</span></span>
+                <span class="biz-price-value">₹${biz.price.toLocaleString('en-IN')} <span style="font-size: 0.75rem; font-weight: 500; color: var(--gray-500);">/ ${biz.priceUnit}</span></span>
               </div>
               <button class="btn-primary btn-sm" onclick="openBookingModal('${biz.id}')">
                 <i data-lucide="calendar" style="width: 14px; height: 14px;"></i> Reserve
@@ -2330,7 +2425,7 @@
 
       const filtered = localBusinesses.filter(biz => {
         const matchesCategory = (selectedCategory === 'all' || biz.category === selectedCategory);
-        const matchesSearch = !search || biz.title.toLowerCase().includes(search) || biz.description.toLowerCase().includes(search) || biz.location.toLowerCase().includes(search);
+        const matchesSearch = !search || biz.title.toLowerCase().includes(search) || biz.description.toLowerCase().includes(search) || biz.location.toLowerCase().includes(search) || biz.region.toLowerCase().includes(search);
         const matchesRegion = (region === 'all' || biz.region === region);
         const matchesBudget = (budget === 'all' || biz.price <= parseFloat(budget));
         return matchesCategory && matchesSearch && matchesRegion && matchesBudget;
@@ -2340,7 +2435,7 @@
     }
 
     // ------------------------------------------
-    // BOOKING & SMART QR PASS SYSTEM
+    // BOOKINGS & QR PASS
     // ------------------------------------------
     function openBookingModal(bizId) {
       const biz = localBusinesses.find(b => b.id === bizId);
@@ -2348,11 +2443,10 @@
       currentActiveBookingBiz = biz;
 
       document.getElementById('bookingModalTitle').innerText = `Reserve: ${biz.title}`;
-      document.getElementById('bookingModalBizName').innerText = biz.title;
-      document.getElementById('bookingModalPrice').innerText = `$${biz.price} / ${biz.priceUnit}`;
+      document.getElementById('bookingModalBizName').innerText = `${biz.title} (${biz.region})`;
+      document.getElementById('bookingModalPrice').innerText = `₹${biz.price.toLocaleString('en-IN')} / ${biz.priceUnit}`;
       document.getElementById('bookingModalImg').src = biz.image;
 
-      // Set default date to tomorrow
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
       document.getElementById('bookDate').value = tomorrow.toISOString().split('T')[0];
@@ -2366,7 +2460,7 @@
       if (!currentActiveBookingBiz) return;
       const guests = parseInt(document.getElementById('bookGuests').value || '1', 10);
       const total = currentActiveBookingBiz.price * guests;
-      document.getElementById('bookingModalTotalPrice').innerText = `$${total.toFixed(2)}`;
+      document.getElementById('bookingModalTotalPrice').innerText = `₹${total.toLocaleString('en-IN')}`;
     }
 
     function confirmBooking(e) {
@@ -2378,7 +2472,7 @@
       const date = document.getElementById('bookDate').value;
       const guests = parseInt(document.getElementById('bookGuests').value, 10);
       const total = currentActiveBookingBiz.price * guests;
-      const bookingCode = `TOUR-${Math.floor(1000 + Math.random() * 9000)}-${String.fromCharCode(65 + Math.floor(Math.random() * 26))}`;
+      const bookingCode = `TOUR-IND-${Math.floor(1000 + Math.random() * 9000)}`;
 
       const newBooking = {
         id: bookingCode,
@@ -2390,7 +2484,7 @@
         guests: guests,
         totalPrice: total,
         status: 'Confirmed',
-        time: 'Check-in 10:00 AM'
+        time: 'Check-in 11:00 AM'
       };
 
       userBookings.unshift(newBooking);
@@ -2398,7 +2492,6 @@
       renderBookings();
       renderHostDashboard();
 
-      // Attempt Firestore sync if logged in
       if (window._firebase && window._firebase.db && window.currentUser) {
         try {
           const fb = window._firebase;
@@ -2408,11 +2501,11 @@
             createdAt: new Date().toISOString()
           });
         } catch(err) {
-          console.log("Offline or Firestore write pending:", err);
+          console.log("Offline write fallback:", err);
         }
       }
 
-      showToast(`Booking confirmed for ${name}! Pass generated.`, 'check-circle');
+      showToast(`Reservation confirmed for ${name}! QR Pass generated.`, 'check-circle');
       openQRPassModal(newBooking.id);
     }
 
@@ -2421,13 +2514,12 @@
       if (!booking) return;
 
       document.getElementById('passModalBizName').innerText = booking.bizName;
-      document.getElementById('passModalGuestInfo').innerText = `Guest: ${booking.guestName} â€¢ ${booking.guests} Guests â€¢ Date: ${booking.date}`;
+      document.getElementById('passModalGuestInfo').innerText = `Traveler: ${booking.guestName} • ${booking.guests} Guests • Date: ${booking.date}`;
       document.getElementById('passBookingCode').innerText = booking.id;
 
       const qrContainer = document.getElementById('qrCodeContainer');
       qrContainer.innerHTML = '';
 
-      // Generate QR Code using QRCodejs
       if (typeof QRCode !== 'undefined') {
         new QRCode(qrContainer, {
           text: JSON.stringify({
@@ -2436,7 +2528,8 @@
             name: booking.guestName,
             guests: booking.guests,
             date: booking.date,
-            status: 'VERIFIED_LOCAL_PASS'
+            country: 'India',
+            status: 'VERIFIED_INDIAN_PASS'
           }),
           width: 180,
           height: 180,
@@ -2459,7 +2552,7 @@
           <div style="text-align: center; padding: 3rem; background: white; border-radius: var(--radius-xl); border: 1px dashed var(--gray-300);">
             <i data-lucide="ticket" style="width: 48px; height: 48px; color: var(--gray-400); margin-bottom: 1rem;"></i>
             <h3>No Bookings Yet</h3>
-            <p style="color: var(--gray-600); margin-top: 0.5rem;">Explore authentic local homestays and workshops to book your first local pass.</p>
+            <p style="color: var(--gray-600); margin-top: 0.5rem;">Explore authentic Indian homestays and safari experiences to reserve your pass.</p>
           </div>
         `;
         if (typeof lucide !== 'undefined') lucide.createIcons();
@@ -2475,10 +2568,10 @@
             </div>
             <h3 style="font-size: 1.2rem; color: var(--gray-900); margin-bottom: 0.25rem;">${b.bizName}</h3>
             <p style="font-size: 0.85rem; color: var(--gray-600);">
-              <i data-lucide="calendar" style="width: 14px; height: 14px; display: inline;"></i> ${b.date} â€¢ ${b.guests} Guests â€¢ <strong>$${b.totalPrice} Paid to Host</strong>
+              <i data-lucide="calendar" style="width: 14px; height: 14px; display: inline;"></i> ${b.date} • ${b.guests} Guests • <strong>₹${b.totalPrice.toLocaleString('en-IN')} Paid to Host</strong>
             </p>
           </div>
-          <div style="display: flex; gap: 0.6rem;">
+          <div>
             <button class="btn-primary btn-sm" onclick="openQRPassModal('${b.id}')">
               <i data-lucide="qr-code" style="width: 14px; height: 14px;"></i> View Digital QR Pass
             </button>
@@ -2490,7 +2583,7 @@
     }
 
     // ------------------------------------------
-    // LOCAL ARTISAN MARKETPLACE & CART
+    // MARKETPLACE & CART
     // ------------------------------------------
     function renderMarketplace() {
       const grid = document.getElementById('productsGrid');
@@ -2508,7 +2601,7 @@
             <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.35rem;">${p.name}</h4>
             <p style="font-size: 0.8rem; color: var(--gray-600); margin-bottom: 0.75rem; flex: 1;">${p.desc}</p>
             <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--gray-100); padding-top: 0.75rem; margin-top: auto;">
-              <span style="font-size: 1.15rem; font-weight: 800; color: var(--primary-dark); font-family: var(--font-display);">$${p.price.toFixed(2)}</span>
+              <span style="font-size: 1.15rem; font-weight: 800; color: var(--primary-dark); font-family: var(--font-display);">₹${p.price.toLocaleString('en-IN')}</span>
               <button class="btn-primary btn-sm" onclick="addToCart('${p.id}')">
                 <i data-lucide="plus" style="width: 14px; height: 14px;"></i> Add to Cart
               </button>
@@ -2540,8 +2633,8 @@
       const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
 
       document.getElementById('cartCountBadge').innerText = totalCount;
-      document.getElementById('cartSubtotalBtn').innerText = `$${totalPrice.toFixed(2)}`;
-      document.getElementById('cartDrawerTotal').innerText = `$${totalPrice.toFixed(2)}`;
+      document.getElementById('cartSubtotalBtn').innerText = `₹${totalPrice.toLocaleString('en-IN')}`;
+      document.getElementById('cartDrawerTotal').innerText = `₹${totalPrice.toLocaleString('en-IN')}`;
 
       const listContainer = document.getElementById('cartItemsList');
       if (!cart.length) {
@@ -2554,7 +2647,7 @@
           <img src="${item.image}" style="width: 50px; height: 50px; border-radius: var(--radius-sm); object-fit: cover;">
           <div style="flex: 1;">
             <h5 style="font-size: 0.85rem; font-weight: 700; line-height: 1.2;">${item.name}</h5>
-            <span style="font-size: 0.8rem; color: var(--primary-dark); font-weight: 600;">$${item.price.toFixed(2)} each</span>
+            <span style="font-size: 0.8rem; color: var(--primary-dark); font-weight: 600;">₹${item.price.toLocaleString('en-IN')} each</span>
           </div>
           <div style="display: flex; align-items: center; gap: 0.4rem;">
             <button class="btn-outline btn-sm" style="padding: 0.2rem 0.5rem;" onclick="changeCartQty('${item.id}', -1)">-</button>
@@ -2569,9 +2662,7 @@
       const item = cart.find(i => i.id === id);
       if (!item) return;
       item.qty += delta;
-      if (item.qty <= 0) {
-        cart = cart.filter(i => i.id !== id);
-      }
+      if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
       updateCartUI();
     }
 
@@ -2593,7 +2684,7 @@
         showToast('Cart is empty', 'alert-circle');
         return;
       }
-      showToast('Order placed! 100% direct payment routed to local artisans.', 'check-circle');
+      showToast('Order confirmed! 100% direct payment channeled to Indian artisans.', 'check-circle');
       cart = [];
       updateCartUI();
       toggleCartDrawer();
@@ -2605,43 +2696,56 @@
     function generateSmartItinerary() {
       const days = document.getElementById('itinerary-days').value;
       const theme = document.getElementById('itinerary-theme').value;
-      const group = document.getElementById('itinerary-group').value;
-
       const output = document.getElementById('itineraryOutput');
+
+      let day1Title = "Day 1: Royal Heritage & Artisan Immersion (Rajasthan Circuit)";
+      let day2Title = "Day 2: Desert Forts, Stepwells & Sand Dune Camp";
+
+      if (theme === 'nature') {
+        day1Title = "Day 1: Alleppey Palm Canals & Paddy Fields (Kerala Circuit)";
+        day2Title = "Day 2: Munnar Tea Hills, Cardamom Trails & Kathakali";
+      } else if (theme === 'himalayas') {
+        day1Title = "Day 1: Rishikesh Holy Ganga Rafting & Parmarth Aarti";
+        day2Title = "Day 2: Old Manali Apple Orchards & Pine Forest Chalet";
+      } else if (theme === 'south') {
+        day1Title = "Day 1: Hampi Vijayanagara Boulder Ruins & Coracle";
+        day2Title = "Day 2: Coorg Rainforest Coffee Plantation & Spices";
+      }
+
       output.innerHTML = `
         <div class="itinerary-day-box">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--gray-100); padding-bottom: 0.75rem;">
-            <h3 style="font-size: 1.25rem; color: var(--primary-dark);">Day 1: Valley Awakening & Native Craftsmanship</h3>
-            <span class="status-pill status-confirmed">Local Green Trail</span>
+            <h3 style="font-size: 1.25rem; color: var(--primary-dark);">${day1Title}</h3>
+            <span class="status-pill status-confirmed">Verified Indian Trail</span>
           </div>
 
           <div class="timeline-item">
             <div class="timeline-dot"></div>
             <div>
-              <span style="font-size: 0.75rem; font-weight: 700; color: var(--gray-500);">08:30 AM â€” Farm Immersion</span>
-              <h4 style="font-size: 1.05rem; margin: 0.2rem 0;">Organic Mountain Spice & Honey Farm Tour</h4>
-              <p style="font-size: 0.85rem; color: var(--gray-600);">Pluck fresh cardamom, sip plantation robusta coffee, and enjoy a village breakfast.</p>
-              <button class="btn-outline btn-sm" style="margin-top: 0.5rem;" onclick="openBookingModal('biz_4')">Reserve Slot ($32)</button>
+              <span style="font-size: 0.75rem; font-weight: 700; color: var(--gray-500);">08:30 AM — Morning Heritage Immersion</span>
+              <h4 style="font-size: 1.05rem; margin: 0.2rem 0;">Subah-e-Banaras Dawn Heritage Boat & Silk Weaving</h4>
+              <p style="font-size: 0.85rem; color: var(--gray-600);">Row past stone ghats at sunrise with live morning ragas, then visit generational silk weavers.</p>
+              <button class="btn-outline btn-sm" style="margin-top: 0.5rem;" onclick="openBookingModal('ind_10')">Reserve (₹1,200)</button>
             </div>
           </div>
 
           <div class="timeline-item">
             <div class="timeline-dot"></div>
             <div>
-              <span style="font-size: 0.75rem; font-weight: 700; color: var(--gray-500);">01:30 PM â€” Heritage Artisan Workshop</span>
-              <h4 style="font-size: 1.05rem; margin: 0.2rem 0;">Ancient Terracotta & Clay Pottery Studio</h4>
-              <p style="font-size: 0.85rem; color: var(--gray-600);">Sit on the master wheel and sculpt your own clay vessel with master artisan Girish.</p>
-              <button class="btn-outline btn-sm" style="margin-top: 0.5rem;" onclick="openBookingModal('biz_2')">Reserve Slot ($28)</button>
+              <span style="font-size: 0.75rem; font-weight: 700; color: var(--gray-500);">02:00 PM — GI Craft Masterclass</span>
+              <h4 style="font-size: 1.05rem; margin: 0.2rem 0;">Jaipur Blue Pottery & Gemstone Artisan Workshop</h4>
+              <p style="font-size: 0.85rem; color: var(--gray-600);">Sit with master artisans to shape ground quartz plates with cobalt floral motifs.</p>
+              <button class="btn-outline btn-sm" style="margin-top: 0.5rem;" onclick="openBookingModal('ind_20')">Reserve (₹1,850)</button>
             </div>
           </div>
 
           <div class="timeline-item">
             <div class="timeline-dot"></div>
             <div>
-              <span style="font-size: 0.75rem; font-weight: 700; color: var(--gray-500);">06:30 PM â€” Twilight Check-in</span>
-              <h4 style="font-size: 1.05rem; margin: 0.2rem 0;">Whispering Pines Eco-Homestay</h4>
-              <p style="font-size: 0.85rem; color: var(--gray-600);">Settle in beside the stream, enjoy dinner prepared with garden-picked herbs.</p>
-              <button class="btn-primary btn-sm" style="margin-top: 0.5rem;" onclick="openBookingModal('biz_1')">Book Stay ($68)</button>
+              <span style="font-size: 0.75rem; font-weight: 700; color: var(--gray-500);">06:30 PM — Starlit Heritage Stay</span>
+              <h4 style="font-size: 1.05rem; margin: 0.2rem 0;">Desert Dune Eco-Camp & Kalbelia Folk Night</h4>
+              <p style="font-size: 0.85rem; color: var(--gray-600);">Traditional Swiss tents under the desert stars with authentic Dal Baati Churma feast.</p>
+              <button class="btn-primary btn-sm" style="margin-top: 0.5rem;" onclick="openBookingModal('ind_1')">Book Camp (₹3,800)</button>
             </div>
           </div>
         </div>
@@ -2649,42 +2753,41 @@
         ${days > 1 ? `
         <div class="itinerary-day-box">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--gray-100); padding-bottom: 0.75rem;">
-            <h3 style="font-size: 1.25rem; color: var(--primary-dark);">Day 2: River Rapids, Storytellers & Weaving</h3>
-            <span class="status-pill status-confirmed">Eco-Adventure Trail</span>
+            <h3 style="font-size: 1.25rem; color: var(--primary-dark);">${day2Title}</h3>
+            <span class="status-pill status-confirmed">Green Eco-Trail</span>
           </div>
 
           <div class="timeline-item">
             <div class="timeline-dot"></div>
             <div>
-              <span style="font-size: 0.75rem; font-weight: 700; color: var(--gray-500);">09:00 AM â€” Coastal Lagoon Kayak</span>
-              <h4 style="font-size: 1.05rem; margin: 0.2rem 0;">Wild River Valley Kayak & Otters Trail</h4>
-              <p style="font-size: 0.85rem; color: var(--gray-600);">Gentle paddle through backwater waterways led by local conservation youth.</p>
-              <button class="btn-outline btn-sm" style="margin-top: 0.5rem;" onclick="openBookingModal('biz_3')">Reserve Slot ($42)</button>
+              <span style="font-size: 0.75rem; font-weight: 700; color: var(--gray-500);">09:00 AM — Nature & Waterway Expedition</span>
+              <h4 style="font-size: 1.05rem; margin: 0.2rem 0;">Alleppey Backwater Eco-Houseboat & Village Canoe</h4>
+              <p style="font-size: 0.85rem; color: var(--gray-600);">Glide through palm canals and visit native toddy groves and paddy fields.</p>
+              <button class="btn-outline btn-sm" style="margin-top: 0.5rem;" onclick="openBookingModal('ind_2')">Reserve (₹5,500)</button>
             </div>
           </div>
 
           <div class="timeline-item">
             <div class="timeline-dot"></div>
             <div>
-              <span style="font-size: 0.75rem; font-weight: 700; color: var(--gray-500);">05:30 PM â€” Dusk Historical Walk</span>
-              <h4 style="font-size: 1.05rem; margin: 0.2rem 0;">Old Town Heritage Lantern Walking Tour</h4>
-              <p style="font-size: 0.85rem; color: var(--gray-600);">Wander through the spice bazaars illuminated by vintage brass oil lamps.</p>
-              <button class="btn-primary btn-sm" style="margin-top: 0.5rem;" onclick="openBookingModal('biz_5')">Join Tour ($24)</button>
+              <span style="font-size: 0.75rem; font-weight: 700; color: var(--gray-500);">05:00 PM — Culinary Spice Trail</span>
+              <h4 style="font-size: 1.05rem; margin: 0.2rem 0;">Chettinad Heritage Mansion Walk & 18-Spice Feast</h4>
+              <p style="font-size: 0.85rem; color: var(--gray-600);">Hands-on stone-grinding session for authentic Chettinad pepper specialties.</p>
+              <button class="btn-primary btn-sm" style="margin-top: 0.5rem;" onclick="openBookingModal('ind_11')">Join Trail (₹1,950)</button>
             </div>
           </div>
         </div>
         ` : ''}
       `;
 
-      showToast('Smart Local Itinerary generated!', 'sparkles');
+      showToast('Smart Indian Circuit Itinerary generated!', 'sparkles');
       if (typeof lucide !== 'undefined') lucide.createIcons();
     }
 
     // ------------------------------------------
-    // HOST DASHBOARD LOGIC
+    // HOST DASHBOARD
     // ------------------------------------------
     function renderHostDashboard() {
-      // Render bookings table
       const tbody = document.getElementById('hostBookingsTableBody');
       if (tbody) {
         tbody.innerHTML = userBookings.map(b => `
@@ -2694,7 +2797,7 @@
             <td>${b.bizName}</td>
             <td>${b.date}</td>
             <td>${b.guests} Guests</td>
-            <td><strong>$${b.totalPrice}</strong></td>
+            <td><strong>₹${b.totalPrice.toLocaleString('en-IN')}</strong></td>
             <td><span class="status-pill ${b.status === 'Confirmed' ? 'status-confirmed' : 'status-completed'}">${b.status}</span></td>
             <td>
               ${b.status === 'Confirmed' 
@@ -2705,7 +2808,6 @@
         `).join('');
       }
 
-      // Render host offerings
       const hostGrid = document.getElementById('hostListingsGrid');
       if (hostGrid) {
         const hostItems = localBusinesses.slice(0, 3);
@@ -2716,10 +2818,10 @@
             </div>
             <div class="biz-card-body">
               <h4 style="font-size: 1.05rem; font-weight: 700;">${b.title}</h4>
-              <p style="font-size: 0.8rem; color: var(--gray-600); margin: 0.35rem 0;">${b.location} â€¢ $${b.price} / ${b.priceUnit}</p>
+              <p style="font-size: 0.8rem; color: var(--gray-600); margin: 0.35rem 0;">${b.location} • ₹${b.price.toLocaleString('en-IN')} / ${b.priceUnit}</p>
               <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
                 <button class="btn-outline btn-sm" style="flex: 1;" onclick="showToast('Listing settings updated', 'check')">Edit Listing</button>
-                <button class="btn-primary btn-sm" style="flex: 1;" onclick="showToast('Active & Bookable', 'check')">Available</button>
+                <button class="btn-primary btn-sm" style="flex: 1;" onclick="showToast('Active & Receiving Bookings', 'check')">Available</button>
               </div>
             </div>
           </div>
@@ -2733,7 +2835,7 @@
         b.status = 'Completed';
         renderBookings();
         renderHostDashboard();
-        showToast(`Guest ${b.guestName} successfully checked in!`, 'check-circle');
+        showToast(`Traveler ${b.guestName} successfully verified and checked in!`, 'check-circle');
       }
     }
 
@@ -2743,18 +2845,19 @@
 
     function submitNewListing(e) {
       e.preventDefault();
+      const state = document.getElementById('newBizState').value;
       const newListing = {
-        id: `biz_${Date.now()}`,
+        id: `ind_${Date.now()}`,
         title: document.getElementById('newBizTitle').value.trim(),
         category: document.getElementById('newBizCategory').value,
-        region: 'Western Ghats',
+        region: state,
         location: document.getElementById('newBizLocation').value.trim(),
         price: parseFloat(document.getElementById('newBizPrice').value),
         priceUnit: 'experience',
         rating: 5.0,
         reviewsCount: 1,
-        image: document.getElementById('newBizImg').value.trim() || 'https://images.unsplash.com/photo-1587061949409-02df41d5e562?w=800&q=80',
-        ecoTag: document.getElementById('newBizEco').value.trim() || 'Verified Local Host',
+        image: document.getElementById('newBizImg').value.trim() || 'https://images.unsplash.com/photo-1548013146-72479768bada?w=800&q=80',
+        ecoTag: 'Verified State Host',
         description: document.getElementById('newBizDesc').value.trim()
       };
 
@@ -2762,21 +2865,20 @@
       renderBusinesses(localBusinesses);
       renderHostDashboard();
       closeModal('addListingModal');
-      showToast('New local business listing published to the portal!', 'check-circle');
+      showToast('New Indian destination listing published!', 'check-circle');
 
-      // Attempt sync to Firestore
       if (window._firebase && window._firebase.db) {
         try {
           const fb = window._firebase;
           fb.setDoc(fb.doc(fb.db, 'businesses', newListing.id), newListing);
         } catch(err) {
-          console.log("Firestore offline:", err);
+          console.log("Firestore offline write:", err);
         }
       }
     }
 
     // ------------------------------------------
-    // QR CODE SCANNER (FOR HOSTS)
+    // SCANNER
     // ------------------------------------------
     function openScannerModal() {
       document.getElementById('scannerModal').classList.add('active');
@@ -2786,25 +2888,19 @@
           html5QrScanner.start(
             { facingMode: "environment" },
             { fps: 10, qrbox: { width: 250, height: 250 } },
-            (decodedText) => {
-              handleQrScanSuccess(decodedText);
-            },
+            (decodedText) => handleQrScanSuccess(decodedText),
             () => {}
           ).catch(err => {
-            console.log("Camera access declined or unavailable, manual input supported.", err);
+            console.log("Camera access not available, manual entry ready.", err);
           });
-        } catch(e) {
-          console.log("Scanner init error:", e);
-        }
+        } catch(e) {}
       }
     }
 
     function closeScannerModal() {
       if (html5QrScanner) {
         try {
-          html5QrScanner.stop().then(() => {
-            html5QrScanner.clear();
-          }).catch(() => {});
+          html5QrScanner.stop().then(() => html5QrScanner.clear()).catch(() => {});
         } catch(e){}
       }
       closeModal('scannerModal');
@@ -2835,25 +2931,11 @@
     }
 
     // ------------------------------------------
-    // ADMIN FUNCTIONS
-    // ------------------------------------------
-    function approveBusiness(bizName) {
-      showToast(`Accredited: ${bizName} granted Verified Local Seal`, 'shield-check');
-      const badge = document.getElementById('pendingApprovalsBadge');
-      if (badge) badge.innerText = '2 Pending';
-    }
-
-    function exportTourismReport() {
-      showToast('Regional Tourism Sustainability & Tax Report downloaded.', 'download');
-    }
-
-    // ------------------------------------------
-    // CHARTS (Chart.js)
+    // CHARTS
     // ------------------------------------------
     function initCharts() {
       if (typeof Chart === 'undefined') return;
 
-      // Host bookings trend
       const ctx1 = document.getElementById('hostBookingsChart')?.getContext('2d');
       if (ctx1) {
         new Chart(ctx1, {
@@ -2861,8 +2943,8 @@
           data: {
             labels: ['Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'],
             datasets: [{
-              label: 'Guest Bookings',
-              data: [14, 22, 19, 28, 34, 42],
+              label: 'Indian & Global Travelers',
+              data: [45, 68, 59, 84, 112, 164],
               borderColor: '#059669',
               backgroundColor: 'rgba(5, 150, 105, 0.1)',
               fill: true,
@@ -2879,16 +2961,15 @@
         });
       }
 
-      // Host demographics chart
       const ctx2 = document.getElementById('hostDemographicsChart')?.getContext('2d');
       if (ctx2) {
         new Chart(ctx2, {
           type: 'doughnut',
           data: {
-            labels: ['Domestic Eco-Travelers', 'International Cultural', 'Local Weekend Staycations'],
+            labels: ['Domestic Interstate', 'International Heritage', 'Local State Weekend'],
             datasets: [{
-              data: [55, 30, 15],
-              backgroundColor: ['#059669', '#0284c7', '#f59e0b']
+              data: [65, 22, 13],
+              backgroundColor: ['#059669', '#f97316', '#3b82f6']
             }]
           },
           options: {
@@ -2899,7 +2980,6 @@
         });
       }
 
-      // Admin Regional Revenue
       const ctx3 = document.getElementById('adminRevenueChart')?.getContext('2d');
       if (ctx3) {
         new Chart(ctx3, {
@@ -2907,8 +2987,8 @@
           data: {
             labels: ['Q1', 'Q2', 'Q3', 'Q4'],
             datasets: [{
-              label: 'Local Direct Revenue ($K)',
-              data: [320, 480, 410, 632],
+              label: 'State Tourism Impact (₹ Crore)',
+              data: [68, 92, 115, 153],
               backgroundColor: '#10b981',
               borderRadius: 6
             }]
@@ -2921,16 +3001,15 @@
         });
       }
 
-      // Admin Category Distribution
       const ctx4 = document.getElementById('adminCategoryChart')?.getContext('2d');
       if (ctx4) {
         new Chart(ctx4, {
           type: 'pie',
           data: {
-            labels: ['Homestays & Stays', 'Guided Heritage', 'Artisans & Crafts', 'Farm Cuisine', 'Eco-Adventures'],
+            labels: ['North (Himalayas & Rajasthan)', 'South (Kerala, TN & Karnataka)', 'West (Goa & Gujarat)', 'East & Northeast'],
             datasets: [{
-              data: [35, 20, 18, 15, 12],
-              backgroundColor: ['#059669', '#3b82f6', '#f59e0b', '#ec4899', '#8b5cf6']
+              data: [38, 32, 18, 12],
+              backgroundColor: ['#f97316', '#059669', '#3b82f6', '#8b5cf6']
             }]
           },
           options: {
@@ -2943,7 +3022,7 @@
     }
 
     // ------------------------------------------
-    // FIREBASE AUTHENTICATION HANDLERS
+    // FIREBASE AUTH
     // ------------------------------------------
     function openAuthModal(mode) {
       currentAuthMode = mode;
@@ -2954,13 +3033,13 @@
       const togglePrompt = document.getElementById('authTogglePrompt');
 
       if (mode === 'signup') {
-        title.innerText = 'Join TourisMart Local Ecosystem';
+        title.innerText = 'Join TourisMart India';
         submitBtn.innerText = 'Create Account with Firebase';
         roleGroup.style.display = 'block';
         toggleLink.innerText = 'Sign In';
         togglePrompt.innerText = 'Already have an account?';
       } else {
-        title.innerText = 'Sign In to TourisMart';
+        title.innerText = 'Sign In to TourisMart India';
         submitBtn.innerText = 'Sign In with Firebase';
         roleGroup.style.display = 'none';
         toggleLink.innerText = 'Sign Up';
@@ -2982,7 +3061,6 @@
 
       const fb = window._firebase;
       if (!fb || !fb.auth) {
-        // Local simulation fallback
         simulateAuthSuccess({ email, uid: 'local_uid_' + Date.now() }, role);
         return;
       }
@@ -3028,9 +3106,8 @@
       window.currentUser = user;
       window.currentUserRole = role;
       closeModal('authModal');
-      showToast(`Welcome back, ${user.displayName || user.email}!`, 'check-circle');
+      showToast(`Namaste & Welcome, ${user.displayName || user.email}!`, 'check-circle');
 
-      // Update header profile button
       const authContainer = document.getElementById('authBtnContainer');
       authContainer.innerHTML = `
         <div style="display: flex; align-items: center; gap: 0.6rem;">
@@ -3052,9 +3129,7 @@
 
     function signOutUser() {
       const fb = window._firebase;
-      if (fb && fb.auth) {
-        fb.signOut(fb.auth);
-      }
+      if (fb && fb.auth) fb.signOut(fb.auth);
       window.currentUser = null;
       window.currentUserRole = null;
       document.getElementById('authBtnContainer').innerHTML = `
@@ -3071,13 +3146,8 @@
       simulateAuthSuccess(user, role);
     };
 
-    window.handleUserSignedOut = function() {
-      // Keep UI active in guest preview
-    };
+    window.handleUserSignedOut = function() {};
 
-    // ------------------------------------------
-    // UTILITIES & MODAL HELPERS
-    // ------------------------------------------
     function closeModal(modalId) {
       const el = document.getElementById(modalId);
       if (el) el.classList.remove('active');
