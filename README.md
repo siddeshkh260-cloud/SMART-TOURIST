@@ -1,14 +1,75 @@
 # SMART-TOURIST18
 
-## Smart Local Tourism Business Portal
+## TourisMart India — Smart Local Tourism Business Portal
 
-TourisMart — A direct-to-community ecosystem connecting travelers with local eco-homestays, indigenous artisan craft workshops, sustainable farm-to-table dining, and guided native trail experiences.
+A full-stack ecosystem empowering local tourism micro-businesses, heritage homestays, and indigenous GI artisans across every state of India with zero-commission direct bookings.
+
+---
+
+### Project Architecture (Frontend & Backend)
+
+```text
+smart/
+├── backend/
+│   ├── server.js               # Node.js REST API & static server
+│   └── data/
+│       ├── places.json         # 53 Famous Indian destinations & experiences
+│       ├── products.json       # Authentic Indian GI-tagged handicrafts
+│       └── bookings.json       # Real-time traveler reservations & passes
+├── frontend/
+│   ├── index.html              # Clean semantic frontend markup
+│   ├── css/
+│   │   └── styles.css          # Modern design system & responsive layout
+│   └── js/
+│       ├── firebase-config.js  # Firebase Auth & Firestore integration
+│       ├── data.js             # Initial dataset & offline fallback
+│       └── app.js              # UI engine, QR generation/scanner, charts & cart
+├── index.html                  # Root portal (for 1-click GitHub Pages deployment)
+├── package.json                # Project dependencies & startup scripts
+└── README.md                   # Full-stack documentation
+```
+
+---
+
+### How to Run the Backend Server
+
+Start the Node.js server from the project root:
+
+```bash
+npm start
+# or
+node backend/server.js
+```
+
+The server will be running at:
+- **Web App**: `http://localhost:3000/`
+- **API Health**: `http://localhost:3000/api/health`
+- **Destinations API**: `http://localhost:3000/api/places`
+- **Indian GI Products API**: `http://localhost:3000/api/products`
+- **Bookings API**: `http://localhost:3000/api/bookings`
+
+---
+
+### Backend REST API Endpoints
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/api/health` | Health status of the API server |
+| `GET` | `/api/places` | List all 53 Indian destinations (supports `?state=`, `?category=`, `?search=`, `?maxPrice=`) |
+| `GET` | `/api/places/:id` | Get details of a single tourist destination |
+| `POST` | `/api/places` | Add a new Indian business listing (Host Portal) |
+| `GET` | `/api/products` | Retrieve authentic Indian GI handicrafts |
+| `GET` | `/api/bookings` | Retrieve customer reservations |
+| `POST` | `/api/bookings` | Create reservation & generate digital QR Pass |
+| `POST` | `/api/bookings/checkin` | Verify tourist QR pass code at the host door |
+| `GET` | `/api/stats/summary` | Macro tourism metrics & revenue stats in ₹ INR |
+
+---
 
 ### Key Features
-- **Tourist Explorer**: Discover verified local businesses, filters by region & budget, and instant reservations.
-- **Smart Digital QR Pass**: Dynamic paperless tourist pass generation powered by `qrcode.js`.
-- **Host Portal**: Real-time revenue metrics, listing manager, and integrated QR camera pass scanner via `html5-qrcode`.
-- **Smart AI Itinerary**: Custom multi-day trip planner tailored to travel style and duration.
-- **Artisan Marketplace**: E-commerce cart supporting local village artisans and organic producers.
-- **Tourism Governance**: Regional tourism impact analytics powered by `Chart.js` and eco-capacity monitors.
-- **Firebase Integration**: Firebase Auth & Firestore synchronization with local fallback.
+- **Tourist Explorer**: 53 famous places across all 28 states & UTs with state filter and ₹ INR pricing.
+- **Dynamic QR Code Pass**: Paperless traveler pass generated with `qrcode.js`.
+- **Host Pass Scanner**: Camera QR code scanning using `html5-qrcode`.
+- **Smart AI Itinerary**: Custom trip planner across iconic Indian travel circuits.
+- **Indian GI Crafts Marketplace**: E-commerce cart for authentic regional produce.
+- **Firebase Auth & Firestore**: Live authentication with local fallback.

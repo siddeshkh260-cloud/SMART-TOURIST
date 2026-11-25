@@ -1,0 +1,24 @@
+[
+  {
+    "id": "TOUR-IND-8942",
+    "bizId": "ind_1",
+    "bizName": "Desert Dune Eco-Camp & Kalbelia Folk Night",
+    "guestName": "Harsh Vardhan",
+    "date": "2026-12-05",
+    "guests": 2,
+    "totalPrice": 7600,
+    "status": "Confirmed",
+    "time": "Check-in 03:00 PM"
+  },
+  {
+    "id": "TOUR-IND-3195",
+    "bizId": "ind_2",
+    "bizName": "Alleppey Backwater Eco-Houseboat & Village Canoe",
+    "guestName": "Harsh Vardhan",
+    "date": "2026-12-10",
+    "guests": 2,
+    "totalPrice": 11000,
+    "status": "Confirmed",
+    "time": "Cruise Slot 11:30 AM"
+  }
+]

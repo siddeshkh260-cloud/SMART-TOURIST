@@ -1,0 +1,19 @@
+{
+  "name": "smart-tourist-portal",
+  "version": "1.0.0",
+  "description": "Smart Local Tourism Business Portal - Frontend & Backend Architecture",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "node backend/server.js"
+  },
+  "keywords": [
+    "tourism",
+    "india",
+    "local-business",
+    "qr-pass",
+    "portal"
+  ],
+  "author": "siddeshkh260-cloud",
+  "license": "MIT"
+}

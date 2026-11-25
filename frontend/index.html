@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#064e3b">
+  <meta name="description" content="Incredible India — Smart Local Tourism Business Portal. Explore verified homestays, native artisan workshops, and cultural experiences across all Indian States.">
+  <title>TourisMart India — Smart Local Tourism Business Portal</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- QR Code generation & Scanner -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+  <!-- Chart.js for Tourism Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Firebase SDK -->
+  <script type="module" src="js/firebase-config.js"></script>
+
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- PORTAL HEADER -->
+  <header class="portal-header">
+    <div class="brand-container" onclick="switchNavTab('explore')">
+      <div class="brand-logo-icon">
+        <i data-lucide="compass"></i>
+      </div>
+      <div class="brand-text">
+        <h1>TourisMart India</h1>
+        <span>Smart Tourism Across All States</span>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs" id="portalNavTabs">
+      <button class="nav-tab-btn active" data-tab="explore" onclick="switchNavTab('explore')">
+        <i data-lucide="compass" style="width: 16px; height: 16px;"></i> Indian Places
+      </button>
+      <button class="nav-tab-btn" data-tab="itinerary" onclick="switchNavTab('itinerary')">
+        <i data-lucide="calendar" style="width: 16px; height: 16px;"></i> AI Itinerary
+      </button>
+      <button class="nav-tab-btn" data-tab="marketplace" onclick="switchNavTab('marketplace')">
+        <i data-lucide="shopping-bag" style="width: 16px; height: 16px;"></i> Indian Crafts
+      </button>
+      <button class="nav-tab-btn" data-tab="mybookings" onclick="switchNavTab('mybookings')">
+        <i data-lucide="ticket" style="width: 16px; height: 16px;"></i> My QR Passes
+      </button>
+      <button class="nav-tab-btn" data-tab="vendor" onclick="switchNavTab('vendor')" id="vendorTabBtn">
+        <i data-lucide="store" style="width: 16px; height: 16px;"></i> Host Portal
+      </button>
+      <button class="nav-tab-btn" data-tab="admin" onclick="switchNavTab('admin')" id="adminTabBtn">
+        <i data-lucide="shield-check" style="width: 16px; height: 16px;"></i> Tourism Admin
+      </button>
+    </nav>
+
+    <!-- Header Actions -->
+    <div class="header-actions">
+      <!-- Role Switcher -->
+      <div style="display: flex; align-items: center; gap: 0.4rem;">
+        <span style="font-size: 0.72rem; font-weight: 700; color: var(--gray-600); text-transform: uppercase;">View As:</span>
+        <select id="roleSelector" onchange="changeRole(this.value)" style="padding: 0.35rem 0.6rem; border-radius: var(--radius-sm); border: 1px solid var(--gray-300); font-size: 0.8rem; font-weight: 600; background: white;">
+          <option value="tourist">Tourist / Traveler</option>
+          <option value="vendor">Local Business Host</option>
+          <option value="admin">Tourism Board Admin</option>
+        </select>
+      </div>
+
+      <!-- Marketplace Cart Icon -->
+      <button class="cart-btn-pill" onclick="toggleCartDrawer()" title="View Cart">
+        <i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i>
+        <span class="cart-badge" id="cartCountBadge">0</span>
+      </button>
+
+      <!-- Auth Container -->
+      <div id="authBtnContainer">
+        <button class="btn-primary" onclick="openAuthModal('signin')">
+          <i data-lucide="user" style="width: 16px; height: 16px;"></i> Sign In / Firebase
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- VIEW 1: EXPLORE INDIAN TOURIST PLACES -->
+  <!-- ========================================== -->
+  <main id="view-explore" class="view-container active">
+    
+    <!-- Hero Banner -->
+    <section class="hero-section">
+      <div class="hero-glow"></div>
+      <div class="hero-content">
+        <div class="hero-tagline">
+          <i data-lucide="sparkles" style="width: 16px; height: 16px; color: #fde047;"></i>
+          Incredible India • 28 States & 8 Union Territories • Local Direct Bookings
+        </div>
+        <h1 class="hero-title">Discover Sacred Wonders & <span>Authentic Indian Heritage</span></h1>
+        <p class="hero-description">Experience desert palaces in Rajasthan, misty tea estates in Darjeeling, serene backwaters in Kerala, and holy Ghats in Varanasi directly hosted by native families.</p>
+        
+        <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+          <button class="btn-accent" onclick="document.getElementById('explore-search-input').focus();">
+            <i data-lucide="search" style="width: 16px; height: 16px;"></i> Explore All Indian States
+          </button>
+          <button class="btn-outline" style="background: rgba(255,255,255,0.15); color: white; border-color: rgba(255,255,255,0.3);" onclick="switchNavTab('vendor')">
+            <i data-lucide="plus-circle" style="width: 16px; height: 16px;"></i> List Indian Homestay or Tour
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Search & Filter Card with All Indian States -->
+    <div class="search-card-wrapper">
+      <div class="search-card">
+        <div class="search-field">
+          <label><i data-lucide="search" style="width: 12px; height: 12px; display: inline;"></i> Search Place or Attraction</label>
+          <input type="text" id="explore-search-input" placeholder="e.g. Jaisalmer, Alleppey, Manali, Hampi..." oninput="filterBusinesses()">
+        </div>
+        <div class="search-field">
+          <label><i data-lucide="map-pin" style="width: 12px; height: 12px; display: inline;"></i> Indian State / UT</label>
+          <select id="region-filter" onchange="filterBusinesses()">
+            <option value="all">All Indian States & UTs</option>
+            <option value="Rajasthan">Rajasthan</option>
+            <option value="Kerala">Kerala</option>
+            <option value="Himachal Pradesh">Himachal Pradesh</option>
+            <option value="Uttarakhand">Uttarakhand</option>
+            <option value="Karnataka">Karnataka</option>
+            <option value="Goa">Goa</option>
+            <option value="Tamil Nadu">Tamil Nadu</option>
+            <option value="Maharashtra">Maharashtra</option>
+            <option value="Jammu & Kashmir">Jammu & Kashmir</option>
+            <option value="Ladakh">Ladakh</option>
+            <option value="West Bengal">West Bengal</option>
+            <option value="Uttar Pradesh">Uttar Pradesh</option>
+            <option value="Gujarat">Gujarat</option>
+            <option value="Meghalaya">Meghalaya</option>
+            <option value="Assam">Assam</option>
+            <option value="Madhya Pradesh">Madhya Pradesh</option>
+            <option value="Punjab">Punjab</option>
+            <option value="Odisha">Odisha</option>
+            <option value="Sikkim">Sikkim</option>
+            <option value="Andhra Pradesh">Andhra Pradesh</option>
+            <option value="Telangana">Telangana</option>
+            <option value="Bihar">Bihar</option>
+            <option value="Delhi NCR">Delhi NCR</option>
+            <option value="Andaman & Nicobar">Andaman & Nicobar</option>
+          </select>
+        </div>
+        <div class="search-field">
+          <label><i data-lucide="tag" style="width: 12px; height: 12px; display: inline;"></i> Max Price (₹ INR)</label>
+          <select id="budget-filter" onchange="filterBusinesses()">
+            <option value="all">Any Price</option>
+            <option value="2000">Under ₹2,000</option>
+            <option value="3500">Under ₹3,500</option>
+            <option value="5000">Under ₹5,000</option>
+          </select>
+        </div>
+        <div>
+          <button class="btn-primary" style="height: 100%; width: 100%; justify-content: center; padding: 0.9rem 1.5rem;" onclick="filterBusinesses()">
+            <i data-lucide="filter" style="width: 16px; height: 16px;"></i> Filter Places
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category Pills Filter -->
+    <div class="category-pills-bar">
+      <button class="cat-pill active" data-cat="all" onclick="filterByCategory('all', this)">
+        <i data-lucide="layout-grid" style="width: 16px; height: 16px;"></i> All Indian Experiences
+      </button>
+      <button class="cat-pill" data-cat="stay" onclick="filterByCategory('stay', this)">
+        <i data-lucide="home" style="width: 16px; height: 16px;"></i> Heritage Stays & Homestays
+      </button>
+      <button class="cat-pill" data-cat="tours" onclick="filterByCategory('tours', this)">
+        <i data-lucide="map" style="width: 16px; height: 16px;"></i> Sacred & Heritage Walks
+      </button>
+      <button class="cat-pill" data-cat="food" onclick="filterByCategory('food', this)">
+        <i data-lucide="utensils" style="width: 16px; height: 16px;"></i> Regional Culinary Trails
+      </button>
+      <button class="cat-pill" data-cat="artisan" onclick="filterByCategory('artisan', this)">
+        <i data-lucide="palette" style="width: 16px; height: 16px;"></i> GI Crafts & Handlooms
+      </button>
+      <button class="cat-pill" data-cat="adventure" onclick="filterByCategory('adventure', this)">
+        <i data-lucide="mountain" style="width: 16px; height: 16px;"></i> Himalayan Treks & Safaris
+      </button>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+      <div class="section-header">
+        <div>
+          <h2>Featured Indian Destinations & Micro-Enterprises</h2>
+          <p>Direct bookings verified by State Tourism Councils and Village Guilds</p>
+        </div>
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <span style="font-size: 0.85rem; color: var(--gray-600); font-weight: 600;" id="businessCountText">Showing 53 famous Indian destinations</span>
+        </div>
+      </div>
+
+      <!-- Business Listings Grid -->
+      <div class="cards-grid" id="businessesGrid">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Impact Stats Banner -->
+      <div class="impact-banner">
+        <div class="stat-item">
+          <h3>₹14.8 Cr+</h3>
+          <p>Direct Revenue Channeled to Indian Artisans & Hosts</p>
+        </div>
+        <div class="stat-item">
+          <h3>1,250+</h3>
+          <p>Verified Village Homestays Across All States</p>
+        </div>
+        <div class="stat-item">
+          <h3>48,000+</h3>
+          <p>Indian Digital Passes Issued</p>
+        </div>
+        <div class="stat-item">
+          <h3>100%</h3>
+          <p>Preservation of Indigenous GI Crafts & Heritage</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ========================================== -->
+  <!-- VIEW 2: SMART AI ITINERARY GENERATOR -->
+  <!-- ========================================== -->
+  <main id="view-itinerary" class="view-container">
+    <div class="main-content" style="max-width: 900px;">
+      <div class="section-header">
+        <div>
+          <h2>Smart Indian Circuit Itinerary Planner</h2>
+          <p>Custom-crafted travel itineraries across Golden Triangle, Kerala Backwaters, and Himalayan Valleys</p>
+        </div>
+      </div>
+
+      <div style="background: white; border-radius: var(--radius-xl); padding: 1.75rem; border: 1px solid var(--gray-200); box-shadow: var(--shadow-sm); margin-bottom: 2rem;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem;">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label>Trip Circuit / Duration</label>
+            <select id="itinerary-days">
+              <option value="1">1 Day (Quick City Heritage)</option>
+              <option value="2" selected>2 Days (Weekend State Circuit)</option>
+              <option value="3">3 Days (Deep Cultural Immersion)</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label>Indian Travel Theme</label>
+            <select id="itinerary-theme">
+              <option value="culture">Rajasthan Royal Heritage & Folk Crafts</option>
+              <option value="nature">Kerala God's Own Country & Backwaters</option>
+              <option value="himalayas">Himachal & Uttarakhand Mountain Trails</option>
+              <option value="south">South India Temple Architecture & Spices</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label>Travel Group</label>
+            <select id="itinerary-group">
+              <option value="solo">Solo Explorer</option>
+              <option value="couple" selected>Couple / Duo</option>
+              <option value="family">Family / Group</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn-primary" style="width: 100%; justify-content: center; padding: 0.9rem;" onclick="generateSmartItinerary()">
+          <i data-lucide="sparkles" style="width: 18px; height: 18px;"></i> Generate Smart Indian Itinerary
+        </button>
+      </div>
+
+      <!-- Generated Schedule Output -->
+      <div id="itineraryOutput">
+        <!-- Rendered by JavaScript -->
+      </div>
+    </div>
+  </main>
+
+  <!-- ========================================== -->
+  <!-- VIEW 3: INDIAN GI CRAFTS MARKETPLACE -->
+  <!-- ========================================== -->
+  <main id="view-marketplace" class="view-container">
+    <div class="main-content">
+      <div class="section-header">
+        <div>
+          <h2>Authentic Indian GI-Tagged Crafts & Produce</h2>
+          <p>Order Kashmiri Pashmina, Darjeeling First Flush Tea, Mysore Sandalwood, and Kutch Rogan Art directly from master artisans</p>
+        </div>
+        <button class="btn-outline" onclick="toggleCartDrawer()">
+          <i data-lucide="shopping-cart" style="width: 16px; height: 16px;"></i> Open Cart (<span id="cartSubtotalBtn">₹0</span>)
+        </button>
+      </div>
+
+      <!-- Products Grid -->
+      <div class="shop-grid" id="productsGrid">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </main>
+
+  <!-- ========================================== -->
+  <!-- VIEW 4: MY BOOKINGS & SMART QR DIGITAL PASS -->
+  <!-- ========================================== -->
+  <main id="view-mybookings" class="view-container">
+    <div class="main-content" style="max-width: 960px;">
+      <div class="section-header">
+        <div>
+          <h2>My Indian Bookings & Smart Tourist Passes</h2>
+          <p>Show your verified digital QR Pass at local Indian venues, homestays, and tour operators</p>
+        </div>
+        <button class="btn-primary btn-sm" onclick="switchNavTab('explore')">
+          <i data-lucide="plus" style="width: 14px; height: 14px;"></i> Book Another Place
+        </button>
+      </div>
+
+      <div id="bookingsListContainer">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </main>
+
+  <!-- ========================================== -->
+  <!-- VIEW 5: LOCAL BUSINESS HOST PORTAL -->
+  <!-- ========================================== -->
+  <main id="view-vendor" class="view-container">
+    <div class="main-content">
+      <div class="section-header">
+        <div>
+          <h2>Indian Local Host & Homestay Portal</h2>
+          <p>Manage listings across states, verify visitor QR passes, track earnings, and welcome travelers</p>
+        </div>
+        <div style="display: flex; gap: 0.75rem;">
+          <button class="btn-accent" onclick="openScannerModal()">
+            <i data-lucide="qr-code" style="width: 16px; height: 16px;"></i> Scan Tourist Pass
+          </button>
+          <button class="btn-primary" onclick="openAddListingModal()">
+            <i data-lucide="plus-circle" style="width: 16px; height: 16px;"></i> Add New Indian Listing
+          </button>
+        </div>
+      </div>
+
+      <!-- Host Metrics -->
+      <div class="dashboard-grid">
+        <div class="metric-card">
+          <div class="metric-icon-box">
+            <span style="font-size: 1.3rem; font-weight: 800;">₹</span>
+          </div>
+          <div class="metric-details">
+            <p>This Month's Earnings</p>
+            <h4 id="hostRevenueMetric">₹78,400</h4>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon-box" style="background: #e0f2fe; color: #0284c7;">
+            <i data-lucide="users"></i>
+          </div>
+          <div class="metric-details">
+            <p>Total Indian & Global Guests</p>
+            <h4>164 Travelers</h4>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon-box" style="background: #fef3c7; color: #d97706;">
+            <i data-lucide="star"></i>
+          </div>
+          <div class="metric-details">
+            <p>Average Host Rating</p>
+            <h4>4.94 / 5.0</h4>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon-box" style="background: #dcfce7; color: #16a34a;">
+            <i data-lucide="shield-check"></i>
+          </div>
+          <div class="metric-details">
+            <p>State Tourism Board</p>
+            <h4>Verified Host Grade A</h4>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem;">
+        <div style="background: white; border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-sm);">
+          <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--gray-800);">Monthly Traveler Footfall (India)</h3>
+          <div style="height: 250px;">
+            <canvas id="hostBookingsChart"></canvas>
+          </div>
+        </div>
+        <div style="background: white; border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-sm);">
+          <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--gray-800);">Traveler Origin States</h3>
+          <div style="height: 250px; display: flex; align-items: center; justify-content: center;">
+            <canvas id="hostDemographicsChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bookings Table -->
+      <div style="margin-bottom: 2.5rem;">
+        <div class="section-header" style="margin-bottom: 1rem;">
+          <h3 style="font-size: 1.3rem;">Recent Indian Reservations</h3>
+          <span style="font-size: 0.85rem; color: var(--gray-600);">Real-time check-in validation</span>
+        </div>
+        <div class="data-table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Booking ID</th>
+                <th>Guest Name</th>
+                <th>State & Place</th>
+                <th>Date</th>
+                <th>Guests</th>
+                <th>Amount (₹)</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="hostBookingsTableBody">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Manage Listings -->
+      <div>
+        <div class="section-header" style="margin-bottom: 1rem;">
+          <h3 style="font-size: 1.3rem;">My Active Indian Offerings</h3>
+          <button class="btn-outline btn-sm" onclick="openAddListingModal()">
+            <i data-lucide="plus" style="width: 14px; height: 14px;"></i> New Listing
+          </button>
+        </div>
+        <div class="cards-grid" id="hostListingsGrid">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ========================================== -->
+  <!-- VIEW 6: STATE TOURISM ADMIN VIEW -->
+  <!-- ========================================== -->
+  <main id="view-admin" class="view-container">
+    <div class="main-content">
+      <div class="section-header">
+        <div>
+          <h2>Indian Tourism Board & State Compliance Council</h2>
+          <p>National and state-wise tourism economic impact, heritage protection, and accreditation</p>
+        </div>
+        <button class="btn-outline btn-sm" onclick="showToast('State Tourism Compliance Report Downloaded', 'download')">
+          <i data-lucide="download" style="width: 14px; height: 14px;"></i> Export State Audit
+        </button>
+      </div>
+
+      <!-- Admin KPIs -->
+      <div class="dashboard-grid">
+        <div class="metric-card">
+          <div class="metric-icon-box" style="background: #ecfdf5; color: #047857;">
+            <i data-lucide="trending-up"></i>
+          </div>
+          <div class="metric-details">
+            <p>Annual Local Tourism Economy</p>
+            <h4>₹428.6 Crore</h4>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon-box" style="background: #eff6ff; color: #1d4ed8;">
+            <i data-lucide="store"></i>
+          </div>
+          <div class="metric-details">
+            <p>Certified State Enterprises</p>
+            <h4>3,480 Homestays</h4>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon-box" style="background: #fdf2f8; color: #be185d;">
+            <i data-lucide="shield"></i>
+          </div>
+          <div class="metric-details">
+            <p>GI Tagging Verification</p>
+            <h4>99.4%</h4>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon-box" style="background: #fffbeb; color: #b45309;">
+            <i data-lucide="alert-circle"></i>
+          </div>
+          <div class="metric-details">
+            <p>Pending State Verifications</p>
+            <h4>3 Pending</h4>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem;">
+        <div style="background: white; border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 1.5rem;">
+          <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--gray-800);">Quarterly Indian State Tourism Revenue (₹ Cr)</h3>
+          <div style="height: 250px;">
+            <canvas id="adminRevenueChart"></canvas>
+          </div>
+        </div>
+        <div style="background: white; border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 1.5rem;">
+          <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--gray-800);">Tourism Footfall Share by Zone</h3>
+          <div style="height: 250px; display: flex; align-items: center; justify-content: center;">
+            <canvas id="adminCategoryChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODALS -->
+
+  <!-- BOOKING MODAL -->
+  <div class="modal-overlay" id="bookingModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="bookingModalTitle">Book Indian Experience</h3>
+        <button class="modal-close-btn" onclick="closeModal('bookingModal')">
+          <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.25rem; background: var(--gray-50); padding: 0.9rem; border-radius: var(--radius-md);">
+          <img id="bookingModalImg" src="" style="width: 70px; height: 70px; border-radius: var(--radius-sm); object-fit: cover;">
+          <div>
+            <h4 id="bookingModalBizName" style="font-size: 1rem; color: var(--gray-900);">Place Name</h4>
+            <p id="bookingModalPrice" style="font-size: 0.85rem; font-weight: 700; color: var(--primary-dark);">₹3,500 / night</p>
+          </div>
+        </div>
+
+        <form id="bookingForm" onsubmit="confirmBooking(event)">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="bookGuestName" required placeholder="Your full name">
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="bookGuestEmail" required placeholder="name@example.com">
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label>Travel Date</label>
+              <input type="date" id="bookDate" required>
+            </div>
+            <div class="form-group">
+              <label>Number of Travelers</label>
+              <input type="number" id="bookGuests" min="1" max="10" value="2" required onchange="calculateBookingTotal()">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Special Requests or Dietary Preferences</label>
+            <textarea id="bookNotes" rows="2" placeholder="e.g. Vegetarian, Jain meal, early sunrise boat..."></textarea>
+          </div>
+
+          <div style="background: var(--primary-subtle); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: 700; font-size: 0.9rem; color: var(--primary-dark);">Total Payable to Local Host:</span>
+            <span id="bookingModalTotalPrice" style="font-size: 1.35rem; font-weight: 800; color: var(--primary-dark); font-family: var(--font-display);">₹7,000</span>
+          </div>
+
+          <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 0.85rem;">
+            <i data-lucide="check-circle" style="width: 18px; height: 18px;"></i> Confirm Reservation & Generate Pass
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- QR PASS MODAL -->
+  <div class="modal-overlay" id="qrPassModal">
+    <div class="modal-box" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3>Verified Tourist QR Pass</h3>
+        <button class="modal-close-btn" onclick="closeModal('qrPassModal')">
+          <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+        </button>
+      </div>
+      <div class="modal-body" style="text-align: center;">
+        <div class="qr-pass-box">
+          <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--primary); letter-spacing: 0.05em;">Smart Local Tourism Pass • India</div>
+          <h4 id="passModalBizName" style="font-size: 1.2rem; margin: 0.35rem 0;">Destination</h4>
+          <p id="passModalGuestInfo" style="font-size: 0.85rem; color: var(--gray-600);">Traveler: Rajesh • 2 Guests</p>
+
+          <div id="qrCodeContainer"></div>
+
+          <div style="background: var(--gray-100); padding: 0.5rem 1rem; border-radius: 9999px; display: inline-block; font-family: monospace; font-size: 1rem; font-weight: 700; color: var(--gray-800);" id="passBookingCode">
+            TOUR-IND-8942
+          </div>
+          <p style="font-size: 0.75rem; color: var(--gray-500); margin-top: 0.5rem;">Present this QR pass upon arrival for paperless entry and verification.</p>
+        </div>
+
+        <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="window.print()">
+          <i data-lucide="printer" style="width: 16px; height: 16px;"></i> Print or Save Pass
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCANNER MODAL -->
+  <div class="modal-overlay" id="scannerModal">
+    <div class="modal-box" style="max-width: 500px;">
+      <div class="modal-header">
+        <h3>Scan Tourist Digital Pass</h3>
+        <button class="modal-close-btn" onclick="closeScannerModal()">
+          <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="scannerReader"></div>
+
+        <div style="margin-top: 1.5rem; text-align: center;">
+          <p style="font-size: 0.85rem; color: var(--gray-600); margin-bottom: 0.75rem;">Or verify via booking code:</p>
+          <div style="display: flex; gap: 0.5rem;">
+            <input type="text" id="manualCodeInput" placeholder="e.g. TOUR-IND-8942" style="flex: 1; padding: 0.65rem; border: 1px solid var(--gray-300); border-radius: var(--radius-md); font-weight: 600; text-transform: uppercase;">
+            <button class="btn-primary" onclick="verifyManualCode()">Verify</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD LISTING MODAL -->
+  <div class="modal-overlay" id="addListingModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>List Your Indian Business or Homestay</h3>
+        <button class="modal-close-btn" onclick="closeModal('addListingModal')">
+          <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form onsubmit="submitNewListing(event)">
+          <div class="form-group">
+            <label>Business / Experience Title</label>
+            <input type="text" id="newBizTitle" required placeholder="e.g. Heritage Haveli Stay & Kathakali Night">
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label>Indian State / UT</label>
+              <select id="newBizState" required>
+                <option value="Rajasthan">Rajasthan</option>
+                <option value="Kerala">Kerala</option>
+                <option value="Himachal Pradesh">Himachal Pradesh</option>
+                <option value="Uttarakhand">Uttarakhand</option>
+                <option value="Karnataka">Karnataka</option>
+                <option value="Goa">Goa</option>
+                <option value="Tamil Nadu">Tamil Nadu</option>
+                <option value="Maharashtra">Maharashtra</option>
+                <option value="Jammu & Kashmir">Jammu & Kashmir</option>
+                <option value="Ladakh">Ladakh</option>
+                <option value="West Bengal">West Bengal</option>
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="Gujarat">Gujarat</option>
+                <option value="Meghalaya">Meghalaya</option>
+                <option value="Assam">Assam</option>
+                <option value="Madhya Pradesh">Madhya Pradesh</option>
+                <option value="Punjab">Punjab</option>
+                <option value="Odisha">Odisha</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Category</label>
+              <select id="newBizCategory" required>
+                <option value="stay">Homestay / Stay</option>
+                <option value="tours">Heritage Tour / Walk</option>
+                <option value="food">Culinary Trail</option>
+                <option value="artisan">Artisan Craft Workshop</option>
+                <option value="adventure">Trek / Safari</option>
+              </select>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label>City / Location</label>
+              <input type="text" id="newBizLocation" required placeholder="e.g. Udaipur, Rajasthan">
+            </div>
+            <div class="form-group">
+              <label>Price in ₹ (INR)</label>
+              <input type="number" id="newBizPrice" required placeholder="2500" min="200">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Image URL</label>
+            <input type="url" id="newBizImg" required placeholder="https://images.unsplash.com/...">
+          </div>
+          <div class="form-group">
+            <label>Description & Native Highlights</label>
+            <textarea id="newBizDesc" rows="3" required placeholder="Describe the authentic cultural experience guests will enjoy..."></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 0.85rem;">
+            <i data-lucide="check" style="width: 16px; height: 16px;"></i> Publish Listing
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTH MODAL -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal-box" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 id="authModalTitle">Sign In to TourisMart India</h3>
+        <button class="modal-close-btn" onclick="closeModal('authModal')">
+          <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <button class="btn-outline" style="width: 100%; justify-content: center; margin-bottom: 1.25rem; font-weight: 600;" onclick="signInWithGooglePopup()">
+          <svg style="width: 18px; height: 18px; margin-right: 0.5rem;" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
+          Continue with Google
+        </button>
+
+        <form id="authEmailForm" onsubmit="handleAuthSubmit(event)">
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="authEmail" required placeholder="you@example.com">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="authPassword" required placeholder="••••••••">
+          </div>
+          
+          <div class="form-group" id="roleSelectGroup" style="display: none;">
+            <label>Role</label>
+            <select id="authRole">
+              <option value="tourist">Tourist / Traveler</option>
+              <option value="vendor">Indian Local Host / Artisan</option>
+              <option value="admin">State Tourism Board Officer</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn-primary" id="authSubmitBtn" style="width: 100%; justify-content: center; padding: 0.8rem; margin-top: 0.5rem;">
+            Sign In with Firebase
+          </button>
+        </form>
+
+        <div style="text-align: center; margin-top: 1rem; font-size: 0.85rem; color: var(--gray-600);">
+          <span id="authTogglePrompt">Don't have an account?</span>
+          <a href="javascript:void(0)" onclick="toggleAuthMode()" id="authToggleLink" style="font-weight: 700; color: var(--primary); margin-left: 0.35rem;">Sign Up</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CART DRAWER -->
+  <div class="cart-drawer-overlay" id="cartOverlay" onclick="toggleCartDrawer()"></div>
+  <aside class="cart-drawer" id="cartDrawer">
+    <div style="padding: 1.25rem; border-bottom: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center;">
+      <h3 style="font-size: 1.15rem; display: flex; align-items: center; gap: 0.5rem;">
+        <i data-lucide="shopping-bag" style="width: 18px; height: 18px; color: var(--saffron);"></i> Indian GI Crafts Cart
+      </h3>
+      <button class="modal-close-btn" onclick="toggleCartDrawer()">
+        <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+      </button>
+    </div>
+    
+    <div style="flex: 1; overflow-y: auto; padding: 1.25rem;" id="cartItemsList">
+      <p style="color: var(--gray-500); text-align: center; margin-top: 2rem;">Your cart is empty.</p>
+    </div>
+
+    <div style="padding: 1.25rem; border-top: 1px solid var(--gray-200); background: var(--gray-50);">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; font-weight: 700;">
+        <span>Total (Supports Native Artisans):</span>
+        <span id="cartDrawerTotal" style="color: var(--primary-dark); font-size: 1.25rem; font-family: var(--font-display);">₹0</span>
+      </div>
+      <button class="btn-primary" style="width: 100%; justify-content: center; padding: 0.85rem;" onclick="checkoutCart()">
+        <i data-lucide="credit-card" style="width: 16px; height: 16px;"></i> Pay Directly via UPI / Card
+      </button>
+    </div>
+  </aside>
+
+  <!-- TOAST NOTICE -->
+  <div id="toastNotice">
+    <i data-lucide="info" id="toastIcon" style="width: 18px; height: 18px;"></i>
+    <span id="toastMessage">Action completed successfully</span>
+  </div>
+
+  <!-- PORTAL FOOTER -->
+  <footer class="portal-footer">
+    <div class="footer-inner">
+      <div>
+        <div style="display: flex; align-items: center; gap: 0.6rem; color: white; margin-bottom: 1rem;">
+          <div class="brand-logo-icon" style="width: 34px; height: 34px;">
+            <i data-lucide="compass" style="width: 18px; height: 18px;"></i>
+          </div>
+          <h2 style="font-size: 1.2rem;">TourisMart India</h2>
+        </div>
+        <p style="font-size: 0.875rem; line-height: 1.6; max-width: 340px;">Empowering local tourism micro-businesses, heritage homestays, and indigenous GI artisans across every state of India with zero-commission direct bookings.</p>
+      </div>
+      <div>
+        <h4 style="color: white; font-size: 0.95rem; margin-bottom: 1rem;">Indian Circuits</h4>
+        <ul style="list-style: none; font-size: 0.875rem; display: flex; flex-direction: column; gap: 0.6rem;">
+          <li><a href="javascript:void(0)" onclick="filterByStateName('Rajasthan')">Rajasthan Royal Desert</a></li>
+          <li><a href="javascript:void(0)" onclick="filterByStateName('Kerala')">Kerala God's Own Backwaters</a></li>
+          <li><a href="javascript:void(0)" onclick="filterByStateName('Himachal Pradesh')">Himachal Apple Orchards</a></li>
+          <li><a href="javascript:void(0)" onclick="filterByStateName('Karnataka')">Karnataka Heritage & Coffee</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color: white; font-size: 0.95rem; margin-bottom: 1rem;">Host Ecosystem</h4>
+        <ul style="list-style: none; font-size: 0.875rem; display: flex; flex-direction: column; gap: 0.6rem;">
+          <li><a href="javascript:void(0)" onclick="switchNavTab('vendor')">Host Dashboard</a></li>
+          <li><a href="javascript:void(0)" onclick="openAddListingModal()">Publish Indian Listing</a></li>
+          <li><a href="javascript:void(0)" onclick="openScannerModal()">Pass QR Scanner</a></li>
+          <li><a href="javascript:void(0)" onclick="switchNavTab('marketplace')">Indian GI Handicrafts</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color: white; font-size: 0.95rem; margin-bottom: 1rem;">Tech & Security</h4>
+        <ul style="list-style: none; font-size: 0.875rem; display: flex; flex-direction: column; gap: 0.6rem;">
+          <li><span style="color: #10b981; display: inline-flex; align-items: center; gap: 0.35rem;"><i data-lucide="check-circle" style="width: 14px; height: 14px;"></i> Firebase Auth & DB</span></li>
+          <li><span style="color: #94a3b8; font-size: 0.8rem;">GitHub: SMART-TOURIST18</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 TourisMart India. Sustainable Cultural Tourism Across Indian States & Union Territories.</p>
+      <p style="color: #64748b;">Powered by Firebase Auth & Firestore • Local Community Tourism Council</p>
+    </div>
+  </footer>
+
+  <!-- ========================================== -->
+  <!-- Full-Stack Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
