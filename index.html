@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#064e3b">
-  <meta name="description" content="Incredible India — Smart Local Tourism Business Portal. Explore verified homestays, native artisan workshops, and cultural experiences across all Indian States.">
-  <title>TourisMart India — Smart Local Tourism Business Portal</title>
+  <meta name="description" content="TourisMart India — Smart Local Tourism Ecosystem across all Indian States. Direct reservations, verified homestays, and native GI crafts.">
+  <title>TourisMart India — Smart Local Tourism Ecosystem</title>
   
-  <!-- Google Fonts -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -19,26 +19,18 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
-  <!-- Chart.js for Tourism Analytics -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- UI Library Engine -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-  <!-- Firebase SDK -->
+  <!-- Cloud Client SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import {
-      getAuth, onAuthStateChanged, signInWithEmailAndPassword,
-      createUserWithEmailAndPassword, signOut, updateProfile,
-      GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import {
-      getFirestore, doc, getDoc, setDoc, collection,
-      query, where, getDocs, deleteDoc, updateDoc, arrayUnion
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc, collection } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    // ════════════════════════════════════════════════════════════
-    //  FIREBASE CONFIG (KEPT INTACT)
-    // ════════════════════════════════════════════════════════════
-    const firebaseConfig = {
+    const config = {
       apiKey: "AIzaSyCDcaXYIO-lDB_WJcyJrMCBG6ww9nRrY8w",
       authDomain: "smart-attendance-26e62.firebaseapp.com",
       databaseURL: "https://smart-attendance-26e62-default-rtdb.firebaseio.com",
@@ -49,182 +41,120 @@
       measurementId: "G-WFJM11RJTV"
     };
 
-    let app, auth, db, googleProvider;
     try {
-      app = initializeApp(firebaseConfig);
-      auth = getAuth(app);
-      db = getFirestore(app);
-      googleProvider = new GoogleAuthProvider();
-    } catch(err) {
-      console.warn("Firebase initialization warning (using local fallback mode):", err);
-    }
-
-    window._firebase = {
-      app, auth, db, googleProvider,
-      signInWithEmailAndPassword, createUserWithEmailAndPassword,
-      signOut, updateProfile, signInWithPopup, sendPasswordResetEmail,
-      doc, getDoc, setDoc, collection, query, where, getDocs, deleteDoc, updateDoc, arrayUnion
-    };
-
-    if (auth) {
-      onAuthStateChanged(auth, async (user) => {
-        if (user) {
-          window.currentUser = user;
-          let role = 'tourist';
-          try {
-            const snap = await getDoc(doc(db, 'users', user.uid));
-            if (snap.exists() && snap.data().role) {
-              role = snap.data().role;
-            }
-          } catch(e) {
-            console.log("Could not load role from Firestore, defaulting to tourist");
-          }
-          window.currentUserRole = role;
-          if (window.handleUserAuthenticated) {
-            window.handleUserAuthenticated(user, role);
-          }
-        } else {
-          window.currentUser = null;
-          window.currentUserRole = null;
-          if (window.handleUserSignedOut) {
-            window.handleUserSignedOut();
-          }
-        }
-      });
+      const app = initializeApp(config);
+      window._cloudAuth = getAuth(app);
+      window._cloudDb = getFirestore(app);
+      window._cloudGoogleProvider = new GoogleAuthProvider();
+      window._cloudMethods = { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, signInWithPopup, doc, setDoc, getDoc, collection };
+    } catch(e) {
+      console.log("Local service mode active");
     }
   </script>
 
+  <!-- Mobile-First Responsive Styles -->
   <style>
     :root {
       --primary: #059669;
       --primary-dark: #047857;
       --primary-light: #10b981;
       --primary-subtle: #d1fae5;
-      --accent: #f59e0b;
-      --accent-hover: #d97706;
+      --saffron: #f97316;
+      --saffron-hover: #ea580c;
       --dark: #0f172a;
       --dark-card: #1e293b;
-      --dark-card-border: #334155;
       --gray-50: #f8fafc;
       --gray-100: #f1f5f9;
       --gray-200: #e2e8f0;
       --gray-300: #cbd5e1;
-      --gray-400: #94a3b8;
       --gray-600: #475569;
       --gray-800: #1e293b;
       --gray-900: #0f172a;
-      --saffron: #f97316;
-      --success: #10b981;
-      --danger: #ef4444;
       --radius-sm: 8px;
       --radius-md: 12px;
       --radius-lg: 16px;
-      --radius-xl: 24px;
-      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      --radius-xl: 22px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08);
+      --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.12);
       --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
       --font-display: 'Space Grotesk', system-ui, sans-serif;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: var(--font-sans);
       background-color: var(--gray-50);
       color: var(--gray-900);
       line-height: 1.5;
       min-height: 100vh;
-      overflow-x: hidden;
+      padding-bottom: 70px; /* Space for mobile bottom bar */
     }
 
-    h1, h2, h3, h4, h5 {
-      font-family: var(--font-display);
-      font-weight: 700;
-      letter-spacing: -0.02em;
+    @media (min-width: 900px) {
+      body { padding-bottom: 0; }
     }
 
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
+    h1, h2, h3, h4, h5 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em; }
+    button, input, select, textarea { font-family: var(--font-sans); outline: none; }
+    button { cursor: pointer; border: none; transition: all 0.2s; }
 
-    button {
-      font-family: var(--font-sans);
-      cursor: pointer;
-      border: none;
-      outline: none;
-      transition: all 0.2s ease;
-    }
-
-    input, select, textarea {
-      font-family: var(--font-sans);
-      outline: none;
-    }
-
-    /* Portal Header */
-    .portal-header {
+    /* Header */
+    .app-header {
       position: sticky;
       top: 0;
       z-index: 50;
       background: rgba(255, 255, 255, 0.96);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--gray-200);
-      padding: 0.75rem 1.5rem;
+      padding: 0.75rem 1rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 1.5rem;
+      gap: 1rem;
     }
 
-    .brand-container {
+    @media (min-width: 900px) {
+      .app-header { padding: 0.85rem 2rem; }
+    }
+
+    .brand-box {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.65rem;
       cursor: pointer;
     }
 
-    .brand-logo-icon {
-      width: 44px;
-      height: 44px;
+    .brand-icon {
+      width: 40px;
+      height: 40px;
       border-radius: var(--radius-md);
-      background: linear-gradient(135deg, #f97316 0%, #059669 100%);
+      background: linear-gradient(135deg, var(--saffron) 0%, var(--primary) 100%);
+      color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: white;
-      box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+      box-shadow: 0 4px 10px rgba(249, 115, 22, 0.25);
     }
 
-    .brand-text h1 {
-      font-size: 1.25rem;
-      line-height: 1.1;
-      color: var(--gray-900);
-    }
+    .brand-text h1 { font-size: 1.15rem; line-height: 1.1; }
+    .brand-text span { font-size: 0.68rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em; }
 
-    .brand-text span {
-      font-size: 0.7rem;
-      font-weight: 700;
-      color: var(--primary);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    /* Nav Tabs */
-    .nav-tabs {
-      display: flex;
+    /* Desktop Navigation */
+    .desktop-nav {
+      display: none;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
       background: var(--gray-100);
       padding: 0.25rem;
       border-radius: 9999px;
     }
 
-    .nav-tab-btn {
+    @media (min-width: 900px) {
+      .desktop-nav { display: flex; }
+    }
+
+    .nav-btn {
       padding: 0.5rem 1rem;
       font-size: 0.85rem;
       font-weight: 600;
@@ -234,91 +164,86 @@
       display: flex;
       align-items: center;
       gap: 0.4rem;
-      transition: all 0.2s;
     }
 
-    .nav-tab-btn:hover {
-      color: var(--gray-900);
-    }
-
-    .nav-tab-btn.active {
-      background: white;
-      color: var(--primary-dark);
-      box-shadow: var(--shadow-sm);
-    }
+    .nav-btn:hover { color: var(--gray-900); }
+    .nav-btn.active { background: white; color: var(--primary-dark); box-shadow: var(--shadow-sm); }
 
     /* Header Actions */
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.6rem;
     }
 
-    .btn-primary {
+    /* Language Switcher Button */
+    .lang-toggle-btn {
+      background: var(--gray-100);
+      border: 1px solid var(--gray-300);
+      padding: 0.4rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--gray-800);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .lang-toggle-btn:hover { background: var(--gray-200); }
+
+    .btn-main {
       background: var(--primary);
       color: white;
-      padding: 0.6rem 1.25rem;
-      border-radius: var(--radius-md);
-      font-weight: 600;
-      font-size: 0.875rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      box-shadow: 0 4px 10px rgba(5, 150, 105, 0.2);
-    }
-
-    .btn-primary:hover {
-      background: var(--primary-dark);
-      transform: translateY(-1px);
-    }
-
-    .btn-outline {
-      background: white;
-      color: var(--gray-800);
-      border: 1px solid var(--gray-300);
       padding: 0.55rem 1.1rem;
       border-radius: var(--radius-md);
       font-weight: 600;
-      font-size: 0.875rem;
+      font-size: 0.85rem;
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.45rem;
     }
 
-    .btn-outline:hover {
-      background: var(--gray-100);
-      border-color: var(--gray-400);
-    }
+    .btn-main:hover { background: var(--primary-dark); }
 
     .btn-accent {
-      background: var(--accent);
+      background: var(--saffron);
       color: white;
-      padding: 0.6rem 1.25rem;
+      padding: 0.55rem 1.1rem;
       border-radius: var(--radius-md);
       font-weight: 600;
-      font-size: 0.875rem;
+      font-size: 0.85rem;
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.45rem;
     }
 
-    .btn-accent:hover {
-      background: var(--accent-hover);
+    .btn-accent:hover { background: var(--saffron-hover); }
+
+    .btn-outline {
+      background: white;
+      border: 1px solid var(--gray-300);
+      color: var(--gray-800);
+      padding: 0.5rem 0.9rem;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
     }
 
-    .btn-sm {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.8rem;
-      border-radius: var(--radius-sm);
-    }
+    .btn-outline:hover { background: var(--gray-100); }
 
-    .cart-btn-pill {
+    .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.78rem; border-radius: var(--radius-sm); }
+
+    .cart-pill {
       position: relative;
       background: white;
       border: 1px solid var(--gray-200);
       border-radius: var(--radius-md);
-      width: 42px;
-      height: 42px;
+      width: 38px;
+      height: 38px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -331,62 +256,83 @@
       right: -4px;
       background: var(--saffron);
       color: white;
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 700;
-      width: 18px;
-      height: 18px;
+      width: 17px;
+      height: 17px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
+    /* Mobile Bottom Navigation Bar (Mobile-First) */
+    .mobile-bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: white;
+      border-top: 1px solid var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      z-index: 80;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
+    }
+
+    @media (min-width: 900px) {
+      .mobile-bottom-bar { display: none; }
+    }
+
+    .mobile-tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.2rem;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--gray-600);
+      background: transparent;
+      padding: 0.4rem 0.6rem;
+      border-radius: var(--radius-sm);
+    }
+
+    .mobile-tab.active { color: var(--primary); }
+
     /* Hero Section */
-    .hero-section {
-      position: relative;
-      background: linear-gradient(135deg, #064e3b 0%, #065f46 45%, #9a3412 100%);
+    .hero-box {
+      background: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #9a3412 100%);
       color: white;
-      padding: 4.5rem 2rem 5.5rem;
+      padding: 2.75rem 1.25rem 4.5rem;
       text-align: center;
-      overflow: hidden;
-    }
-
-    .hero-glow {
-      position: absolute;
-      top: -20%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 850px;
-      height: 420px;
-      background: radial-gradient(circle, rgba(249, 115, 22, 0.25) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .hero-content {
       position: relative;
-      z-index: 2;
-      max-width: 900px;
-      margin: 0 auto;
     }
 
-    .hero-tagline {
+    @media (min-width: 900px) {
+      .hero-box { padding: 4.5rem 2rem 5.5rem; }
+    }
+
+    .hero-badge {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      background: rgba(255, 255, 255, 0.18);
+      gap: 0.45rem;
+      background: rgba(255,255,255,0.18);
       backdrop-filter: blur(8px);
-      padding: 0.45rem 1.1rem;
+      padding: 0.4rem 0.9rem;
       border-radius: 9999px;
-      font-size: 0.85rem;
+      font-size: 0.78rem;
       font-weight: 700;
-      margin-bottom: 1.25rem;
-      border: 1px solid rgba(255, 255, 255, 0.25);
+      margin-bottom: 1rem;
+      border: 1px solid rgba(255,255,255,0.25);
     }
 
     .hero-title {
-      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-size: clamp(1.8rem, 5vw, 3.4rem);
       line-height: 1.15;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1rem;
     }
 
     .hero-title span {
@@ -395,3239 +341,1212 @@
       -webkit-text-fill-color: transparent;
     }
 
-    .hero-description {
-      font-size: 1.15rem;
+    .hero-desc {
+      font-size: 0.98rem;
       color: #fed7aa;
-      margin-bottom: 2.5rem;
-      max-width: 720px;
-      margin-left: auto;
-      margin-right: auto;
+      max-width: 680px;
+      margin: 0 auto 1.5rem;
     }
 
-    /* Search & Filter Bar */
-    .search-card-wrapper {
+    /* Search & Filter Bar (Mobile-First) */
+    .search-wrapper {
       position: relative;
       margin-top: -2.5rem;
       max-width: 1100px;
       margin-left: auto;
       margin-right: auto;
-      padding: 0 1.5rem;
+      padding: 0 1rem;
       z-index: 10;
     }
 
-    .search-card {
+    .search-container {
       background: white;
-      border-radius: var(--radius-xl);
-      padding: 1.25rem;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+      border-radius: var(--radius-lg);
+      padding: 1rem;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.08);
       border: 1px solid var(--gray-200);
-      display: grid;
-      grid-template-columns: 2fr 1.8fr 1.4fr auto;
-      gap: 1rem;
-      align-items: center;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
     }
 
-    @media (max-width: 920px) {
-      .search-card {
-        grid-template-columns: 1fr;
+    @media (min-width: 900px) {
+      .search-container {
+        border-radius: var(--radius-xl);
+        padding: 1.25rem;
+        display: grid;
+        grid-template-columns: 2fr 1.6fr 1.3fr auto;
       }
     }
 
-    .search-field {
+    .input-field {
       display: flex;
       flex-direction: column;
-      gap: 0.25rem;
-      padding: 0.5rem 0.75rem;
-      border-radius: var(--radius-md);
+      gap: 0.2rem;
       background: var(--gray-50);
       border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      padding: 0.45rem 0.75rem;
     }
 
-    .search-field label {
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--gray-600);
-    }
+    .input-field label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; color: var(--gray-600); }
+    .input-field input, .input-field select { background: transparent; border: none; font-size: 0.9rem; font-weight: 600; color: var(--gray-900); }
 
-    .search-field input, .search-field select {
-      background: transparent;
-      border: none;
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--gray-900);
-    }
-
-    /* Category Pills */
-    .category-pills-bar {
+    /* Category Filter Bar */
+    .cat-bar {
       display: flex;
-      align-items: center;
-      gap: 0.75rem;
+      gap: 0.6rem;
       overflow-x: auto;
-      padding: 1.75rem 1.5rem 0.5rem;
+      padding: 1.25rem 1rem 0.5rem;
       max-width: 1240px;
       margin: 0 auto;
       scrollbar-width: none;
     }
 
-    .category-pills-bar::-webkit-scrollbar {
-      display: none;
-    }
+    .cat-bar::-webkit-scrollbar { display: none; }
 
-    .cat-pill {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.6rem 1.2rem;
+    .cat-chip {
+      padding: 0.5rem 1rem;
       border-radius: 9999px;
       background: white;
       border: 1px solid var(--gray-200);
-      font-size: 0.875rem;
+      font-size: 0.82rem;
       font-weight: 600;
-      color: var(--gray-700);
+      color: var(--gray-600);
       white-space: nowrap;
-      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
     }
 
-    .cat-pill:hover {
-      border-color: var(--primary);
-      color: var(--primary-dark);
-    }
-
-    .cat-pill.active {
+    .cat-chip.active {
       background: var(--primary);
       color: white;
       border-color: var(--primary);
-      box-shadow: 0 4px 10px rgba(5, 150, 105, 0.25);
+      box-shadow: 0 4px 10px rgba(5,150,105,0.25);
     }
 
     /* Main Container */
-    .main-content {
+    .main-wrap {
       max-width: 1240px;
-      margin: 1.5rem auto 4rem;
-      padding: 0 1.5rem;
+      margin: 1rem auto 3rem;
+      padding: 0 1rem;
     }
 
-    .view-container {
-      display: none;
+    @media (min-width: 900px) {
+      .main-wrap { padding: 0 1.5rem; }
     }
 
-    .view-container.active {
-      display: block;
-      animation: fadeIn 0.25s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .section-header {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    .section-header h2 {
-      font-size: 1.75rem;
-      color: var(--gray-900);
-    }
-
-    .section-header p {
-      font-size: 0.95rem;
-      color: var(--gray-600);
-    }
-
-    /* Card Grids */
-    .cards-grid {
+    /* Destination Cards Grid */
+    .dest-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 1.75rem;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
     }
 
-    /* Business Card */
-    .biz-card {
+    @media (min-width: 640px) {
+      .dest-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+    }
+
+    @media (min-width: 1024px) {
+      .dest-grid { grid-template-columns: repeat(3, 1fr); gap: 1.75rem; }
+    }
+
+    .dest-card {
       background: white;
       border-radius: var(--radius-lg);
       border: 1px solid var(--gray-200);
       overflow: hidden;
-      box-shadow: var(--shadow-sm);
-      transition: all 0.25s ease;
       display: flex;
       flex-direction: column;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.25s ease;
     }
 
-    .biz-card:hover {
-      transform: translateY(-4px);
+    .dest-card:hover {
+      transform: translateY(-3px);
       box-shadow: var(--shadow-xl);
-      border-color: var(--gray-300);
     }
 
-    .biz-card-image {
+    .dest-img-box {
       position: relative;
-      height: 210px;
+      height: 200px;
       background: var(--gray-200);
       overflow: hidden;
     }
 
-    .biz-card-image img {
+    .dest-img-box img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: transform 0.4s ease;
+      transition: transform 0.4s;
     }
 
-    .biz-card:hover .biz-card-image img {
-      transform: scale(1.05);
-    }
+    .dest-card:hover .dest-img-box img { transform: scale(1.05); }
 
-    .biz-badge-eco {
+    .tag-eco {
       position: absolute;
-      top: 12px;
-      left: 12px;
-      background: rgba(6, 78, 59, 0.92);
+      top: 10px;
+      left: 10px;
+      background: rgba(6,78,59,0.92);
       backdrop-filter: blur(6px);
       color: #6ee7b7;
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       font-weight: 700;
-      padding: 0.3rem 0.65rem;
+      padding: 0.25rem 0.55rem;
       border-radius: 9999px;
       display: flex;
       align-items: center;
-      gap: 0.35rem;
+      gap: 0.3rem;
     }
 
-    .biz-badge-state {
+    .tag-state {
       position: absolute;
-      top: 12px;
-      right: 12px;
-      background: rgba(249, 115, 22, 0.92);
+      top: 10px;
+      right: 10px;
+      background: rgba(249,115,22,0.92);
       backdrop-filter: blur(6px);
       color: white;
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       font-weight: 700;
-      padding: 0.3rem 0.65rem;
+      padding: 0.25rem 0.55rem;
       border-radius: 9999px;
     }
 
-    .biz-card-body {
-      padding: 1.25rem;
+    .dest-body {
+      padding: 1.15rem;
       display: flex;
       flex-direction: column;
       flex: 1;
     }
 
-    .biz-card-meta {
+    .dest-meta {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      margin-bottom: 0.5rem;
-    }
-
-    .biz-location {
-      display: flex;
       align-items: center;
-      gap: 0.25rem;
-      font-size: 0.8rem;
-      color: var(--gray-600);
-      font-weight: 600;
-    }
-
-    .biz-rating {
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: #d97706;
-    }
-
-    .biz-title {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--gray-900);
+      font-size: 0.78rem;
       margin-bottom: 0.4rem;
-      line-height: 1.3;
     }
 
-    .biz-desc {
-      font-size: 0.875rem;
-      color: var(--gray-600);
-      margin-bottom: 1rem;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      flex-grow: 1;
-    }
+    .dest-location { color: var(--gray-600); font-weight: 600; display: flex; align-items: center; gap: 0.25rem; }
+    .dest-rating { color: #d97706; font-weight: 700; display: flex; align-items: center; gap: 0.25rem; }
 
-    .biz-card-footer {
+    .dest-title { font-size: 1.1rem; line-height: 1.3; margin-bottom: 0.4rem; }
+    .dest-desc { font-size: 0.82rem; color: var(--gray-600); margin-bottom: 1rem; line-height: 1.45; flex: 1; }
+
+    .dest-footer {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
       border-top: 1px solid var(--gray-100);
-      padding-top: 0.9rem;
+      padding-top: 0.85rem;
       margin-top: auto;
     }
 
-    .biz-price {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .biz-price-label {
-      font-size: 0.7rem;
-      color: var(--gray-400);
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-
-    .biz-price-value {
-      font-size: 1.2rem;
-      font-weight: 800;
-      color: var(--primary-dark);
-      font-family: var(--font-display);
-    }
+    .price-value { font-size: 1.15rem; font-weight: 800; color: var(--primary-dark); font-family: var(--font-display); }
 
     /* Impact Banner */
-    .impact-banner {
+    .impact-box {
       background: white;
       border: 1px solid var(--gray-200);
       border-radius: var(--radius-xl);
-      padding: 2rem 2.5rem;
-      margin: 3rem 0;
+      padding: 1.5rem;
+      margin: 2.5rem 0;
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 2rem;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
       text-align: center;
-      box-shadow: var(--shadow-sm);
     }
 
-    @media (max-width: 800px) {
-      .impact-banner {
-        grid-template-columns: repeat(2, 1fr);
-        padding: 1.5rem;
-      }
+    @media (min-width: 800px) {
+      .impact-box { grid-template-columns: repeat(4, 1fr); padding: 2rem; }
     }
 
-    .stat-item h3 {
-      font-size: 2.2rem;
-      color: var(--primary-dark);
-      margin-bottom: 0.25rem;
-      font-family: var(--font-display);
-    }
-
-    .stat-item p {
-      font-size: 0.85rem;
-      color: var(--gray-600);
-      font-weight: 500;
-    }
+    .impact-item h3 { font-size: 1.8rem; color: var(--primary-dark); }
+    .impact-item p { font-size: 0.78rem; color: var(--gray-600); font-weight: 600; }
 
     /* Modals */
-    .modal-overlay {
+    .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.6);
+      background: rgba(15, 23, 42, 0.65);
       backdrop-filter: blur(4px);
       z-index: 100;
-      display: none;
+      display: flex;
       align-items: center;
       justify-content: center;
-      padding: 1.5rem;
+      padding: 1rem;
     }
 
-    .modal-overlay.active {
-      display: flex;
-    }
-
-    .modal-box {
+    .modal-window {
       background: white;
       border-radius: var(--radius-xl);
       width: 100%;
-      max-width: 580px;
+      max-width: 520px;
       max-height: 90vh;
       overflow-y: auto;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-      border: 1px solid var(--gray-200);
-      position: relative;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
     }
 
-    .modal-header {
-      padding: 1.25rem 1.5rem;
+    .modal-top {
+      padding: 1rem 1.25rem;
       border-bottom: 1px solid var(--gray-200);
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
 
-    .modal-header h3 {
-      font-size: 1.25rem;
-      color: var(--gray-900);
-    }
+    .modal-content { padding: 1.25rem; }
 
-    .modal-close-btn {
-      background: var(--gray-100);
-      border-radius: 50%;
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--gray-600);
-    }
-
-    .modal-close-btn:hover {
-      background: var(--gray-200);
-      color: var(--gray-900);
-    }
-
-    .modal-body {
-      padding: 1.5rem;
-    }
-
-    .form-group {
-      margin-bottom: 1rem;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--gray-700);
-      margin-bottom: 0.35rem;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-    }
-
-    .form-group input, .form-group select, .form-group textarea {
+    .form-row { margin-bottom: 0.9rem; }
+    .form-row label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--gray-600); margin-bottom: 0.25rem; text-transform: uppercase; }
+    .form-row input, .form-row select, .form-row textarea {
       width: 100%;
-      padding: 0.65rem 0.9rem;
+      padding: 0.65rem 0.85rem;
       border: 1px solid var(--gray-300);
       border-radius: var(--radius-md);
-      font-size: 0.9rem;
-      background: white;
+      font-size: 0.88rem;
     }
 
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
-    }
-
-    /* Dashboard Widgets */
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.25rem;
-      margin-bottom: 2rem;
-    }
-
-    .metric-card {
-      background: white;
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-lg);
-      padding: 1.25rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .metric-icon-box {
-      width: 48px;
-      height: 48px;
-      border-radius: var(--radius-md);
-      background: var(--primary-subtle);
-      color: var(--primary-dark);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .metric-details p {
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      color: var(--gray-500);
-      letter-spacing: 0.04em;
-    }
-
-    .metric-details h4 {
-      font-size: 1.5rem;
-      color: var(--gray-900);
-      font-family: var(--font-display);
-    }
-
-    /* Tables */
-    .data-table-container {
-      background: white;
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-lg);
-      overflow-x: auto;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .data-table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 0.875rem;
-    }
-
-    .data-table th {
-      background: var(--gray-50);
-      padding: 0.85rem 1rem;
-      font-weight: 700;
-      color: var(--gray-600);
-      border-bottom: 1px solid var(--gray-200);
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .data-table td {
-      padding: 0.9rem 1rem;
-      border-bottom: 1px solid var(--gray-100);
-      color: var(--gray-800);
-      vertical-align: middle;
-    }
-
-    .status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      padding: 0.25rem 0.65rem;
-      border-radius: 9999px;
-      font-size: 0.75rem;
-      font-weight: 700;
-    }
-
-    .status-confirmed {
-      background: #dcfce7;
-      color: #15803d;
-    }
-
-    .status-completed {
-      background: #e0f2fe;
-      color: #0369a1;
-    }
-
-    /* QR Pass */
-    .qr-pass-box {
-      background: white;
-      border: 2px dashed var(--primary);
-      border-radius: var(--radius-xl);
-      padding: 2rem;
-      text-align: center;
-      margin: 1rem 0;
-    }
-
-    #qrCodeContainer {
-      display: flex;
-      justify-content: center;
-      margin: 1.25rem auto;
-      padding: 1rem;
-      background: white;
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-sm);
-      width: 200px;
-      height: 200px;
-    }
-
-    /* Marketplace Items */
-    .shop-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .product-card {
-      background: white;
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--gray-200);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      transition: all 0.2s;
-    }
-
-    .product-card:hover {
-      box-shadow: var(--shadow-md);
-      transform: translateY(-2px);
-    }
-
-    .product-img {
-      height: 180px;
-      background: var(--gray-100);
-      overflow: hidden;
-      position: relative;
-    }
-
-    .product-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .product-body {
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-    }
-
-    .artisan-tag {
-      font-size: 0.72rem;
-      font-weight: 600;
-      color: var(--saffron);
-      margin-bottom: 0.25rem;
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-    }
-
-    /* Itinerary */
-    .itinerary-day-box {
-      background: white;
-      border: 1px solid var(--gray-200);
-      border-radius: var(--radius-lg);
-      padding: 1.5rem;
-      margin-bottom: 1.25rem;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .timeline-item {
-      display: flex;
-      gap: 1rem;
-      padding: 1rem 0;
-      border-left: 2px solid var(--primary-light);
-      margin-left: 0.75rem;
-      padding-left: 1.5rem;
-      position: relative;
-    }
-
-    .timeline-dot {
-      position: absolute;
-      left: -9px;
-      top: 1.3rem;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background: var(--primary);
-      border: 3px solid white;
-      box-shadow: 0 0 0 2px var(--primary);
-    }
-
-    #scannerReader {
-      width: 100%;
-      max-width: 480px;
-      margin: 0 auto;
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      border: 2px solid var(--gray-300);
-    }
-
-    #toastNotice {
+    /* Cart Slide Drawer */
+    .cart-overlay {
       position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      z-index: 1000;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 90;
+    }
+
+    .cart-slider {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      max-width: 360px;
+      background: white;
+      z-index: 95;
+      display: flex;
+      flex-direction: column;
+      box-shadow: -10px 0 25px rgba(0,0,0,0.15);
+    }
+
+    /* Toast */
+    .toast-pill {
+      position: fixed;
+      bottom: 75px;
+      left: 50%;
+      transform: translateX(-50%);
       background: var(--gray-900);
       color: white;
-      padding: 0.9rem 1.4rem;
-      border-radius: var(--radius-lg);
-      font-size: 0.9rem;
+      padding: 0.75rem 1.25rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
       font-weight: 600;
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-      transform: translateY(100px);
-      opacity: 0;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      gap: 0.5rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      z-index: 200;
       pointer-events: none;
     }
 
-    #toastNotice.active {
-      transform: translateY(0);
-      opacity: 1;
+    @media (min-width: 900px) {
+      .toast-pill { bottom: 2rem; right: 2rem; left: auto; transform: none; }
     }
 
-    .portal-footer {
+    /* Footer */
+    .app-footer {
       background: #091e17;
-      color: var(--gray-400);
-      padding: 3.5rem 2rem 2rem;
-      border-top: 1px solid #14352b;
+      color: #94a3b8;
+      padding: 2.5rem 1.5rem 1.5rem;
+      font-size: 0.85rem;
     }
 
     .footer-inner {
       max-width: 1240px;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: 2fr repeat(3, 1fr);
-      gap: 3rem;
-      margin-bottom: 2.5rem;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
     }
 
-    @media (max-width: 800px) {
-      .footer-inner {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-      }
-    }
-
-    .footer-bottom {
-      max-width: 1240px;
-      margin: 0 auto;
-      padding-top: 1.5rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.85rem;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    .cart-drawer-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(2px);
-      z-index: 90;
-      display: none;
-    }
-
-    .cart-drawer {
-      position: fixed;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      width: 100%;
-      max-width: 380px;
-      background: white;
-      z-index: 95;
-      box-shadow: -10px 0 30px rgba(0,0,0,0.15);
-      display: flex;
-      flex-direction: column;
-      transform: translateX(100%);
-      transition: transform 0.3s ease;
-    }
-
-    .cart-drawer.open {
-      transform: translateX(0);
+    @media (min-width: 800px) {
+      .footer-inner { grid-template-columns: 2fr repeat(2, 1fr); gap: 3rem; }
     }
   </style>
 </head>
 <body>
+  <!-- Application Container -->
+  <div id="root"></div>
 
-  <!-- PORTAL HEADER -->
-  <header class="portal-header">
-    <div class="brand-container" onclick="switchNavTab('explore')">
-      <div class="brand-logo-icon">
-        <i data-lucide="compass"></i>
-      </div>
-      <div class="brand-text">
-        <h1>TourisMart India</h1>
-        <span>Smart Tourism Across All States</span>
-      </div>
-    </div>
+  <!-- LOAD INITIAL DATASET -->
+  <script src="js/data.js"></script>
 
-    <!-- Navigation Tabs -->
-    <nav class="nav-tabs" id="portalNavTabs">
-      <button class="nav-tab-btn active" data-tab="explore" onclick="switchNavTab('explore')">
-        <i data-lucide="compass" style="width: 16px; height: 16px;"></i> Indian Places
-      </button>
-      <button class="nav-tab-btn" data-tab="itinerary" onclick="switchNavTab('itinerary')">
-        <i data-lucide="calendar" style="width: 16px; height: 16px;"></i> AI Itinerary
-      </button>
-      <button class="nav-tab-btn" data-tab="marketplace" onclick="switchNavTab('marketplace')">
-        <i data-lucide="shopping-bag" style="width: 16px; height: 16px;"></i> Indian Crafts
-      </button>
-      <button class="nav-tab-btn" data-tab="mybookings" onclick="switchNavTab('mybookings')">
-        <i data-lucide="ticket" style="width: 16px; height: 16px;"></i> My QR Passes
-      </button>
-      <button class="nav-tab-btn" data-tab="vendor" onclick="switchNavTab('vendor')" id="vendorTabBtn">
-        <i data-lucide="store" style="width: 16px; height: 16px;"></i> Host Portal
-      </button>
-      <button class="nav-tab-btn" data-tab="admin" onclick="switchNavTab('admin')" id="adminTabBtn">
-        <i data-lucide="shield-check" style="width: 16px; height: 16px;"></i> Tourism Admin
-      </button>
-    </nav>
+  <!-- Application Logic (Bilingual, Mobile-First, Realtime Cloud Connect) -->
+  <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
 
-    <!-- Header Actions -->
-    <div class="header-actions">
-      <!-- Role Switcher -->
-      <div style="display: flex; align-items: center; gap: 0.4rem;">
-        <span style="font-size: 0.72rem; font-weight: 700; color: var(--gray-600); text-transform: uppercase;">View As:</span>
-        <select id="roleSelector" onchange="changeRole(this.value)" style="padding: 0.35rem 0.6rem; border-radius: var(--radius-sm); border: 1px solid var(--gray-300); font-size: 0.8rem; font-weight: 600; background: white;">
-          <option value="tourist">Tourist / Traveler</option>
-          <option value="vendor">Local Business Host</option>
-          <option value="admin">Tourism Board Admin</option>
-        </select>
-      </div>
-
-      <!-- Marketplace Cart Icon -->
-      <button class="cart-btn-pill" onclick="toggleCartDrawer()" title="View Cart">
-        <i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i>
-        <span class="cart-badge" id="cartCountBadge">0</span>
-      </button>
-
-      <!-- Auth Container -->
-      <div id="authBtnContainer">
-        <button class="btn-primary" onclick="openAuthModal('signin')">
-          <i data-lucide="user" style="width: 16px; height: 16px;"></i> Sign In / Firebase
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- ========================================== -->
-  <!-- VIEW 1: EXPLORE INDIAN TOURIST PLACES -->
-  <!-- ========================================== -->
-  <main id="view-explore" class="view-container active">
-    
-    <!-- Hero Banner -->
-    <section class="hero-section">
-      <div class="hero-glow"></div>
-      <div class="hero-content">
-        <div class="hero-tagline">
-          <i data-lucide="sparkles" style="width: 16px; height: 16px; color: #fde047;"></i>
-          Incredible India • 28 States & 8 Union Territories • Local Direct Bookings
-        </div>
-        <h1 class="hero-title">Discover Sacred Wonders & <span>Authentic Indian Heritage</span></h1>
-        <p class="hero-description">Experience desert palaces in Rajasthan, misty tea estates in Darjeeling, serene backwaters in Kerala, and holy Ghats in Varanasi directly hosted by native families.</p>
-        
-        <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
-          <button class="btn-accent" onclick="document.getElementById('explore-search-input').focus();">
-            <i data-lucide="search" style="width: 16px; height: 16px;"></i> Explore All Indian States
-          </button>
-          <button class="btn-outline" style="background: rgba(255,255,255,0.15); color: white; border-color: rgba(255,255,255,0.3);" onclick="switchNavTab('vendor')">
-            <i data-lucide="plus-circle" style="width: 16px; height: 16px;"></i> List Indian Homestay or Tour
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Search & Filter Card with All Indian States -->
-    <div class="search-card-wrapper">
-      <div class="search-card">
-        <div class="search-field">
-          <label><i data-lucide="search" style="width: 12px; height: 12px; display: inline;"></i> Search Place or Attraction</label>
-          <input type="text" id="explore-search-input" placeholder="e.g. Jaisalmer, Alleppey, Manali, Hampi..." oninput="filterBusinesses()">
-        </div>
-        <div class="search-field">
-          <label><i data-lucide="map-pin" style="width: 12px; height: 12px; display: inline;"></i> Indian State / UT</label>
-          <select id="region-filter" onchange="filterBusinesses()">
-            <option value="all">All Indian States & UTs</option>
-            <option value="Rajasthan">Rajasthan</option>
-            <option value="Kerala">Kerala</option>
-            <option value="Himachal Pradesh">Himachal Pradesh</option>
-            <option value="Uttarakhand">Uttarakhand</option>
-            <option value="Karnataka">Karnataka</option>
-            <option value="Goa">Goa</option>
-            <option value="Tamil Nadu">Tamil Nadu</option>
-            <option value="Maharashtra">Maharashtra</option>
-            <option value="Jammu & Kashmir">Jammu & Kashmir</option>
-            <option value="Ladakh">Ladakh</option>
-            <option value="West Bengal">West Bengal</option>
-            <option value="Uttar Pradesh">Uttar Pradesh</option>
-            <option value="Gujarat">Gujarat</option>
-            <option value="Meghalaya">Meghalaya</option>
-            <option value="Assam">Assam</option>
-            <option value="Madhya Pradesh">Madhya Pradesh</option>
-            <option value="Punjab">Punjab</option>
-            <option value="Odisha">Odisha</option>
-            <option value="Sikkim">Sikkim</option>
-            <option value="Andhra Pradesh">Andhra Pradesh</option>
-            <option value="Telangana">Telangana</option>
-            <option value="Bihar">Bihar</option>
-            <option value="Delhi NCR">Delhi NCR</option>
-            <option value="Andaman & Nicobar">Andaman & Nicobar</option>
-          </select>
-        </div>
-        <div class="search-field">
-          <label><i data-lucide="tag" style="width: 12px; height: 12px; display: inline;"></i> Max Price (₹ INR)</label>
-          <select id="budget-filter" onchange="filterBusinesses()">
-            <option value="all">Any Price</option>
-            <option value="2000">Under ₹2,000</option>
-            <option value="3500">Under ₹3,500</option>
-            <option value="5000">Under ₹5,000</option>
-          </select>
-        </div>
-        <div>
-          <button class="btn-primary" style="height: 100%; width: 100%; justify-content: center; padding: 0.9rem 1.5rem;" onclick="filterBusinesses()">
-            <i data-lucide="filter" style="width: 16px; height: 16px;"></i> Filter Places
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Category Pills Filter -->
-    <div class="category-pills-bar">
-      <button class="cat-pill active" data-cat="all" onclick="filterByCategory('all', this)">
-        <i data-lucide="layout-grid" style="width: 16px; height: 16px;"></i> All Indian Experiences
-      </button>
-      <button class="cat-pill" data-cat="stay" onclick="filterByCategory('stay', this)">
-        <i data-lucide="home" style="width: 16px; height: 16px;"></i> Heritage Stays & Homestays
-      </button>
-      <button class="cat-pill" data-cat="tours" onclick="filterByCategory('tours', this)">
-        <i data-lucide="map" style="width: 16px; height: 16px;"></i> Sacred & Heritage Walks
-      </button>
-      <button class="cat-pill" data-cat="food" onclick="filterByCategory('food', this)">
-        <i data-lucide="utensils" style="width: 16px; height: 16px;"></i> Regional Culinary Trails
-      </button>
-      <button class="cat-pill" data-cat="artisan" onclick="filterByCategory('artisan', this)">
-        <i data-lucide="palette" style="width: 16px; height: 16px;"></i> GI Crafts & Handlooms
-      </button>
-      <button class="cat-pill" data-cat="adventure" onclick="filterByCategory('adventure', this)">
-        <i data-lucide="mountain" style="width: 16px; height: 16px;"></i> Himalayan Treks & Safaris
-      </button>
-    </div>
-
-    <!-- Main Content Area -->
-    <div class="main-content">
-      <div class="section-header">
-        <div>
-          <h2>Featured Indian Destinations & Micro-Enterprises</h2>
-          <p>Direct bookings verified by State Tourism Councils and Village Guilds</p>
-        </div>
-        <div style="display: flex; gap: 0.5rem; align-items: center;">
-          <span style="font-size: 0.85rem; color: var(--gray-600); font-weight: 600;" id="businessCountText">Showing 53 famous Indian destinations</span>
-        </div>
-      </div>
-
-      <!-- Business Listings Grid -->
-      <div class="cards-grid" id="businessesGrid">
-        <!-- Rendered dynamically -->
-      </div>
-
-      <!-- Impact Stats Banner -->
-      <div class="impact-banner">
-        <div class="stat-item">
-          <h3>₹14.8 Cr+</h3>
-          <p>Direct Revenue Channeled to Indian Artisans & Hosts</p>
-        </div>
-        <div class="stat-item">
-          <h3>1,250+</h3>
-          <p>Verified Village Homestays Across All States</p>
-        </div>
-        <div class="stat-item">
-          <h3>48,000+</h3>
-          <p>Indian Digital Passes Issued</p>
-        </div>
-        <div class="stat-item">
-          <h3>100%</h3>
-          <p>Preservation of Indigenous GI Crafts & Heritage</p>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <!-- ========================================== -->
-  <!-- VIEW 2: SMART AI ITINERARY GENERATOR -->
-  <!-- ========================================== -->
-  <main id="view-itinerary" class="view-container">
-    <div class="main-content" style="max-width: 900px;">
-      <div class="section-header">
-        <div>
-          <h2>Smart Indian Circuit Itinerary Planner</h2>
-          <p>Custom-crafted travel itineraries across Golden Triangle, Kerala Backwaters, and Himalayan Valleys</p>
-        </div>
-      </div>
-
-      <div style="background: white; border-radius: var(--radius-xl); padding: 1.75rem; border: 1px solid var(--gray-200); box-shadow: var(--shadow-sm); margin-bottom: 2rem;">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem;">
-          <div class="form-group" style="margin-bottom: 0;">
-            <label>Trip Circuit / Duration</label>
-            <select id="itinerary-days">
-              <option value="1">1 Day (Quick City Heritage)</option>
-              <option value="2" selected>2 Days (Weekend State Circuit)</option>
-              <option value="3">3 Days (Deep Cultural Immersion)</option>
-            </select>
-          </div>
-          <div class="form-group" style="margin-bottom: 0;">
-            <label>Indian Travel Theme</label>
-            <select id="itinerary-theme">
-              <option value="culture">Rajasthan Royal Heritage & Folk Crafts</option>
-              <option value="nature">Kerala God's Own Country & Backwaters</option>
-              <option value="himalayas">Himachal & Uttarakhand Mountain Trails</option>
-              <option value="south">South India Temple Architecture & Spices</option>
-            </select>
-          </div>
-          <div class="form-group" style="margin-bottom: 0;">
-            <label>Travel Group</label>
-            <select id="itinerary-group">
-              <option value="solo">Solo Explorer</option>
-              <option value="couple" selected>Couple / Duo</option>
-              <option value="family">Family / Group</option>
-            </select>
-          </div>
-        </div>
-
-        <button class="btn-primary" style="width: 100%; justify-content: center; padding: 0.9rem;" onclick="generateSmartItinerary()">
-          <i data-lucide="sparkles" style="width: 18px; height: 18px;"></i> Generate Smart Indian Itinerary
-        </button>
-      </div>
-
-      <!-- Generated Schedule Output -->
-      <div id="itineraryOutput">
-        <!-- Rendered by JavaScript -->
-      </div>
-    </div>
-  </main>
-
-  <!-- ========================================== -->
-  <!-- VIEW 3: INDIAN GI CRAFTS MARKETPLACE -->
-  <!-- ========================================== -->
-  <main id="view-marketplace" class="view-container">
-    <div class="main-content">
-      <div class="section-header">
-        <div>
-          <h2>Authentic Indian GI-Tagged Crafts & Produce</h2>
-          <p>Order Kashmiri Pashmina, Darjeeling First Flush Tea, Mysore Sandalwood, and Kutch Rogan Art directly from master artisans</p>
-        </div>
-        <button class="btn-outline" onclick="toggleCartDrawer()">
-          <i data-lucide="shopping-cart" style="width: 16px; height: 16px;"></i> Open Cart (<span id="cartSubtotalBtn">₹0</span>)
-        </button>
-      </div>
-
-      <!-- Products Grid -->
-      <div class="shop-grid" id="productsGrid">
-        <!-- Rendered dynamically -->
-      </div>
-    </div>
-  </main>
-
-  <!-- ========================================== -->
-  <!-- VIEW 4: MY BOOKINGS & SMART QR DIGITAL PASS -->
-  <!-- ========================================== -->
-  <main id="view-mybookings" class="view-container">
-    <div class="main-content" style="max-width: 960px;">
-      <div class="section-header">
-        <div>
-          <h2>My Indian Bookings & Smart Tourist Passes</h2>
-          <p>Show your verified digital QR Pass at local Indian venues, homestays, and tour operators</p>
-        </div>
-        <button class="btn-primary btn-sm" onclick="switchNavTab('explore')">
-          <i data-lucide="plus" style="width: 14px; height: 14px;"></i> Book Another Place
-        </button>
-      </div>
-
-      <div id="bookingsListContainer">
-        <!-- Rendered dynamically -->
-      </div>
-    </div>
-  </main>
-
-  <!-- ========================================== -->
-  <!-- VIEW 5: LOCAL BUSINESS HOST PORTAL -->
-  <!-- ========================================== -->
-  <main id="view-vendor" class="view-container">
-    <div class="main-content">
-      <div class="section-header">
-        <div>
-          <h2>Indian Local Host & Homestay Portal</h2>
-          <p>Manage listings across states, verify visitor QR passes, track earnings, and welcome travelers</p>
-        </div>
-        <div style="display: flex; gap: 0.75rem;">
-          <button class="btn-accent" onclick="openScannerModal()">
-            <i data-lucide="qr-code" style="width: 16px; height: 16px;"></i> Scan Tourist Pass
-          </button>
-          <button class="btn-primary" onclick="openAddListingModal()">
-            <i data-lucide="plus-circle" style="width: 16px; height: 16px;"></i> Add New Indian Listing
-          </button>
-        </div>
-      </div>
-
-      <!-- Host Metrics -->
-      <div class="dashboard-grid">
-        <div class="metric-card">
-          <div class="metric-icon-box">
-            <span style="font-size: 1.3rem; font-weight: 800;">₹</span>
-          </div>
-          <div class="metric-details">
-            <p>This Month's Earnings</p>
-            <h4 id="hostRevenueMetric">₹78,400</h4>
-          </div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-icon-box" style="background: #e0f2fe; color: #0284c7;">
-            <i data-lucide="users"></i>
-          </div>
-          <div class="metric-details">
-            <p>Total Indian & Global Guests</p>
-            <h4>164 Travelers</h4>
-          </div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-icon-box" style="background: #fef3c7; color: #d97706;">
-            <i data-lucide="star"></i>
-          </div>
-          <div class="metric-details">
-            <p>Average Host Rating</p>
-            <h4>4.94 / 5.0</h4>
-          </div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-icon-box" style="background: #dcfce7; color: #16a34a;">
-            <i data-lucide="shield-check"></i>
-          </div>
-          <div class="metric-details">
-            <p>State Tourism Board</p>
-            <h4>Verified Host Grade A</h4>
-          </div>
-        </div>
-      </div>
-
-      <!-- Charts -->
-      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem;">
-        <div style="background: white; border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-sm);">
-          <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--gray-800);">Monthly Traveler Footfall (India)</h3>
-          <div style="height: 250px;">
-            <canvas id="hostBookingsChart"></canvas>
-          </div>
-        </div>
-        <div style="background: white; border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-sm);">
-          <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--gray-800);">Traveler Origin States</h3>
-          <div style="height: 250px; display: flex; align-items: center; justify-content: center;">
-            <canvas id="hostDemographicsChart"></canvas>
-          </div>
-        </div>
-      </div>
-
-      <!-- Bookings Table -->
-      <div style="margin-bottom: 2.5rem;">
-        <div class="section-header" style="margin-bottom: 1rem;">
-          <h3 style="font-size: 1.3rem;">Recent Indian Reservations</h3>
-          <span style="font-size: 0.85rem; color: var(--gray-600);">Real-time check-in validation</span>
-        </div>
-        <div class="data-table-container">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Booking ID</th>
-                <th>Guest Name</th>
-                <th>State & Place</th>
-                <th>Date</th>
-                <th>Guests</th>
-                <th>Amount (₹)</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="hostBookingsTableBody">
-              <!-- Rendered dynamically -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Manage Listings -->
-      <div>
-        <div class="section-header" style="margin-bottom: 1rem;">
-          <h3 style="font-size: 1.3rem;">My Active Indian Offerings</h3>
-          <button class="btn-outline btn-sm" onclick="openAddListingModal()">
-            <i data-lucide="plus" style="width: 14px; height: 14px;"></i> New Listing
-          </button>
-        </div>
-        <div class="cards-grid" id="hostListingsGrid">
-          <!-- Rendered dynamically -->
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <!-- ========================================== -->
-  <!-- VIEW 6: STATE TOURISM ADMIN VIEW -->
-  <!-- ========================================== -->
-  <main id="view-admin" class="view-container">
-    <div class="main-content">
-      <div class="section-header">
-        <div>
-          <h2>Indian Tourism Board & State Compliance Council</h2>
-          <p>National and state-wise tourism economic impact, heritage protection, and accreditation</p>
-        </div>
-        <button class="btn-outline btn-sm" onclick="showToast('State Tourism Compliance Report Downloaded', 'download')">
-          <i data-lucide="download" style="width: 14px; height: 14px;"></i> Export State Audit
-        </button>
-      </div>
-
-      <!-- Admin KPIs -->
-      <div class="dashboard-grid">
-        <div class="metric-card">
-          <div class="metric-icon-box" style="background: #ecfdf5; color: #047857;">
-            <i data-lucide="trending-up"></i>
-          </div>
-          <div class="metric-details">
-            <p>Annual Local Tourism Economy</p>
-            <h4>₹428.6 Crore</h4>
-          </div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-icon-box" style="background: #eff6ff; color: #1d4ed8;">
-            <i data-lucide="store"></i>
-          </div>
-          <div class="metric-details">
-            <p>Certified State Enterprises</p>
-            <h4>3,480 Homestays</h4>
-          </div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-icon-box" style="background: #fdf2f8; color: #be185d;">
-            <i data-lucide="shield"></i>
-          </div>
-          <div class="metric-details">
-            <p>GI Tagging Verification</p>
-            <h4>99.4%</h4>
-          </div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-icon-box" style="background: #fffbeb; color: #b45309;">
-            <i data-lucide="alert-circle"></i>
-          </div>
-          <div class="metric-details">
-            <p>Pending State Verifications</p>
-            <h4>3 Pending</h4>
-          </div>
-        </div>
-      </div>
-
-      <!-- Charts -->
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem;">
-        <div style="background: white; border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 1.5rem;">
-          <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--gray-800);">Quarterly Indian State Tourism Revenue (₹ Cr)</h3>
-          <div style="height: 250px;">
-            <canvas id="adminRevenueChart"></canvas>
-          </div>
-        </div>
-        <div style="background: white; border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 1.5rem;">
-          <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--gray-800);">Tourism Footfall Share by Zone</h3>
-          <div style="height: 250px; display: flex; align-items: center; justify-content: center;">
-            <canvas id="adminCategoryChart"></canvas>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <!-- MODALS -->
-
-  <!-- BOOKING MODAL -->
-  <div class="modal-overlay" id="bookingModal">
-    <div class="modal-box">
-      <div class="modal-header">
-        <h3 id="bookingModalTitle">Book Indian Experience</h3>
-        <button class="modal-close-btn" onclick="closeModal('bookingModal')">
-          <i data-lucide="x" style="width: 16px; height: 16px;"></i>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.25rem; background: var(--gray-50); padding: 0.9rem; border-radius: var(--radius-md);">
-          <img id="bookingModalImg" src="" style="width: 70px; height: 70px; border-radius: var(--radius-sm); object-fit: cover;">
-          <div>
-            <h4 id="bookingModalBizName" style="font-size: 1rem; color: var(--gray-900);">Place Name</h4>
-            <p id="bookingModalPrice" style="font-size: 0.85rem; font-weight: 700; color: var(--primary-dark);">₹3,500 / night</p>
-          </div>
-        </div>
-
-        <form id="bookingForm" onsubmit="confirmBooking(event)">
-          <div class="form-group">
-            <label>Full Name</label>
-            <input type="text" id="bookGuestName" required placeholder="Your full name">
-          </div>
-          <div class="form-group">
-            <label>Email Address</label>
-            <input type="email" id="bookGuestEmail" required placeholder="name@example.com">
-          </div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-            <div class="form-group">
-              <label>Travel Date</label>
-              <input type="date" id="bookDate" required>
-            </div>
-            <div class="form-group">
-              <label>Number of Travelers</label>
-              <input type="number" id="bookGuests" min="1" max="10" value="2" required onchange="calculateBookingTotal()">
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Special Requests or Dietary Preferences</label>
-            <textarea id="bookNotes" rows="2" placeholder="e.g. Vegetarian, Jain meal, early sunrise boat..."></textarea>
-          </div>
-
-          <div style="background: var(--primary-subtle); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-weight: 700; font-size: 0.9rem; color: var(--primary-dark);">Total Payable to Local Host:</span>
-            <span id="bookingModalTotalPrice" style="font-size: 1.35rem; font-weight: 800; color: var(--primary-dark); font-family: var(--font-display);">₹7,000</span>
-          </div>
-
-          <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 0.85rem;">
-            <i data-lucide="check-circle" style="width: 18px; height: 18px;"></i> Confirm Reservation & Generate Pass
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- QR PASS MODAL -->
-  <div class="modal-overlay" id="qrPassModal">
-    <div class="modal-box" style="max-width: 440px;">
-      <div class="modal-header">
-        <h3>Verified Tourist QR Pass</h3>
-        <button class="modal-close-btn" onclick="closeModal('qrPassModal')">
-          <i data-lucide="x" style="width: 16px; height: 16px;"></i>
-        </button>
-      </div>
-      <div class="modal-body" style="text-align: center;">
-        <div class="qr-pass-box">
-          <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--primary); letter-spacing: 0.05em;">Smart Local Tourism Pass • India</div>
-          <h4 id="passModalBizName" style="font-size: 1.2rem; margin: 0.35rem 0;">Destination</h4>
-          <p id="passModalGuestInfo" style="font-size: 0.85rem; color: var(--gray-600);">Traveler: Rajesh • 2 Guests</p>
-
-          <div id="qrCodeContainer"></div>
-
-          <div style="background: var(--gray-100); padding: 0.5rem 1rem; border-radius: 9999px; display: inline-block; font-family: monospace; font-size: 1rem; font-weight: 700; color: var(--gray-800);" id="passBookingCode">
-            TOUR-IND-8942
-          </div>
-          <p style="font-size: 0.75rem; color: var(--gray-500); margin-top: 0.5rem;">Present this QR pass upon arrival for paperless entry and verification.</p>
-        </div>
-
-        <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="window.print()">
-          <i data-lucide="printer" style="width: 16px; height: 16px;"></i> Print or Save Pass
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- SCANNER MODAL -->
-  <div class="modal-overlay" id="scannerModal">
-    <div class="modal-box" style="max-width: 500px;">
-      <div class="modal-header">
-        <h3>Scan Tourist Digital Pass</h3>
-        <button class="modal-close-btn" onclick="closeScannerModal()">
-          <i data-lucide="x" style="width: 16px; height: 16px;"></i>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div id="scannerReader"></div>
-
-        <div style="margin-top: 1.5rem; text-align: center;">
-          <p style="font-size: 0.85rem; color: var(--gray-600); margin-bottom: 0.75rem;">Or verify via booking code:</p>
-          <div style="display: flex; gap: 0.5rem;">
-            <input type="text" id="manualCodeInput" placeholder="e.g. TOUR-IND-8942" style="flex: 1; padding: 0.65rem; border: 1px solid var(--gray-300); border-radius: var(--radius-md); font-weight: 600; text-transform: uppercase;">
-            <button class="btn-primary" onclick="verifyManualCode()">Verify</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ADD LISTING MODAL -->
-  <div class="modal-overlay" id="addListingModal">
-    <div class="modal-box">
-      <div class="modal-header">
-        <h3>List Your Indian Business or Homestay</h3>
-        <button class="modal-close-btn" onclick="closeModal('addListingModal')">
-          <i data-lucide="x" style="width: 16px; height: 16px;"></i>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form onsubmit="submitNewListing(event)">
-          <div class="form-group">
-            <label>Business / Experience Title</label>
-            <input type="text" id="newBizTitle" required placeholder="e.g. Heritage Haveli Stay & Kathakali Night">
-          </div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-            <div class="form-group">
-              <label>Indian State / UT</label>
-              <select id="newBizState" required>
-                <option value="Rajasthan">Rajasthan</option>
-                <option value="Kerala">Kerala</option>
-                <option value="Himachal Pradesh">Himachal Pradesh</option>
-                <option value="Uttarakhand">Uttarakhand</option>
-                <option value="Karnataka">Karnataka</option>
-                <option value="Goa">Goa</option>
-                <option value="Tamil Nadu">Tamil Nadu</option>
-                <option value="Maharashtra">Maharashtra</option>
-                <option value="Jammu & Kashmir">Jammu & Kashmir</option>
-                <option value="Ladakh">Ladakh</option>
-                <option value="West Bengal">West Bengal</option>
-                <option value="Uttar Pradesh">Uttar Pradesh</option>
-                <option value="Gujarat">Gujarat</option>
-                <option value="Meghalaya">Meghalaya</option>
-                <option value="Assam">Assam</option>
-                <option value="Madhya Pradesh">Madhya Pradesh</option>
-                <option value="Punjab">Punjab</option>
-                <option value="Odisha">Odisha</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Category</label>
-              <select id="newBizCategory" required>
-                <option value="stay">Homestay / Stay</option>
-                <option value="tours">Heritage Tour / Walk</option>
-                <option value="food">Culinary Trail</option>
-                <option value="artisan">Artisan Craft Workshop</option>
-                <option value="adventure">Trek / Safari</option>
-              </select>
-            </div>
-          </div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-            <div class="form-group">
-              <label>City / Location</label>
-              <input type="text" id="newBizLocation" required placeholder="e.g. Udaipur, Rajasthan">
-            </div>
-            <div class="form-group">
-              <label>Price in ₹ (INR)</label>
-              <input type="number" id="newBizPrice" required placeholder="2500" min="200">
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Image URL</label>
-            <input type="url" id="newBizImg" required placeholder="https://images.unsplash.com/...">
-          </div>
-          <div class="form-group">
-            <label>Description & Native Highlights</label>
-            <textarea id="newBizDesc" rows="3" required placeholder="Describe the authentic cultural experience guests will enjoy..."></textarea>
-          </div>
-
-          <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 0.85rem;">
-            <i data-lucide="check" style="width: 16px; height: 16px;"></i> Publish Listing
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- AUTH MODAL -->
-  <div class="modal-overlay" id="authModal">
-    <div class="modal-box" style="max-width: 440px;">
-      <div class="modal-header">
-        <h3 id="authModalTitle">Sign In to TourisMart India</h3>
-        <button class="modal-close-btn" onclick="closeModal('authModal')">
-          <i data-lucide="x" style="width: 16px; height: 16px;"></i>
-        </button>
-      </div>
-      <div class="modal-body">
-        <button class="btn-outline" style="width: 100%; justify-content: center; margin-bottom: 1.25rem; font-weight: 600;" onclick="signInWithGooglePopup()">
-          <svg style="width: 18px; height: 18px; margin-right: 0.5rem;" viewBox="0 0 24 24">
-            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-          </svg>
-          Continue with Google
-        </button>
-
-        <form id="authEmailForm" onsubmit="handleAuthSubmit(event)">
-          <div class="form-group">
-            <label>Email Address</label>
-            <input type="email" id="authEmail" required placeholder="you@example.com">
-          </div>
-          <div class="form-group">
-            <label>Password</label>
-            <input type="password" id="authPassword" required placeholder="••••••••">
-          </div>
-          
-          <div class="form-group" id="roleSelectGroup" style="display: none;">
-            <label>Role</label>
-            <select id="authRole">
-              <option value="tourist">Tourist / Traveler</option>
-              <option value="vendor">Indian Local Host / Artisan</option>
-              <option value="admin">State Tourism Board Officer</option>
-            </select>
-          </div>
-
-          <button type="submit" class="btn-primary" id="authSubmitBtn" style="width: 100%; justify-content: center; padding: 0.8rem; margin-top: 0.5rem;">
-            Sign In with Firebase
-          </button>
-        </form>
-
-        <div style="text-align: center; margin-top: 1rem; font-size: 0.85rem; color: var(--gray-600);">
-          <span id="authTogglePrompt">Don't have an account?</span>
-          <a href="javascript:void(0)" onclick="toggleAuthMode()" id="authToggleLink" style="font-weight: 700; color: var(--primary); margin-left: 0.35rem;">Sign Up</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- CART DRAWER -->
-  <div class="cart-drawer-overlay" id="cartOverlay" onclick="toggleCartDrawer()"></div>
-  <aside class="cart-drawer" id="cartDrawer">
-    <div style="padding: 1.25rem; border-bottom: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center;">
-      <h3 style="font-size: 1.15rem; display: flex; align-items: center; gap: 0.5rem;">
-        <i data-lucide="shopping-bag" style="width: 18px; height: 18px; color: var(--saffron);"></i> Indian GI Crafts Cart
-      </h3>
-      <button class="modal-close-btn" onclick="toggleCartDrawer()">
-        <i data-lucide="x" style="width: 16px; height: 16px;"></i>
-      </button>
-    </div>
-    
-    <div style="flex: 1; overflow-y: auto; padding: 1.25rem;" id="cartItemsList">
-      <p style="color: var(--gray-500); text-align: center; margin-top: 2rem;">Your cart is empty.</p>
-    </div>
-
-    <div style="padding: 1.25rem; border-top: 1px solid var(--gray-200); background: var(--gray-50);">
-      <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; font-weight: 700;">
-        <span>Total (Supports Native Artisans):</span>
-        <span id="cartDrawerTotal" style="color: var(--primary-dark); font-size: 1.25rem; font-family: var(--font-display);">₹0</span>
-      </div>
-      <button class="btn-primary" style="width: 100%; justify-content: center; padding: 0.85rem;" onclick="checkoutCart()">
-        <i data-lucide="credit-card" style="width: 16px; height: 16px;"></i> Pay Directly via UPI / Card
-      </button>
-    </div>
-  </aside>
-
-  <!-- TOAST NOTICE -->
-  <div id="toastNotice">
-    <i data-lucide="info" id="toastIcon" style="width: 18px; height: 18px;"></i>
-    <span id="toastMessage">Action completed successfully</span>
-  </div>
-
-  <!-- PORTAL FOOTER -->
-  <footer class="portal-footer">
-    <div class="footer-inner">
-      <div>
-        <div style="display: flex; align-items: center; gap: 0.6rem; color: white; margin-bottom: 1rem;">
-          <div class="brand-logo-icon" style="width: 34px; height: 34px;">
-            <i data-lucide="compass" style="width: 18px; height: 18px;"></i>
-          </div>
-          <h2 style="font-size: 1.2rem;">TourisMart India</h2>
-        </div>
-        <p style="font-size: 0.875rem; line-height: 1.6; max-width: 340px;">Empowering local tourism micro-businesses, heritage homestays, and indigenous GI artisans across every state of India with zero-commission direct bookings.</p>
-      </div>
-      <div>
-        <h4 style="color: white; font-size: 0.95rem; margin-bottom: 1rem;">Indian Circuits</h4>
-        <ul style="list-style: none; font-size: 0.875rem; display: flex; flex-direction: column; gap: 0.6rem;">
-          <li><a href="javascript:void(0)" onclick="filterByStateName('Rajasthan')">Rajasthan Royal Desert</a></li>
-          <li><a href="javascript:void(0)" onclick="filterByStateName('Kerala')">Kerala God's Own Backwaters</a></li>
-          <li><a href="javascript:void(0)" onclick="filterByStateName('Himachal Pradesh')">Himachal Apple Orchards</a></li>
-          <li><a href="javascript:void(0)" onclick="filterByStateName('Karnataka')">Karnataka Heritage & Coffee</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 style="color: white; font-size: 0.95rem; margin-bottom: 1rem;">Host Ecosystem</h4>
-        <ul style="list-style: none; font-size: 0.875rem; display: flex; flex-direction: column; gap: 0.6rem;">
-          <li><a href="javascript:void(0)" onclick="switchNavTab('vendor')">Host Dashboard</a></li>
-          <li><a href="javascript:void(0)" onclick="openAddListingModal()">Publish Indian Listing</a></li>
-          <li><a href="javascript:void(0)" onclick="openScannerModal()">Pass QR Scanner</a></li>
-          <li><a href="javascript:void(0)" onclick="switchNavTab('marketplace')">Indian GI Handicrafts</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 style="color: white; font-size: 0.95rem; margin-bottom: 1rem;">Tech & Security</h4>
-        <ul style="list-style: none; font-size: 0.875rem; display: flex; flex-direction: column; gap: 0.6rem;">
-          <li><span style="color: #10b981; display: inline-flex; align-items: center; gap: 0.35rem;"><i data-lucide="check-circle" style="width: 14px; height: 14px;"></i> Firebase Auth & DB</span></li>
-          <li><span style="color: #94a3b8; font-size: 0.8rem;">GitHub: SMART-TOURIST18</span></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>© 2026 TourisMart India. Sustainable Cultural Tourism Across Indian States & Union Territories.</p>
-      <p style="color: #64748b;">Powered by Firebase Auth & Firestore • Local Community Tourism Council</p>
-    </div>
-  </footer>
-
-  <!-- ========================================== -->
-  <!-- APPLICATION SCRIPT LOGIC (INDIAN PLACES) -->
-  <!-- ========================================== -->
-  <script>
-    // ------------------------------------------
-    // ALL INDIAN TOURIST PLACES & EXPERIENCES
-    // ------------------------------------------
-    let localBusinesses = [
-  {
-    "id": "ind_1",
-    "title": "Sam Sand Dunes Camel Safari & Desert Swiss Tents",
-    "category": "stay",
-    "region": "Rajasthan",
-    "location": "Jaisalmer, Rajasthan",
-    "price": 3800,
-    "priceUnit": "night",
-    "rating": 4.96,
-    "reviewsCount": 210,
-    "image": "https://images.unsplash.com/photo-1548013146-72479768bada?w=800&q=80",
-    "ecoTag": "Thar Desert Community",
-    "description": "Swiss tents under desert stars with live Kalbelia dance, camel dune ride, and authentic woodfire Dal Baati Churma."
-  },
-  {
-    "id": "ind_raj_2",
-    "title": "Amber Fort & Hawa Mahal Heritage Walk + Blue Pottery",
-    "category": "tours",
-    "region": "Rajasthan",
-    "location": "Jaipur, Rajasthan",
-    "price": 1850,
-    "priceUnit": "person",
-    "rating": 4.94,
-    "reviewsCount": 320,
-    "image": "https://images.unsplash.com/photo-1599661046289-e31897846e41?w=800&q=80",
-    "ecoTag": "Pink City Heritage Guild",
-    "description": "Explore Amber Fort, Jal Mahal, and Hawa Mahal with a certified royal historian. Includes a hands-on GI blue pottery session."
-  },
-  {
-    "id": "ind_raj_3",
-    "title": "Lake Pichola Royal Haveli & Sunset Boat Cruise",
-    "category": "stay",
-    "region": "Rajasthan",
-    "location": "Udaipur, Rajasthan",
-    "price": 5200,
-    "priceUnit": "night",
-    "rating": 4.98,
-    "reviewsCount": 185,
-    "image": "https://images.unsplash.com/photo-1615836245337-f5b9b2303f10?w=800&q=80",
-    "ecoTag": "Heritage Haveli Trust",
-    "description": "Historic Mewari lakeside haveli overlooking the City Palace and Jag Mandir. Includes evening sunset boat cruise."
-  },
-  {
-    "id": "ind_raj_4",
-    "title": "Mehrangarh Fort & Blue City Brahmin Alley Walk",
-    "category": "tours",
-    "region": "Rajasthan",
-    "location": "Jodhpur, Rajasthan",
-    "price": 1400,
-    "priceUnit": "tour",
-    "rating": 4.92,
-    "reviewsCount": 145,
-    "image": "https://images.unsplash.com/photo-1589308078059-be1415eab4c3?w=800&q=80",
-    "ecoTag": "Marwar Historians Guild",
-    "description": "Imposing hill fort exploration followed by walking through indigo-blue alleys of Navchokiya with piping hot Mirchi Vada."
-  },
-  {
-    "id": "ind_2",
-    "title": "Alleppey Backwater Eco-Houseboat & Village Canoe Cruise",
-    "category": "stay",
-    "region": "Kerala",
-    "location": "Alappuzha (Alleppey), Kerala",
-    "price": 5500,
-    "priceUnit": "night",
-    "rating": 4.98,
-    "reviewsCount": 290,
-    "image": "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=800&q=80",
-    "ecoTag": "Solar Houseboat Certified",
-    "description": "Traditional wooden Kettuvallam through palm canals. Fresh Karimeen Pollichathu meal and canoe paddle into toddy village groves."
-  },
-  {
-    "id": "ind_ker_2",
-    "title": "Munnar Eravikulam Tea Hills & Spice Plantation Trek",
-    "category": "tours",
-    "region": "Kerala",
-    "location": "Munnar, Kerala",
-    "price": 1600,
-    "priceUnit": "person",
-    "rating": 4.93,
-    "reviewsCount": 240,
-    "image": "https://images.unsplash.com/photo-1593693397690-362cb9666fc2?w=800&q=80",
-    "ecoTag": "Western Ghats Flora Trust",
-    "description": "Walk through lush rolling tea carpets, spot endangered Nilgiri Tahr, and taste single-estate high-grown orthodox tea."
-  },
-  {
-    "id": "ind_ker_3",
-    "title": "Fort Kochi Chinese Fishing Nets & Kathakali Night",
-    "category": "tours",
-    "region": "Kerala",
-    "location": "Kochi (Cochin), Kerala",
-    "price": 1250,
-    "priceUnit": "person",
-    "rating": 4.89,
-    "reviewsCount": 178,
-    "image": "https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?w=800&q=80",
-    "ecoTag": "Colonial Spice Port Walk",
-    "description": "Sunset along iconic wooden Chinese fishing nets, Jewish Synagogue, Mattancherry palace, and front-row traditional Kathakali theater."
-  },
-  {
-    "id": "ind_ker_4",
-    "title": "Wayanad Rainforest Treehouse & Chembra Peak Trek",
-    "category": "stay",
-    "region": "Kerala",
-    "location": "Wayanad, Kerala",
-    "price": 4600,
-    "priceUnit": "night",
-    "rating": 4.95,
-    "reviewsCount": 135,
-    "image": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&q=80",
-    "ecoTag": "Zero-Impact Treehouse",
-    "description": "Perched 60 feet above the forest canopy amidst cardamom estates. Trek to the famous heart-shaped lake at Chembra Peak."
-  },
-  {
-    "id": "ind_3",
-    "title": "Old Manali Apple Orchard Wooden Chalet & Solang Pass",
-    "category": "stay",
-    "region": "Himachal Pradesh",
-    "location": "Manali, Himachal Pradesh",
-    "price": 2800,
-    "priceUnit": "night",
-    "rating": 4.93,
-    "reviewsCount": 215,
-    "image": "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=800&q=80",
-    "ecoTag": "Kath-Kuni Timber Architecture",
-    "description": "Cedarwood cottage surrounded by heirloom apple orchards. Snow peak views of Solang Valley, bukhari stoves, and fresh Siddu."
-  },
-  {
-    "id": "ind_hp_2",
-    "title": "Shimla British Heritage Ridge Walk & Toy Train Experience",
-    "category": "tours",
-    "region": "Himachal Pradesh",
-    "location": "Shimla, Himachal Pradesh",
-    "price": 1500,
-    "priceUnit": "person",
-    "rating": 4.9,
-    "reviewsCount": 195,
-    "image": "https://images.unsplash.com/photo-1589802829985-817e51171b92?w=800&q=80",
-    "ecoTag": "UNESCO Kalka-Shimla Railway",
-    "description": "Historic colonial Mall Road, Christ Church, and Viceregal Lodge walk, with scenic Kalka-Shimla mountain toy train ride."
-  },
-  {
-    "id": "ind_hp_3",
-    "title": "Spiti Valley Key Monastery & Mud-Brick Village Homestay",
-    "category": "adventure",
-    "region": "Himachal Pradesh",
-    "location": "Kaza, Spiti Valley, Himachal Pradesh",
-    "price": 3200,
-    "priceUnit": "night",
-    "rating": 4.97,
-    "reviewsCount": 110,
-    "image": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&q=80",
-    "ecoTag": "High Altitude Eco-Village",
-    "description": "Explore 1,000-year-old Key Gompa perched on a cliff at 13,600 ft. Stargaze in zero-pollution skies at Hikkim and Langza."
-  },
-  {
-    "id": "ind_hp_4",
-    "title": "Dharamshala Tibetan Monasteries & Kangra Tea Trail",
-    "category": "tours",
-    "region": "Himachal Pradesh",
-    "location": "McLeod Ganj, Dharamshala, Himachal Pradesh",
-    "price": 1350,
-    "priceUnit": "person",
-    "rating": 4.91,
-    "reviewsCount": 160,
-    "image": "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=80",
-    "ecoTag": "Tibetan Cultural Preservation",
-    "description": "Tsuglagkhang Dalai Lama temple complex, Norbulingka Institute Tibetan arts, and century-old Kangra green tea estates."
-  },
-  {
-    "id": "ind_4",
-    "title": "Rishikesh Holy Ganga River Rafting & Cliffside Camp",
-    "category": "adventure",
-    "region": "Uttarakhand",
-    "location": "Shivpuri, Rishikesh, Uttarakhand",
-    "price": 1800,
-    "priceUnit": "person",
-    "rating": 4.91,
-    "reviewsCount": 340,
-    "image": "https://images.unsplash.com/photo-1581793745862-99fde7fa73d2?w=800&q=80",
-    "ecoTag": "Certified White-Water Guides",
-    "description": "Thrilling Grade III+ river rafting through Marine Drive rapids, cliff jumping into the holy Ganga, and evening Triveni Ghat Aarti."
-  },
-  {
-    "id": "ind_uk_2",
-    "title": "Nainital Lakefront Heritage Stay & Naini Peak Trek",
-    "category": "stay",
-    "region": "Uttarakhand",
-    "location": "Nainital, Uttarakhand",
-    "price": 3100,
-    "priceUnit": "night",
-    "rating": 4.92,
-    "reviewsCount": 180,
-    "image": "https://images.unsplash.com/photo-1589802829985-817e51171b92?w=800&q=80",
-    "ecoTag": "Kumaon Hill Homestay",
-    "description": "Overlooking eye-shaped Naini Lake. Boating, cable car ride to Snow View Point, and guided rhododendron forest trail to China Peak."
-  },
-  {
-    "id": "ind_uk_3",
-    "title": "Jim Corbett Tiger Safari & Ramganga River Jungle Lodge",
-    "category": "adventure",
-    "region": "Uttarakhand",
-    "location": "Ramnagar, Jim Corbett, Uttarakhand",
-    "price": 4200,
-    "priceUnit": "night",
-    "rating": 4.95,
-    "reviewsCount": 220,
-    "image": "https://images.unsplash.com/photo-1575550959106-5a7defe28b56?w=800&q=80",
-    "ecoTag": "Project Tiger Partner",
-    "description": "Open 4x4 Jeep Safari through Dhikala & Bijrani zones tracking wild Royal Bengal tigers, Asiatic elephants, and gharials."
-  },
-  {
-    "id": "ind_uk_4",
-    "title": "Mussoorie Queen of Hills & Landour Colonial Bakehouse Walk",
-    "category": "tours",
-    "region": "Uttarakhand",
-    "location": "Landour, Mussoorie, Uttarakhand",
-    "price": 1500,
-    "priceUnit": "person",
-    "rating": 4.88,
-    "reviewsCount": 140,
-    "image": "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=800&q=80",
-    "ecoTag": "Historic Deodar Walk",
-    "description": "Quiet pine-covered trails of Landour, Char Dukan pancakes, Ruskin Bond landmarks, and sweeping Doon Valley vistas."
-  },
-  {
-    "id": "ind_5",
-    "title": "Coorg Rainforest Coffee & Pepper Estate Stay",
-    "category": "stay",
-    "region": "Karnataka",
-    "location": "Madikeri, Coorg, Karnataka",
-    "price": 3200,
-    "priceUnit": "night",
-    "rating": 4.95,
-    "reviewsCount": 175,
-    "image": "https://images.unsplash.com/photo-1598091383021-15ddea10925d?w=800&q=80",
-    "ecoTag": "Shade-Grown Bird Friendly",
-    "description": "Planter bungalow amidst 100 acres of Arabica coffee and pepper. Includes stream trekking, coffee roasting, and Kodava feast."
-  },
-  {
-    "id": "ind_6",
-    "title": "Hampi UNESCO Boulder Ruins & Tungabhadra Coracle Boat",
-    "category": "tours",
-    "region": "Karnataka",
-    "location": "Hampi, Karnataka",
-    "price": 1400,
-    "priceUnit": "tour",
-    "rating": 4.94,
-    "reviewsCount": 250,
-    "image": "https://images.unsplash.com/photo-1600100397608-f010f443b749?w=800&q=80",
-    "ecoTag": "UNESCO Archaeological Guide",
-    "description": "Dawn tour of Vijayanagara empire, stone chariot, musical pillars, and sunset coracle boat ride on Tungabhadra river."
-  },
-  {
-    "id": "ind_kar_3",
-    "title": "Mysore Palace Grand Illumination & Sandalwood Silk Trail",
-    "category": "tours",
-    "region": "Karnataka",
-    "location": "Mysore, Karnataka",
-    "price": 1200,
-    "priceUnit": "tour",
-    "rating": 4.96,
-    "reviewsCount": 310,
-    "image": "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=800&q=80",
-    "ecoTag": "Wodeyar Royal Heritage",
-    "description": "Explore the 100,000-bulb illuminated Amba Vilas Palace, century-old Devaraja flower market, and Mysore silk weaving karkhana."
-  },
-  {
-    "id": "ind_kar_4",
-    "title": "Gokarna Om Beach Cliffside Eco-Hut & Arabian Sea Sunset",
-    "category": "stay",
-    "region": "Karnataka",
-    "location": "Gokarna, Karnataka",
-    "price": 2400,
-    "priceUnit": "night",
-    "rating": 4.91,
-    "reviewsCount": 165,
-    "image": "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=800&q=80",
-    "ecoTag": "Coastal Eco-Sanctuary",
-    "description": "Rustic thatched huts overlooking Om Beach and Kudle Beach. Yoga at sunrise, dolphin spotting boat rides, and Mahabaleshwar temple."
-  },
-  {
-    "id": "ind_7",
-    "title": "Divar Island Cycling & Goan Feni Heritage Trail",
-    "category": "tours",
-    "region": "Goa",
-    "location": "Divar Island, Old Goa, Goa",
-    "price": 1650,
-    "priceUnit": "person",
-    "rating": 4.88,
-    "reviewsCount": 130,
-    "image": "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=800&q=80",
-    "ecoTag": "Slow Village Tourism",
-    "description": "Ferry over to tranquil Divar Island. Cycle past Portuguese villas, ancient paddy fields, and visit a traditional cashew feni distillery."
-  },
-  {
-    "id": "ind_goa_2",
-    "title": "Palolem Beach Kayaking & Secret Butterfly Beach Cruise",
-    "category": "adventure",
-    "region": "Goa",
-    "location": "Canacona, South Goa",
-    "price": 1450,
-    "priceUnit": "person",
-    "rating": 4.92,
-    "reviewsCount": 190,
-    "image": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80",
-    "ecoTag": "Marine Conservation Certified",
-    "description": "Paddle sea kayaks through calm turquoise bays, discover hidden Butterfly Beach, and spot playful Indo-Pacific humpback dolphins."
-  },
-  {
-    "id": "ind_11",
-    "title": "Chettinad Heritage Mansion Walk & 18-Spice Feast",
-    "category": "food",
-    "region": "Tamil Nadu",
-    "location": "Karaikudi, Chettinad, Tamil Nadu",
-    "price": 1950,
-    "priceUnit": "person",
-    "rating": 4.89,
-    "reviewsCount": 125,
-    "image": "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=800&q=80",
-    "ecoTag": "Chettiar Architecture Guild",
-    "description": "Tour 19th-century merchant mansions with Burma teak pillars and Italian marble. Hands-on stone-grinding Chettinad pepper feast."
-  },
-  {
-    "id": "ind_tn_2",
-    "title": "Madurai Meenakshi Amman Temple Dawn Architectural Tour",
-    "category": "tours",
-    "region": "Tamil Nadu",
-    "location": "Madurai, Tamil Nadu",
-    "price": 1100,
-    "priceUnit": "tour",
-    "rating": 4.97,
-    "reviewsCount": 380,
-    "image": "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=800&q=80",
-    "ecoTag": "Dravidian Temple Heritage",
-    "description": "Witness morning temple rituals amidst 33,000 sculpted figures, the Hall of Thousand Pillars, and taste Madurai Jigarthanda."
-  },
-  {
-    "id": "ind_tn_3",
-    "title": "Ooty Nilgiri Mountain Toy Train & Botanical Heritage Stay",
-    "category": "stay",
-    "region": "Tamil Nadu",
-    "location": "Ooty (Udhagamandalam), Tamil Nadu",
-    "price": 3400,
-    "priceUnit": "night",
-    "rating": 4.93,
-    "reviewsCount": 210,
-    "image": "https://images.unsplash.com/photo-1593693397690-362cb9666fc2?w=800&q=80",
-    "ecoTag": "Nilgiri Biosphere Reserve",
-    "description": "Ride the UNESCO steam railway to Coonoor through 250 bridges. Stay in heritage stone cottages with eucalyptus wood fires."
-  },
-  {
-    "id": "ind_19",
-    "title": "Mahabaleshwar Strawberry Agro-Farm & Warli Art Camp",
-    "category": "food",
-    "region": "Maharashtra",
-    "location": "Mahabaleshwar, Maharashtra",
-    "price": 2100,
-    "priceUnit": "person",
-    "rating": 4.87,
-    "reviewsCount": 115,
-    "image": "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=800&q=80",
-    "ecoTag": "Organic Red-Soil Cooperative",
-    "description": "Pluck winter strawberries directly from organic farm rows. Enjoy fresh strawberry cream and paint authentic Warli tribal murals."
-  },
-  {
-    "id": "ind_mah_2",
-    "title": "Ajanta & Ellora UNESCO Ancient Rock-Cut Caves Tour",
-    "category": "tours",
-    "region": "Maharashtra",
-    "location": "Chhatrapati Sambhaji Nagar (Aurangabad), Maharashtra",
-    "price": 1800,
-    "priceUnit": "tour",
-    "rating": 4.98,
-    "reviewsCount": 270,
-    "image": "https://images.unsplash.com/photo-1600100397608-f010f443b749?w=800&q=80",
-    "ecoTag": "Monolithic Architecture Guild",
-    "description": "Marvel at Kailash Temple carved from a single basalt rock cliff and 2,000-year-old Buddhist fresco paintings in Ajanta."
-  },
-  {
-    "id": "ind_mah_3",
-    "title": "South Mumbai Colonial Heritage & Art Deco Walking Tour",
-    "category": "tours",
-    "region": "Maharashtra",
-    "location": "Fort & Colaba, Mumbai, Maharashtra",
-    "price": 1250,
-    "priceUnit": "person",
-    "rating": 4.91,
-    "reviewsCount": 230,
-    "image": "https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=800&q=80",
-    "ecoTag": "Victorian Gothic UNESCO Walk",
-    "description": "Gateway of India, Chhatrapati Shivaji Terminus (VT), Marine Drive Queen’s Necklace, and Irani cafe bun-maska chai."
-  },
-  {
-    "id": "ind_8",
-    "title": "Dal Lake Handcrafted Cedarwood Houseboat & Shikara",
-    "category": "stay",
-    "region": "Jammu & Kashmir",
-    "location": "Dal Lake, Srinagar, Jammu & Kashmir",
-    "price": 4200,
-    "priceUnit": "night",
-    "rating": 4.97,
-    "reviewsCount": 195,
-    "image": "https://images.unsplash.com/photo-1595815771614-ade9d652a65d?w=800&q=80",
-    "ecoTag": "3rd Gen Kashmiri Boat Guild",
-    "description": "Carved walnut wood houseboat on Dal Lake. Sunrise floating flower and vegetable market tour by wooden Shikara with saffron Kahwa."
-  },
-  {
-    "id": "ind_jk_2",
-    "title": "Gulmarg Apharwat Gondola Snow Ride & Pine Lodge",
-    "category": "adventure",
-    "region": "Jammu & Kashmir",
-    "location": "Gulmarg, Jammu & Kashmir",
-    "price": 4800,
-    "priceUnit": "night",
-    "rating": 4.96,
-    "reviewsCount": 220,
-    "image": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&q=80",
-    "ecoTag": "Himalayan Ski Sanctuary",
-    "description": "Ride the world’s second-highest operating cable car to 13,780 ft. Ski, snowboard, or cozy up in pine-panelled alpine lodges."
-  },
-  {
-    "id": "ind_jk_3",
-    "title": "Pahalgam Betaab Valley & Baisaran Meadow Horse Trail",
-    "category": "tours",
-    "region": "Jammu & Kashmir",
-    "location": "Pahalgam, Jammu & Kashmir",
-    "price": 1700,
-    "priceUnit": "person",
-    "rating": 4.94,
-    "reviewsCount": 165,
-    "image": "https://images.unsplash.com/photo-1595815771614-ade9d652a65d?w=800&q=80",
-    "ecoTag": "Lidder River Valley Guild",
-    "description": "Pony ride through dense pine forests to Baisaran (Mini Switzerland), riverside Lidder trout fishing, and Aru Valley."
-  },
-  {
-    "id": "ind_9",
-    "title": "Nubra Valley High-Altitude Camel Safari & Homestay",
-    "category": "adventure",
-    "region": "Ladakh",
-    "location": "Hunder, Nubra Valley, Ladakh",
-    "price": 3600,
-    "priceUnit": "person",
-    "rating": 4.94,
-    "reviewsCount": 110,
-    "image": "https://images.unsplash.com/photo-1581793745862-99fde7fa73d2?w=800&q=80",
-    "ecoTag": "Solar Heated Eco-Homestay",
-    "description": "Ride double-humped Bactrian camels across white sand dunes surrounded by glaciers. Savor steamed momos and butter tea."
-  },
-  {
-    "id": "ind_lad_2",
-    "title": "Pangong Tso Blue Lake High-Altitude Glamping Camp",
-    "category": "stay",
-    "region": "Ladakh",
-    "location": "Pangong Lake, Ladakh",
-    "price": 4500,
-    "priceUnit": "night",
-    "rating": 4.98,
-    "reviewsCount": 180,
-    "image": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80",
-    "ecoTag": "Zero-Emission Eco Camp",
-    "description": "Luxury insulated tents on the shores of 14,270 ft Pangong Tso. Watch the crystal waters change colors from turquoise to deep indigo."
-  },
-  {
-    "id": "ind_10",
-    "title": "Subah-e-Banaras Sunrise Boat & Silk Karkhana Walk",
-    "category": "tours",
-    "region": "Uttar Pradesh",
-    "location": "Assi Ghat, Varanasi, Uttar Pradesh",
-    "price": 1200,
-    "priceUnit": "person",
-    "rating": 4.96,
-    "reviewsCount": 380,
-    "image": "https://images.unsplash.com/photo-1561361513-2d000a50f0dc?w=800&q=80",
-    "ecoTag": "7th Gen Banarasi Weavers Guild",
-    "description": "Sunrise wooden rowing boat along sacred Ganges ghats with morning ragas, followed by a walk into real zari pit-loom workshops."
-  },
-  {
-    "id": "ind_up_2",
-    "title": "Taj Mahal Sunrise Tour & Mughal Pietra Dura Inlay Craft",
-    "category": "tours",
-    "region": "Uttar Pradesh",
-    "location": "Agra, Uttar Pradesh",
-    "price": 1600,
-    "priceUnit": "person",
-    "rating": 4.99,
-    "reviewsCount": 520,
-    "image": "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&q=80",
-    "ecoTag": "UNESCO World Heritage Guide",
-    "description": "Watch the sunrise turn white Makrana marble golden. Visit direct descendants of Mughal artisans crafting marble inlay."
-  },
-  {
-    "id": "ind_up_3",
-    "title": "Ayodhya Saryu River Evening Aarti & Ram Temple Trail",
-    "category": "tours",
-    "region": "Uttar Pradesh",
-    "location": "Ayodhya, Uttar Pradesh",
-    "price": 1100,
-    "priceUnit": "tour",
-    "rating": 4.95,
-    "reviewsCount": 290,
-    "image": "https://images.unsplash.com/photo-1561361513-2d000a50f0dc?w=800&q=80",
-    "ecoTag": "Sacred Pilgrim Trust",
-    "description": "Spiritual walk through the grand temple complex, Hanuman Garhi, and sunset motorized wooden boat on holy Saryu river with lamp floating."
-  },
-  {
-    "id": "ind_12",
-    "title": "Darjeeling Tea Estate Heritage Planter Bungalow",
-    "category": "stay",
-    "region": "West Bengal",
-    "location": "Darjeeling, West Bengal",
-    "price": 4800,
-    "priceUnit": "night",
-    "rating": 4.95,
-    "reviewsCount": 160,
-    "image": "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=80",
-    "ecoTag": "Bio-Dynamic Organic Tea",
-    "description": "Colonial tea bungalow with clear views of Mt. Kanchenjunga. Pluck fine tea leaves and enjoy First Flush cupping sessions."
-  },
-  {
-    "id": "ind_wb_2",
-    "title": "Kolkata Victoria Memorial, Tram Ride & College Street Books",
-    "category": "tours",
-    "region": "West Bengal",
-    "location": "Kolkata (Calcutta), West Bengal",
-    "price": 1150,
-    "priceUnit": "tour",
-    "rating": 4.92,
-    "reviewsCount": 240,
-    "image": "https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=800&q=80",
-    "ecoTag": "City of Joy Cultural Trust",
-    "description": "Ride vintage electric trams to College Street Boi Para, savor kathi rolls and mishti doi, and tour marble Victoria Memorial."
-  },
-  {
-    "id": "ind_wb_3",
-    "title": "Sundarbans Mangrove Royal Bengal Tiger Boat Safari",
-    "category": "adventure",
-    "region": "West Bengal",
-    "location": "Sundarbans, West Bengal",
-    "price": 3600,
-    "priceUnit": "person",
-    "rating": 4.94,
-    "reviewsCount": 140,
-    "image": "https://images.unsplash.com/photo-1575550959106-5a7defe28b56?w=800&q=80",
-    "ecoTag": "UNESCO Mangrove Biosphere",
-    "description": "Cruise through tidal creeks and estuarine mangrove forests tracking elusive swimming tigers, saltwater crocodiles, and mudskippers."
-  },
-  {
-    "id": "ind_13",
-    "title": "Rann of Kutch Bhunga Mud-Art Homestay & Rogan Art",
-    "category": "artisan",
-    "region": "Gujarat",
-    "location": "Dhordo & Nirona, Kutch, Gujarat",
-    "price": 3400,
-    "priceUnit": "night",
-    "rating": 4.92,
-    "reviewsCount": 135,
-    "image": "https://images.unsplash.com/photo-1609137144820-2131976a463a?w=800&q=80",
-    "ecoTag": "UNESCO Intangible Cultural Heritage",
-    "description": "Stay in cylindrical clay Bhunga decorated with Lippan mirror work. Visit Nirona masters for 300-year-old Rogan fabric painting."
-  },
-  {
-    "id": "ind_guj_2",
-    "title": "Gir National Park Asiatic Lion Open Jeep Safari",
-    "category": "adventure",
-    "region": "Gujarat",
-    "location": "Sasan Gir, Gujarat",
-    "price": 3800,
-    "priceUnit": "safari",
-    "rating": 4.96,
-    "reviewsCount": 260,
-    "image": "https://images.unsplash.com/photo-1575550959106-5a7defe28b56?w=800&q=80",
-    "ecoTag": "Last Refuge of Asiatic Lion",
-    "description": "Open 4x4 forest department safari across deciduous teak forests. Encounter wild Asiatic lion prides and visit Maldhari pastoral hamlets."
-  },
-  {
-    "id": "ind_14",
-    "title": "Cherrapunji Living Root Bridges Rainforest Trek",
-    "category": "adventure",
-    "region": "Meghalaya",
-    "location": "Sohra (Cherrapunji), Meghalaya",
-    "price": 2200,
-    "priceUnit": "person",
-    "rating": 4.97,
-    "reviewsCount": 155,
-    "image": "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=800&q=80",
-    "ecoTag": "Indigenous Khasi Bio-Engineering",
-    "description": "Trek down 3,500 ancient stone steps to the Double Decker Living Root Bridge. Swim in turquoise natural pools and explore sacred groves."
-  },
-  {
-    "id": "ind_15",
-    "title": "Kaziranga One-Horned Rhino Safari & Mishing Village",
-    "category": "adventure",
-    "region": "Assam",
-    "location": "Kaziranga, Assam",
-    "price": 2750,
-    "priceUnit": "person",
-    "rating": 4.93,
-    "reviewsCount": 180,
-    "image": "https://images.unsplash.com/photo-1575550959106-5a7defe28b56?w=800&q=80",
-    "ecoTag": "Wildlife Conservation Certified",
-    "description": "Open 4x4 jeep safari through tall grassland forests tracking wild one-horned rhinoceroses. Visit stilt Mishing villages for handloom weaving."
-  },
-  {
-    "id": "ind_16",
-    "title": "Khajuraho Sculptural Heritage & Bundeli Terracotta",
-    "category": "artisan",
-    "region": "Madhya Pradesh",
-    "location": "Khajuraho, Madhya Pradesh",
-    "price": 1500,
-    "priceUnit": "tour",
-    "rating": 4.91,
-    "reviewsCount": 110,
-    "image": "https://images.unsplash.com/photo-1600100397608-f010f443b749?w=800&q=80",
-    "ecoTag": "Archaeological Guild of India",
-    "description": "In-depth architectural guided walk through the western temple group sculptures, followed by pottery wheel toy making in rural village."
-  },
-  {
-    "id": "ind_mp_2",
-    "title": "Bandhavgarh Royal Bengal Tiger Safari & Jungle Resort",
-    "category": "adventure",
-    "region": "Madhya Pradesh",
-    "location": "Bandhavgarh, Madhya Pradesh",
-    "price": 4200,
-    "priceUnit": "night",
-    "rating": 4.98,
-    "reviewsCount": 215,
-    "image": "https://images.unsplash.com/photo-1575550959106-5a7defe28b56?w=800&q=80",
-    "ecoTag": "Highest Tiger Density Zone",
-    "description": "Experience India’s highest tiger density park on morning and afternoon game drives, with evening tribal Baiga dance performances."
-  },
-  {
-    "id": "ind_17",
-    "title": "Amritsar Golden Temple Langar Sewa & Wagah Border",
-    "category": "food",
-    "region": "Punjab",
-    "location": "Amritsar, Punjab",
-    "price": 1800,
-    "priceUnit": "day",
-    "rating": 4.99,
-    "reviewsCount": 420,
-    "image": "https://images.unsplash.com/photo-1588714477688-cf28a50e94f7?w=800&q=80",
-    "ecoTag": "Community Langar Partner",
-    "description": "Dawn spiritual tour of Harmandir Sahib, volunteer in the 100,000-meal kitchen, and attend the high-energy Wagah Border retreat ceremony."
-  },
-  {
-    "id": "ind_18",
-    "title": "Raghurajpur Pattachitra Heritage Village Studio Walk",
-    "category": "artisan",
-    "region": "Odisha",
-    "location": "Puri District, Odisha",
-    "price": 1600,
-    "priceUnit": "person",
-    "rating": 4.9,
-    "reviewsCount": 95,
-    "image": "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=800&q=80",
-    "ecoTag": "100% Artisan Preserved Village",
-    "description": "Explore the world-famous village where every house is an art studio. Learn palm-leaf engraving and watch Gotipua dance performance."
-  },
-  {
-    "id": "ind_sik_1",
-    "title": "Gangtok Rumtek Monastery & Tsomgo Glacier Lake Expedition",
-    "category": "adventure",
-    "region": "Sikkim",
-    "location": "Gangtok, Sikkim",
-    "price": 2900,
-    "priceUnit": "person",
-    "rating": 4.95,
-    "reviewsCount": 165,
-    "image": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&q=80",
-    "ecoTag": "100% Organic State Certified",
-    "description": "Visit the sacred 12,400 ft glacial Tsomgo lake, ride decorated yaks, and tour 16th Karmapa seat at majestic Rumtek Monastery."
-  },
-  {
-    "id": "ind_ap_1",
-    "title": "Araku Valley Organic Coffee Plantations & Borra Caves",
-    "category": "food",
-    "region": "Andhra Pradesh",
-    "location": "Araku Valley, Visakhapatnam, Andhra Pradesh",
-    "price": 2100,
-    "priceUnit": "person",
-    "rating": 4.91,
-    "reviewsCount": 130,
-    "image": "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=800&q=80",
-    "ecoTag": "Tribal Farmer Coffee Guild",
-    "description": "Scenic glass-domed Vistadome train ride up Eastern Ghats hills, organic Araku coffee tastings, and million-year-old limestone Borra caves."
-  },
-  {
-    "id": "ind_tel_1",
-    "title": "Hyderabad Golconda Fort Sound-and-Light & Charminar Biryani",
-    "category": "food",
-    "region": "Telangana",
-    "location": "Old City, Hyderabad, Telangana",
-    "price": 1350,
-    "priceUnit": "person",
-    "rating": 4.97,
-    "reviewsCount": 310,
-    "image": "https://images.unsplash.com/photo-1589308078059-be1415eab4c3?w=800&q=80",
-    "ecoTag": "Nizam Heritage Culinary Walk",
-    "description": "Acoustic marvels of Golconda Fort, sunset walk around 430-year-old Charminar, Laad Bazaar pearl bangles, and dum biryani tasting."
-  },
-  {
-    "id": "ind_bih_1",
-    "title": "Bodh Gaya Mahabodhi Temple & Ancient Nalanda University",
-    "category": "tours",
-    "region": "Bihar",
-    "location": "Bodh Gaya & Nalanda, Bihar",
-    "price": 1400,
-    "priceUnit": "tour",
-    "rating": 4.96,
-    "reviewsCount": 175,
-    "image": "https://images.unsplash.com/photo-1600100397608-f010f443b749?w=800&q=80",
-    "ecoTag": "UNESCO World Peace Sanctuary",
-    "description": "Meditation under the sacred Bodhi Tree where Buddha attained enlightenment, followed by the ruins of 5th-century Nalanda University."
-  },
-  {
-    "id": "ind_del_1",
-    "title": "Old Delhi Chandni Chowk Rickshaw Food Trail & Red Fort",
-    "category": "food",
-    "region": "Delhi NCR",
-    "location": "Old Delhi, Delhi NCR",
-    "price": 1250,
-    "priceUnit": "person",
-    "rating": 4.93,
-    "reviewsCount": 340,
-    "image": "https://images.unsplash.com/photo-1587061949409-02df41d5e562?w=800&q=80",
-    "ecoTag": "Mughal Shahjahanabad Heritage",
-    "description": "Cycle-rickshaw glide through Asia’s largest spice market (Khari Baoli), Paranthe Wali Gali, Jama Masjid, and majestic Red Fort."
-  },
-  {
-    "id": "ind_and_1",
-    "title": "Havelock Island Radhanagar Beach & Coral Reef Scuba Diving",
-    "category": "adventure",
-    "region": "Andaman & Nicobar",
-    "location": "Havelock Island (Swaraj Dweep), Andaman",
-    "price": 4900,
-    "priceUnit": "person",
-    "rating": 4.98,
-    "reviewsCount": 220,
-    "image": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80",
-    "ecoTag": "PADI Certified Coral Reefs",
-    "description": "Scuba dive into vibrant coral gardens with sea turtles at Elephant Beach. Relax on Radhanagar Beach, rated among Asia’s best beaches."
-  }
-];
-
-    let marketplaceProducts = [
-      {
-        id: 'prod_1',
-        name: 'Kashmiri Hand-Spun Pure Pashmina Shawl',
-        maker: 'Srinagar Valley Artisans Guild',
-        price: 8500,
-        category: 'craft',
-        image: 'https://images.unsplash.com/photo-1607344645866-009c320c5ab8?w=600&q=80',
-        desc: 'Hand-woven from Changthangi goat wool with traditional Sozni embroidery.'
+    // BILINGUAL DICTIONARY (English & Hindi)
+    const i18n = {
+      en: {
+        brandSubtitle: 'Smart Tourism Across All States',
+        tagline: 'Incredible India • 28 States & 8 Union Territories • Direct Bookings',
+        heroTitle1: 'Discover Sacred Wonders &',
+        heroTitle2: 'Authentic Indian Heritage',
+        heroDesc: 'Experience desert palaces in Rajasthan, misty tea estates in Darjeeling, serene backwaters in Kerala, and holy Ghats in Varanasi directly hosted by native families.',
+        exploreBtn: 'Explore Indian Destinations',
+        listBizBtn: 'List Your Homestay or Tour',
+        searchPlaceholder: 'Search city, state, or monument (e.g. Jaisalmer, Hampi, Tiger, Tea)...',
+        allStates: 'All Indian States & UTs',
+        anyPrice: 'Any Price',
+        filterPlaces: 'Filter Places',
+        showing: 'Showing',
+        destinations: 'famous Indian destinations',
+        directRate: 'Direct Rate',
+        reserve: 'Reserve',
+        reserveTitle: 'Reserve Experience',
+        travelDate: 'Travel Date',
+        travelers: 'Number of Travelers',
+        specialReqs: 'Special Requests / Dietary Preferences',
+        totalPayable: 'Total Payable to Native Host:',
+        confirmPassBtn: 'Confirm Reservation & Issue Digital Pass',
+        digitalPassTitle: 'Verified Traveler Digital QR Pass',
+        showPassNotice: 'Present this QR pass upon arrival for paperless entry and verification.',
+        printPass: 'Print / Save Pass',
+        myPasses: 'My Digital QR Passes',
+        noPassesYet: 'No Passes Issued Yet',
+        noPassesSub: 'Explore authentic Indian homestays and reserve your first pass.',
+        circuitPlanner: 'Smart Circuit Itinerary Planner',
+        circuitDesc: 'Custom-crafted multi-day itineraries across iconic Indian travel trails.',
+        generateCircuit: 'Generate Smart Indian Circuit',
+        giCraftsTitle: 'Authentic Indian GI-Tagged Crafts & Produce',
+        giCraftsSub: 'Handcrafted heirlooms, single-origin teas, and spices ordered directly from master guilds.',
+        addToCart: 'Add to Cart',
+        openCart: 'Open Cart',
+        cartTitle: 'Local Goods Cart',
+        cartEmpty: 'Your cart is empty.',
+        checkoutBtn: 'Pay Directly via UPI / Card',
+        scanPassBtn: 'Scan Tourist Pass',
+        addListingBtn: 'Publish Indian Listing',
+        footerDesc: 'Empowering local tourism micro-businesses, heritage homestays, and indigenous GI artisans across every state of India with zero-commission direct bookings.',
+        footerBottom: '© 2026 TourisMart India. Sustainable Cultural Tourism Across Indian States & Union Territories. Accredited by Local Community Tourism Council.',
+        categories: {
+          all: 'All Indian Experiences',
+          stay: 'Heritage Stays & Homestays',
+          tours: 'Sacred & Heritage Walks',
+          food: 'Regional Culinary Trails',
+          artisan: 'GI Crafts & Handlooms',
+          adventure: 'Himalayan Treks & Safaris'
+        }
       },
-      {
-        id: 'prod_2',
-        name: 'Darjeeling First Flush Muscatel Tea (250g)',
-        maker: 'Makaibari Organic Bio-Dynamic Gardens',
-        price: 950,
-        category: 'food',
-        image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=600&q=80',
-        desc: 'Delicate two-leaves-and-a-bud harvested in spring with floral aroma.'
-      },
-      {
-        id: 'prod_3',
-        name: 'Jaipur Handmade Blue Pottery Decorative Plate',
-        maker: 'Kripal Kumbh Crafts, Jaipur',
-        price: 1250,
-        category: 'craft',
-        image: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&q=80',
-        desc: 'Made from Egyptian paste and quartz powder with cobalt blue motifs.'
-      },
-      {
-        id: 'prod_4',
-        name: 'Mysore Pure Sandalwood Oil & Incense Cones',
-        maker: 'Karnataka Forest Guild, Mysore',
-        price: 1400,
-        category: 'craft',
-        image: 'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=600&q=80',
-        desc: 'Sustainably distilled Santalum album heartwood with deep sacred aroma.'
-      },
-      {
-        id: 'prod_5',
-        name: 'Kutch Rogan Art Hand-Painted Silk Stole',
-        maker: 'Khatri Rogan Art Masters, Nirona',
-        price: 3200,
-        category: 'craft',
-        image: 'https://images.unsplash.com/photo-1606744824163-985d376605aa?w=600&q=80',
-        desc: 'Castor oil boiled paste applied with brass rod creating intricate tree of life.'
-      },
-      {
-        id: 'prod_6',
-        name: 'Malabar Tellicherry Extra-Bold Peppercorn (500g)',
-        maker: 'Wayanad Organic Spices Cooperative',
-        price: 650,
-        category: 'food',
-        image: 'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?w=600&q=80',
-        desc: 'Sun-dried high-piperine Tellicherry black pepper with intense citrus notes.'
-      }
-    ];
-
-    // Bookings state
-    let userBookings = [
-      {
-        id: 'TOUR-IND-8942',
-        bizId: 'ind_1',
-        bizName: 'Desert Dune Eco-Camp & Kalbelia Folk Night',
-        guestName: 'Harsh Vardhan',
-        date: '2026-12-05',
-        guests: 2,
-        totalPrice: 7600,
-        status: 'Confirmed',
-        time: 'Check-in 03:00 PM'
-      },
-      {
-        id: 'TOUR-IND-3195',
-        bizId: 'ind_2',
-        bizName: 'Alleppey Backwater Eco-Houseboat & Village Canoe',
-        guestName: 'Harsh Vardhan',
-        date: '2026-12-10',
-        guests: 2,
-        totalPrice: 11000,
-        status: 'Confirmed',
-        time: 'Cruise Slot 11:30 AM'
-      }
-    ];
-
-    let cart = [];
-    let currentActiveBookingBiz = null;
-    let selectedCategory = 'all';
-    let currentAuthMode = 'signin';
-    let currentRole = 'tourist';
-    let html5QrScanner = null;
-
-    document.addEventListener('DOMContentLoaded', () => {
-      renderBusinesses(localBusinesses);
-      renderMarketplace();
-      renderBookings();
-      renderHostDashboard();
-      initCharts();
-      if (typeof lucide !== 'undefined') lucide.createIcons();
-    });
-
-    function switchNavTab(tabName) {
-      document.querySelectorAll('.nav-tab-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.tab === tabName);
-      });
-
-      document.querySelectorAll('.view-container').forEach(view => {
-        view.classList.remove('active');
-      });
-
-      const targetView = document.getElementById(`view-${tabName}`);
-      if (targetView) {
-        targetView.classList.add('active');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-
-      if (typeof lucide !== 'undefined') lucide.createIcons();
-    }
-
-    function changeRole(role) {
-      currentRole = role;
-      showToast(`Switched view to ${role.toUpperCase()}`, 'check-circle');
-      if (role === 'vendor') switchNavTab('vendor');
-      else if (role === 'admin') switchNavTab('admin');
-      else switchNavTab('explore');
-    }
-
-    function filterByStateName(stateName) {
-      switchNavTab('explore');
-      const filter = document.getElementById('region-filter');
-      if (filter) {
-        filter.value = stateName;
-        filterBusinesses();
-      }
-    }
-
-    // ------------------------------------------
-    // RENDER BUSINESSES
-    // ------------------------------------------
-    function renderBusinesses(items) {
-      const grid = document.getElementById('businessesGrid');
-      const countEl = document.getElementById('businessCountText');
-      if (countEl) countEl.innerText = `Showing ${items.length} Indian destinations`;
-
-      if (!items.length) {
-        grid.innerHTML = `
-          <div style="grid-column: 1/-1; text-align: center; padding: 3rem 1rem; background: white; border-radius: var(--radius-lg); border: 1px dashed var(--gray-300);">
-            <i data-lucide="compass" style="width: 48px; height: 48px; color: var(--gray-400); margin-bottom: 1rem;"></i>
-            <h3>No destinations match this state or filter</h3>
-            <p style="color: var(--gray-600); margin-top: 0.5rem;">Select another Indian state or clear your search terms.</p>
-          </div>
-        `;
-        if (typeof lucide !== 'undefined') lucide.createIcons();
-        return;
-      }
-
-      grid.innerHTML = items.map(biz => `
-        <div class="biz-card">
-          <div class="biz-card-image">
-            <img src="${biz.image}" alt="${biz.title}" loading="lazy">
-            <div class="biz-badge-eco">
-              <i data-lucide="leaf" style="width: 12px; height: 12px;"></i> ${biz.ecoTag}
-            </div>
-            <div class="biz-badge-state">
-              ${biz.region}
-            </div>
-          </div>
-          <div class="biz-card-body">
-            <div class="biz-card-meta">
-              <span class="biz-location">
-                <i data-lucide="map-pin" style="width: 14px; height: 14px;"></i> ${biz.location}
-              </span>
-              <span class="biz-rating">
-                <i data-lucide="star" style="width: 14px; height: 14px; fill: currentColor;"></i> ${biz.rating} (${biz.reviewsCount})
-              </span>
-            </div>
-            <h3 class="biz-title">${biz.title}</h3>
-            <p class="biz-desc">${biz.description}</p>
-            <div class="biz-card-footer">
-              <div class="biz-price">
-                <span class="biz-price-label">Direct Rate</span>
-                <span class="biz-price-value">₹${biz.price.toLocaleString('en-IN')} <span style="font-size: 0.75rem; font-weight: 500; color: var(--gray-500);">/ ${biz.priceUnit}</span></span>
-              </div>
-              <button class="btn-primary btn-sm" onclick="openBookingModal('${biz.id}')">
-                <i data-lucide="calendar" style="width: 14px; height: 14px;"></i> Reserve
-              </button>
-            </div>
-          </div>
-        </div>
-      `).join('');
-
-      if (typeof lucide !== 'undefined') lucide.createIcons();
-    }
-
-    function filterByCategory(cat, btn) {
-      selectedCategory = cat;
-      document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
-      btn.classList.add('active');
-      filterBusinesses();
-    }
-
-    function filterBusinesses() {
-      const search = (document.getElementById('explore-search-input')?.value || '').toLowerCase().trim();
-      const region = document.getElementById('region-filter')?.value || 'all';
-      const budget = document.getElementById('budget-filter')?.value || 'all';
-
-      const filtered = localBusinesses.filter(biz => {
-        const matchesCategory = (selectedCategory === 'all' || biz.category === selectedCategory);
-        const matchesSearch = !search || biz.title.toLowerCase().includes(search) || biz.description.toLowerCase().includes(search) || biz.location.toLowerCase().includes(search) || biz.region.toLowerCase().includes(search);
-        const matchesRegion = (region === 'all' || biz.region === region);
-        const matchesBudget = (budget === 'all' || biz.price <= parseFloat(budget));
-        return matchesCategory && matchesSearch && matchesRegion && matchesBudget;
-      });
-
-      renderBusinesses(filtered);
-    }
-
-    // ------------------------------------------
-    // BOOKINGS & QR PASS
-    // ------------------------------------------
-    function openBookingModal(bizId) {
-      const biz = localBusinesses.find(b => b.id === bizId);
-      if (!biz) return;
-      currentActiveBookingBiz = biz;
-
-      document.getElementById('bookingModalTitle').innerText = `Reserve: ${biz.title}`;
-      document.getElementById('bookingModalBizName').innerText = `${biz.title} (${biz.region})`;
-      document.getElementById('bookingModalPrice').innerText = `₹${biz.price.toLocaleString('en-IN')} / ${biz.priceUnit}`;
-      document.getElementById('bookingModalImg').src = biz.image;
-
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      document.getElementById('bookDate').value = tomorrow.toISOString().split('T')[0];
-      document.getElementById('bookGuests').value = 2;
-
-      calculateBookingTotal();
-      document.getElementById('bookingModal').classList.add('active');
-    }
-
-    function calculateBookingTotal() {
-      if (!currentActiveBookingBiz) return;
-      const guests = parseInt(document.getElementById('bookGuests').value || '1', 10);
-      const total = currentActiveBookingBiz.price * guests;
-      document.getElementById('bookingModalTotalPrice').innerText = `₹${total.toLocaleString('en-IN')}`;
-    }
-
-    function confirmBooking(e) {
-      e.preventDefault();
-      if (!currentActiveBookingBiz) return;
-
-      const name = document.getElementById('bookGuestName').value.trim();
-      const email = document.getElementById('bookGuestEmail').value.trim();
-      const date = document.getElementById('bookDate').value;
-      const guests = parseInt(document.getElementById('bookGuests').value, 10);
-      const total = currentActiveBookingBiz.price * guests;
-      const bookingCode = `TOUR-IND-${Math.floor(1000 + Math.random() * 9000)}`;
-
-      const newBooking = {
-        id: bookingCode,
-        bizId: currentActiveBookingBiz.id,
-        bizName: currentActiveBookingBiz.title,
-        guestName: name,
-        guestEmail: email,
-        date: date,
-        guests: guests,
-        totalPrice: total,
-        status: 'Confirmed',
-        time: 'Check-in 11:00 AM'
-      };
-
-      userBookings.unshift(newBooking);
-      closeModal('bookingModal');
-      renderBookings();
-      renderHostDashboard();
-
-      if (window._firebase && window._firebase.db && window.currentUser) {
-        try {
-          const fb = window._firebase;
-          fb.setDoc(fb.doc(fb.db, 'bookings', bookingCode), {
-            ...newBooking,
-            userId: window.currentUser.uid,
-            createdAt: new Date().toISOString()
-          });
-        } catch(err) {
-          console.log("Offline write fallback:", err);
+      hi: {
+        brandSubtitle: 'सभी राज्यों में स्मार्ट पर्यटन पोर्टल',
+        tagline: 'अतुल्य भारत • २८ राज्य और ८ केंद्र शासित प्रदेश • सीधी बुकिंग',
+        heroTitle1: 'पवित्र धरोहर और',
+        heroTitle2: 'प्रामाणिक भारतीय संस्कृति देखें',
+        heroDesc: 'राजस्थान के रेगिस्तानी महलों, दार्जिलिंग के चाय बागानों, केरल के शांत बैकवाटर और काशी के पावन घाटों का आनंद सीधे स्थानीय परिवारों के आतिथ्य में लें।',
+        exploreBtn: 'भारतीय पर्यटन स्थल देखें',
+        listBizBtn: 'अपना होमस्टे या यात्रा जोड़ें',
+        searchPlaceholder: 'स्थान, राज्य या स्मारक खोजें (जैसे जैसलमेर, हम्पी, बाघ, चाय)...',
+        allStates: 'सभी भारतीय राज्य और केंद्र शासित प्रदेश',
+        anyPrice: 'कोई भी मूल्य',
+        filterPlaces: 'खोजें',
+        showing: 'कुल',
+        destinations: 'प्रसिद्ध भारतीय स्थल',
+        directRate: 'प्रत्यक्ष दर',
+        reserve: 'आरक्षित करें',
+        reserveTitle: 'अनुभव आरक्षित करें',
+        travelDate: 'यात्रा तिथि',
+        travelers: 'यात्रियों की संख्या',
+        specialReqs: 'विशेष अनुरोध या भोजन प्राथमिकताएं',
+        totalPayable: 'मेजबान को देय कुल राशि:',
+        confirmPassBtn: 'पुष्टि करें और डिजिटल पास प्राप्त करें',
+        digitalPassTitle: 'सत्यापित यात्री डिजिटल क्यूआर पास',
+        showPassNotice: 'आगमन पर त्वरित सत्यापन और प्रवेश हेतु यह क्यूआर पास प्रस्तुत करें।',
+        printPass: 'पास प्रिंट या सहेजें',
+        myPasses: 'मेरे डिजिटल क्यूआर पास',
+        noPassesYet: 'अभी कोई पास नहीं है',
+        noPassesSub: 'प्रामाणिक भारतीय होमस्टे देखें और अपना पहला डिजिटल पास प्राप्त करें।',
+        circuitPlanner: 'स्मार्ट यात्रा योजनाकार',
+        circuitDesc: 'भारत के प्रमुख पर्यटन सर्किटों के लिए तैयार विशेष बहु-दिवसीय कार्यक्रम।',
+        generateCircuit: 'यात्रा कार्यक्रम तैयार करें',
+        giCraftsTitle: 'प्रामाणिक जीआई टैग हस्तशिल्प और उत्पाद',
+        giCraftsSub: 'कश्मीरी पश्मीना, दार्जिलिंग चाय और मैसूर चंदन सीधे कारीगरों से प्राप्त करें।',
+        addToCart: 'कार्ट में जोड़ें',
+        openCart: 'कार्ट देखें',
+        cartTitle: 'स्थानीय हस्तशिल्प कार्ट',
+        cartEmpty: 'आपकी कार्ट अभी खाली है।',
+        checkoutBtn: 'यूपीआई / कार्ड से सीधा भुगतान करें',
+        scanPassBtn: 'पास स्कैन करें',
+        addListingBtn: 'नई भारतीय पेशकश प्रकाशित करें',
+        footerDesc: 'भारत के सभी राज्यों में स्थानीय सूक्ष्म-पर्यटन, हेरिटेज होमस्टे और पारंपरिक जीआई कारीगरों को सशक्त बनाने वाला प्रत्यक्ष मंच।',
+        footerBottom: '© 2026 TourisMart India. सभी भारतीय राज्यों में सतत सांस्कृतिक पर्यटन। स्थानीय समुदाय पर्यटन परिषद द्वारा मान्यता प्राप्त।',
+        categories: {
+          all: 'सभी भारतीय अनुभव',
+          stay: 'हेरिटेज स्टे और होमस्टे',
+          tours: 'धार्मिक और ऐतिहासिक पैदल यात्राएं',
+          food: 'पारंपरिक भोजन यात्राएं',
+          artisan: 'जीआई शिल्प और हथकरघा',
+          adventure: 'हिमालयी ट्रेक और वन्यजीव सफारी'
         }
       }
-
-      showToast(`Reservation confirmed for ${name}! QR Pass generated.`, 'check-circle');
-      openQRPassModal(newBooking.id);
-    }
-
-    function openQRPassModal(bookingId) {
-      const booking = userBookings.find(b => b.id === bookingId);
-      if (!booking) return;
-
-      document.getElementById('passModalBizName').innerText = booking.bizName;
-      document.getElementById('passModalGuestInfo').innerText = `Traveler: ${booking.guestName} • ${booking.guests} Guests • Date: ${booking.date}`;
-      document.getElementById('passBookingCode').innerText = booking.id;
-
-      const qrContainer = document.getElementById('qrCodeContainer');
-      qrContainer.innerHTML = '';
-
-      if (typeof QRCode !== 'undefined') {
-        new QRCode(qrContainer, {
-          text: JSON.stringify({
-            bookingId: booking.id,
-            biz: booking.bizName,
-            name: booking.guestName,
-            guests: booking.guests,
-            date: booking.date,
-            country: 'India',
-            status: 'VERIFIED_INDIAN_PASS'
-          }),
-          width: 180,
-          height: 180,
-          colorDark: "#064e3b",
-          colorLight: "#ffffff",
-          correctLevel: QRCode.CorrectLevel.H
-        });
-      }
-
-      document.getElementById('qrPassModal').classList.add('active');
-      if (typeof lucide !== 'undefined') lucide.createIcons();
-    }
-
-    function renderBookings() {
-      const container = document.getElementById('bookingsListContainer');
-      if (!container) return;
-
-      if (!userBookings.length) {
-        container.innerHTML = `
-          <div style="text-align: center; padding: 3rem; background: white; border-radius: var(--radius-xl); border: 1px dashed var(--gray-300);">
-            <i data-lucide="ticket" style="width: 48px; height: 48px; color: var(--gray-400); margin-bottom: 1rem;"></i>
-            <h3>No Bookings Yet</h3>
-            <p style="color: var(--gray-600); margin-top: 0.5rem;">Explore authentic Indian homestays and safari experiences to reserve your pass.</p>
-          </div>
-        `;
-        if (typeof lucide !== 'undefined') lucide.createIcons();
-        return;
-      }
-
-      container.innerHTML = userBookings.map(b => `
-        <div style="background: white; border-radius: var(--radius-lg); border: 1px solid var(--gray-200); padding: 1.5rem; margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; box-shadow: var(--shadow-sm);">
-          <div>
-            <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.35rem;">
-              <span class="status-pill ${b.status === 'Confirmed' ? 'status-confirmed' : 'status-completed'}">${b.status}</span>
-              <span style="font-family: monospace; font-weight: 700; font-size: 0.85rem; color: var(--gray-500);">${b.id}</span>
-            </div>
-            <h3 style="font-size: 1.2rem; color: var(--gray-900); margin-bottom: 0.25rem;">${b.bizName}</h3>
-            <p style="font-size: 0.85rem; color: var(--gray-600);">
-              <i data-lucide="calendar" style="width: 14px; height: 14px; display: inline;"></i> ${b.date} • ${b.guests} Guests • <strong>₹${b.totalPrice.toLocaleString('en-IN')} Paid to Host</strong>
-            </p>
-          </div>
-          <div>
-            <button class="btn-primary btn-sm" onclick="openQRPassModal('${b.id}')">
-              <i data-lucide="qr-code" style="width: 14px; height: 14px;"></i> View Digital QR Pass
-            </button>
-          </div>
-        </div>
-      `).join('');
-
-      if (typeof lucide !== 'undefined') lucide.createIcons();
-    }
-
-    // ------------------------------------------
-    // MARKETPLACE & CART
-    // ------------------------------------------
-    function renderMarketplace() {
-      const grid = document.getElementById('productsGrid');
-      if (!grid) return;
-
-      grid.innerHTML = marketplaceProducts.map(p => `
-        <div class="product-card">
-          <div class="product-img">
-            <img src="${p.image}" alt="${p.name}">
-          </div>
-          <div class="product-body">
-            <span class="artisan-tag">
-              <i data-lucide="sparkles" style="width: 12px; height: 12px;"></i> ${p.maker}
-            </span>
-            <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.35rem;">${p.name}</h4>
-            <p style="font-size: 0.8rem; color: var(--gray-600); margin-bottom: 0.75rem; flex: 1;">${p.desc}</p>
-            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--gray-100); padding-top: 0.75rem; margin-top: auto;">
-              <span style="font-size: 1.15rem; font-weight: 800; color: var(--primary-dark); font-family: var(--font-display);">₹${p.price.toLocaleString('en-IN')}</span>
-              <button class="btn-primary btn-sm" onclick="addToCart('${p.id}')">
-                <i data-lucide="plus" style="width: 14px; height: 14px;"></i> Add to Cart
-              </button>
-            </div>
-          </div>
-        </div>
-      `).join('');
-
-      if (typeof lucide !== 'undefined') lucide.createIcons();
-    }
-
-    function addToCart(prodId) {
-      const prod = marketplaceProducts.find(p => p.id === prodId);
-      if (!prod) return;
-
-      const existing = cart.find(item => item.id === prodId);
-      if (existing) {
-        existing.qty += 1;
-      } else {
-        cart.push({ ...prod, qty: 1 });
-      }
-
-      updateCartUI();
-      showToast(`Added ${prod.name} to cart!`, 'shopping-bag');
-    }
-
-    function updateCartUI() {
-      const totalCount = cart.reduce((sum, item) => sum + item.qty, 0);
-      const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-
-      document.getElementById('cartCountBadge').innerText = totalCount;
-      document.getElementById('cartSubtotalBtn').innerText = `₹${totalPrice.toLocaleString('en-IN')}`;
-      document.getElementById('cartDrawerTotal').innerText = `₹${totalPrice.toLocaleString('en-IN')}`;
-
-      const listContainer = document.getElementById('cartItemsList');
-      if (!cart.length) {
-        listContainer.innerHTML = `<p style="color: var(--gray-500); text-align: center; margin-top: 2rem;">Your cart is empty.</p>`;
-        return;
-      }
-
-      listContainer.innerHTML = cart.map(item => `
-        <div style="display: flex; gap: 0.75rem; padding: 0.75rem 0; border-bottom: 1px solid var(--gray-100); align-items: center;">
-          <img src="${item.image}" style="width: 50px; height: 50px; border-radius: var(--radius-sm); object-fit: cover;">
-          <div style="flex: 1;">
-            <h5 style="font-size: 0.85rem; font-weight: 700; line-height: 1.2;">${item.name}</h5>
-            <span style="font-size: 0.8rem; color: var(--primary-dark); font-weight: 600;">₹${item.price.toLocaleString('en-IN')} each</span>
-          </div>
-          <div style="display: flex; align-items: center; gap: 0.4rem;">
-            <button class="btn-outline btn-sm" style="padding: 0.2rem 0.5rem;" onclick="changeCartQty('${item.id}', -1)">-</button>
-            <span style="font-weight: 700; font-size: 0.85rem;">${item.qty}</span>
-            <button class="btn-outline btn-sm" style="padding: 0.2rem 0.5rem;" onclick="changeCartQty('${item.id}', 1)">+</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function changeCartQty(id, delta) {
-      const item = cart.find(i => i.id === id);
-      if (!item) return;
-      item.qty += delta;
-      if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
-      updateCartUI();
-    }
-
-    function toggleCartDrawer() {
-      const drawer = document.getElementById('cartDrawer');
-      const overlay = document.getElementById('cartOverlay');
-      const isOpen = drawer.classList.contains('open');
-      if (isOpen) {
-        drawer.classList.remove('open');
-        overlay.style.display = 'none';
-      } else {
-        drawer.classList.add('open');
-        overlay.style.display = 'block';
-      }
-    }
-
-    function checkoutCart() {
-      if (!cart.length) {
-        showToast('Cart is empty', 'alert-circle');
-        return;
-      }
-      showToast('Order confirmed! 100% direct payment channeled to Indian artisans.', 'check-circle');
-      cart = [];
-      updateCartUI();
-      toggleCartDrawer();
-    }
-
-    // ------------------------------------------
-    // SMART ITINERARY PLANNER
-    // ------------------------------------------
-    function generateSmartItinerary() {
-      const days = document.getElementById('itinerary-days').value;
-      const theme = document.getElementById('itinerary-theme').value;
-      const output = document.getElementById('itineraryOutput');
-
-      let day1Title = "Day 1: Royal Heritage & Artisan Immersion (Rajasthan Circuit)";
-      let day2Title = "Day 2: Desert Forts, Stepwells & Sand Dune Camp";
-
-      if (theme === 'nature') {
-        day1Title = "Day 1: Alleppey Palm Canals & Paddy Fields (Kerala Circuit)";
-        day2Title = "Day 2: Munnar Tea Hills, Cardamom Trails & Kathakali";
-      } else if (theme === 'himalayas') {
-        day1Title = "Day 1: Rishikesh Holy Ganga Rafting & Parmarth Aarti";
-        day2Title = "Day 2: Old Manali Apple Orchards & Pine Forest Chalet";
-      } else if (theme === 'south') {
-        day1Title = "Day 1: Hampi Vijayanagara Boulder Ruins & Coracle";
-        day2Title = "Day 2: Coorg Rainforest Coffee Plantation & Spices";
-      }
-
-      output.innerHTML = `
-        <div class="itinerary-day-box">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--gray-100); padding-bottom: 0.75rem;">
-            <h3 style="font-size: 1.25rem; color: var(--primary-dark);">${day1Title}</h3>
-            <span class="status-pill status-confirmed">Verified Indian Trail</span>
-          </div>
-
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div>
-              <span style="font-size: 0.75rem; font-weight: 700; color: var(--gray-500);">08:30 AM — Morning Heritage Immersion</span>
-              <h4 style="font-size: 1.05rem; margin: 0.2rem 0;">Subah-e-Banaras Dawn Heritage Boat & Silk Weaving</h4>
-              <p style="font-size: 0.85rem; color: var(--gray-600);">Row past stone ghats at sunrise with live morning ragas, then visit generational silk weavers.</p>
-              <button class="btn-outline btn-sm" style="margin-top: 0.5rem;" onclick="openBookingModal('ind_10')">Reserve (₹1,200)</button>
-            </div>
-          </div>
-
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div>
-              <span style="font-size: 0.75rem; font-weight: 700; color: var(--gray-500);">02:00 PM — GI Craft Masterclass</span>
-              <h4 style="font-size: 1.05rem; margin: 0.2rem 0;">Jaipur Blue Pottery & Gemstone Artisan Workshop</h4>
-              <p style="font-size: 0.85rem; color: var(--gray-600);">Sit with master artisans to shape ground quartz plates with cobalt floral motifs.</p>
-              <button class="btn-outline btn-sm" style="margin-top: 0.5rem;" onclick="openBookingModal('ind_20')">Reserve (₹1,850)</button>
-            </div>
-          </div>
-
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div>
-              <span style="font-size: 0.75rem; font-weight: 700; color: var(--gray-500);">06:30 PM — Starlit Heritage Stay</span>
-              <h4 style="font-size: 1.05rem; margin: 0.2rem 0;">Desert Dune Eco-Camp & Kalbelia Folk Night</h4>
-              <p style="font-size: 0.85rem; color: var(--gray-600);">Traditional Swiss tents under the desert stars with authentic Dal Baati Churma feast.</p>
-              <button class="btn-primary btn-sm" style="margin-top: 0.5rem;" onclick="openBookingModal('ind_1')">Book Camp (₹3,800)</button>
-            </div>
-          </div>
-        </div>
-
-        ${days > 1 ? `
-        <div class="itinerary-day-box">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--gray-100); padding-bottom: 0.75rem;">
-            <h3 style="font-size: 1.25rem; color: var(--primary-dark);">${day2Title}</h3>
-            <span class="status-pill status-confirmed">Green Eco-Trail</span>
-          </div>
-
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div>
-              <span style="font-size: 0.75rem; font-weight: 700; color: var(--gray-500);">09:00 AM — Nature & Waterway Expedition</span>
-              <h4 style="font-size: 1.05rem; margin: 0.2rem 0;">Alleppey Backwater Eco-Houseboat & Village Canoe</h4>
-              <p style="font-size: 0.85rem; color: var(--gray-600);">Glide through palm canals and visit native toddy groves and paddy fields.</p>
-              <button class="btn-outline btn-sm" style="margin-top: 0.5rem;" onclick="openBookingModal('ind_2')">Reserve (₹5,500)</button>
-            </div>
-          </div>
-
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div>
-              <span style="font-size: 0.75rem; font-weight: 700; color: var(--gray-500);">05:00 PM — Culinary Spice Trail</span>
-              <h4 style="font-size: 1.05rem; margin: 0.2rem 0;">Chettinad Heritage Mansion Walk & 18-Spice Feast</h4>
-              <p style="font-size: 0.85rem; color: var(--gray-600);">Hands-on stone-grinding session for authentic Chettinad pepper specialties.</p>
-              <button class="btn-primary btn-sm" style="margin-top: 0.5rem;" onclick="openBookingModal('ind_11')">Join Trail (₹1,950)</button>
-            </div>
-          </div>
-        </div>
-        ` : ''}
-      `;
-
-      showToast('Smart Indian Circuit Itinerary generated!', 'sparkles');
-      if (typeof lucide !== 'undefined') lucide.createIcons();
-    }
-
-    // ------------------------------------------
-    // HOST DASHBOARD
-    // ------------------------------------------
-    function renderHostDashboard() {
-      const tbody = document.getElementById('hostBookingsTableBody');
-      if (tbody) {
-        tbody.innerHTML = userBookings.map(b => `
-          <tr>
-            <td><strong>${b.id}</strong></td>
-            <td>${b.guestName}</td>
-            <td>${b.bizName}</td>
-            <td>${b.date}</td>
-            <td>${b.guests} Guests</td>
-            <td><strong>₹${b.totalPrice.toLocaleString('en-IN')}</strong></td>
-            <td><span class="status-pill ${b.status === 'Confirmed' ? 'status-confirmed' : 'status-completed'}">${b.status}</span></td>
-            <td>
-              ${b.status === 'Confirmed' 
-                ? `<button class="btn-primary btn-sm" onclick="checkInGuest('${b.id}')"><i data-lucide="check" style="width: 12px; height: 12px;"></i> Check In</button>`
-                : `<span style="font-size: 0.8rem; color: var(--gray-500);">Completed</span>`}
-            </td>
-          </tr>
-        `).join('');
-      }
-
-      const hostGrid = document.getElementById('hostListingsGrid');
-      if (hostGrid) {
-        const hostItems = localBusinesses.slice(0, 3);
-        hostGrid.innerHTML = hostItems.map(b => `
-          <div class="biz-card">
-            <div class="biz-card-image" style="height: 160px;">
-              <img src="${b.image}" alt="${b.title}">
-            </div>
-            <div class="biz-card-body">
-              <h4 style="font-size: 1.05rem; font-weight: 700;">${b.title}</h4>
-              <p style="font-size: 0.8rem; color: var(--gray-600); margin: 0.35rem 0;">${b.location} • ₹${b.price.toLocaleString('en-IN')} / ${b.priceUnit}</p>
-              <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
-                <button class="btn-outline btn-sm" style="flex: 1;" onclick="showToast('Listing settings updated', 'check')">Edit Listing</button>
-                <button class="btn-primary btn-sm" style="flex: 1;" onclick="showToast('Active & Receiving Bookings', 'check')">Available</button>
-              </div>
-            </div>
-          </div>
-        `).join('');
-      }
-    }
-
-    function checkInGuest(bookingId) {
-      const b = userBookings.find(item => item.id === bookingId);
-      if (b) {
-        b.status = 'Completed';
-        renderBookings();
-        renderHostDashboard();
-        showToast(`Traveler ${b.guestName} successfully verified and checked in!`, 'check-circle');
-      }
-    }
-
-    function openAddListingModal() {
-      document.getElementById('addListingModal').classList.add('active');
-    }
-
-    function submitNewListing(e) {
-      e.preventDefault();
-      const state = document.getElementById('newBizState').value;
-      const newListing = {
-        id: `ind_${Date.now()}`,
-        title: document.getElementById('newBizTitle').value.trim(),
-        category: document.getElementById('newBizCategory').value,
-        region: state,
-        location: document.getElementById('newBizLocation').value.trim(),
-        price: parseFloat(document.getElementById('newBizPrice').value),
-        priceUnit: 'experience',
-        rating: 5.0,
-        reviewsCount: 1,
-        image: document.getElementById('newBizImg').value.trim() || 'https://images.unsplash.com/photo-1548013146-72479768bada?w=800&q=80',
-        ecoTag: 'Verified State Host',
-        description: document.getElementById('newBizDesc').value.trim()
-      };
-
-      localBusinesses.unshift(newListing);
-      renderBusinesses(localBusinesses);
-      renderHostDashboard();
-      closeModal('addListingModal');
-      showToast('New Indian destination listing published!', 'check-circle');
-
-      if (window._firebase && window._firebase.db) {
-        try {
-          const fb = window._firebase;
-          fb.setDoc(fb.doc(fb.db, 'businesses', newListing.id), newListing);
-        } catch(err) {
-          console.log("Firestore offline write:", err);
-        }
-      }
-    }
-
-    // ------------------------------------------
-    // SCANNER
-    // ------------------------------------------
-    function openScannerModal() {
-      document.getElementById('scannerModal').classList.add('active');
-      if (typeof Html5Qrcode !== 'undefined') {
-        try {
-          html5QrScanner = new Html5Qrcode("scannerReader");
-          html5QrScanner.start(
-            { facingMode: "environment" },
-            { fps: 10, qrbox: { width: 250, height: 250 } },
-            (decodedText) => handleQrScanSuccess(decodedText),
-            () => {}
-          ).catch(err => {
-            console.log("Camera access not available, manual entry ready.", err);
-          });
-        } catch(e) {}
-      }
-    }
-
-    function closeScannerModal() {
-      if (html5QrScanner) {
-        try {
-          html5QrScanner.stop().then(() => html5QrScanner.clear()).catch(() => {});
-        } catch(e){}
-      }
-      closeModal('scannerModal');
-    }
-
-    function handleQrScanSuccess(decodedText) {
-      closeScannerModal();
-      try {
-        const data = JSON.parse(decodedText);
-        if (data.bookingId) {
-          checkInGuest(data.bookingId);
-          showToast(`Pass Validated: ${data.name} (${data.guests} Guests)`, 'check-circle');
-          return;
-        }
-      } catch(e) {}
-      showToast(`Scanned Code: ${decodedText}`, 'check-circle');
-    }
-
-    function verifyManualCode() {
-      const code = document.getElementById('manualCodeInput').value.trim().toUpperCase();
-      const booking = userBookings.find(b => b.id.toUpperCase() === code);
-      if (booking) {
-        checkInGuest(booking.id);
-        closeScannerModal();
-      } else {
-        showToast('Invalid or unrecognized booking code', 'alert-circle');
-      }
-    }
-
-    // ------------------------------------------
-    // CHARTS
-    // ------------------------------------------
-    function initCharts() {
-      if (typeof Chart === 'undefined') return;
-
-      const ctx1 = document.getElementById('hostBookingsChart')?.getContext('2d');
-      if (ctx1) {
-        new Chart(ctx1, {
-          type: 'line',
-          data: {
-            labels: ['Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'],
-            datasets: [{
-              label: 'Indian & Global Travelers',
-              data: [45, 68, 59, 84, 112, 164],
-              borderColor: '#059669',
-              backgroundColor: 'rgba(5, 150, 105, 0.1)',
-              fill: true,
-              tension: 0.35,
-              borderWidth: 3
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } }
-          }
-        });
-      }
-
-      const ctx2 = document.getElementById('hostDemographicsChart')?.getContext('2d');
-      if (ctx2) {
-        new Chart(ctx2, {
-          type: 'doughnut',
-          data: {
-            labels: ['Domestic Interstate', 'International Heritage', 'Local State Weekend'],
-            datasets: [{
-              data: [65, 22, 13],
-              backgroundColor: ['#059669', '#f97316', '#3b82f6']
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { position: 'bottom' } }
-          }
-        });
-      }
-
-      const ctx3 = document.getElementById('adminRevenueChart')?.getContext('2d');
-      if (ctx3) {
-        new Chart(ctx3, {
-          type: 'bar',
-          data: {
-            labels: ['Q1', 'Q2', 'Q3', 'Q4'],
-            datasets: [{
-              label: 'State Tourism Impact (₹ Crore)',
-              data: [68, 92, 115, 153],
-              backgroundColor: '#10b981',
-              borderRadius: 6
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } }
-          }
-        });
-      }
-
-      const ctx4 = document.getElementById('adminCategoryChart')?.getContext('2d');
-      if (ctx4) {
-        new Chart(ctx4, {
-          type: 'pie',
-          data: {
-            labels: ['North (Himalayas & Rajasthan)', 'South (Kerala, TN & Karnataka)', 'West (Goa & Gujarat)', 'East & Northeast'],
-            datasets: [{
-              data: [38, 32, 18, 12],
-              backgroundColor: ['#f97316', '#059669', '#3b82f6', '#8b5cf6']
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { position: 'bottom' } }
-          }
-        });
-      }
-    }
-
-    // ------------------------------------------
-    // FIREBASE AUTH
-    // ------------------------------------------
-    function openAuthModal(mode) {
-      currentAuthMode = mode;
-      const title = document.getElementById('authModalTitle');
-      const submitBtn = document.getElementById('authSubmitBtn');
-      const roleGroup = document.getElementById('roleSelectGroup');
-      const toggleLink = document.getElementById('authToggleLink');
-      const togglePrompt = document.getElementById('authTogglePrompt');
-
-      if (mode === 'signup') {
-        title.innerText = 'Join TourisMart India';
-        submitBtn.innerText = 'Create Account with Firebase';
-        roleGroup.style.display = 'block';
-        toggleLink.innerText = 'Sign In';
-        togglePrompt.innerText = 'Already have an account?';
-      } else {
-        title.innerText = 'Sign In to TourisMart India';
-        submitBtn.innerText = 'Sign In with Firebase';
-        roleGroup.style.display = 'none';
-        toggleLink.innerText = 'Sign Up';
-        togglePrompt.innerText = "Don't have an account?";
-      }
-
-      document.getElementById('authModal').classList.add('active');
-    }
-
-    function toggleAuthMode() {
-      openAuthModal(currentAuthMode === 'signin' ? 'signup' : 'signin');
-    }
-
-    async function handleAuthSubmit(e) {
-      e.preventDefault();
-      const email = document.getElementById('authEmail').value.trim();
-      const password = document.getElementById('authPassword').value;
-      const role = document.getElementById('authRole').value;
-
-      const fb = window._firebase;
-      if (!fb || !fb.auth) {
-        simulateAuthSuccess({ email, uid: 'local_uid_' + Date.now() }, role);
-        return;
-      }
-
-      try {
-        if (currentAuthMode === 'signup') {
-          const cred = await fb.createUserWithEmailAndPassword(fb.auth, email, password);
-          try {
-            await fb.setDoc(fb.doc(fb.db, 'users', cred.user.uid), {
-              email: email,
-              role: role,
-              createdAt: new Date().toISOString()
-            });
-          } catch(e) {}
-          simulateAuthSuccess(cred.user, role);
-        } else {
-          const cred = await fb.signInWithEmailAndPassword(fb.auth, email, password);
-          simulateAuthSuccess(cred.user, role);
-        }
-      } catch(err) {
-        console.error("Firebase auth error:", err);
-        showToast(err.message || 'Authentication error', 'alert-circle');
-      }
-    }
-
-    async function signInWithGooglePopup() {
-      const fb = window._firebase;
-      if (!fb || !fb.auth || !fb.googleProvider) {
-        simulateAuthSuccess({ displayName: 'Google Traveler', email: 'traveler@google.com', uid: 'google_local' }, 'tourist');
-        return;
-      }
-
-      try {
-        const cred = await fb.signInWithPopup(fb.auth, fb.googleProvider);
-        simulateAuthSuccess(cred.user, 'tourist');
-      } catch(err) {
-        console.error("Google sign in error:", err);
-        showToast(err.message || 'Google sign in cancelled', 'alert-circle');
-      }
-    }
-
-    function simulateAuthSuccess(user, role) {
-      window.currentUser = user;
-      window.currentUserRole = role;
-      closeModal('authModal');
-      showToast(`Namaste & Welcome, ${user.displayName || user.email}!`, 'check-circle');
-
-      const authContainer = document.getElementById('authBtnContainer');
-      authContainer.innerHTML = `
-        <div style="display: flex; align-items: center; gap: 0.6rem;">
-          <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem;">
-            ${(user.displayName || user.email || 'U').charAt(0).toUpperCase()}
-          </div>
-          <button class="btn-outline btn-sm" onclick="signOutUser()">
-            <i data-lucide="log-out" style="width: 14px; height: 14px;"></i> Sign Out
-          </button>
-        </div>
-      `;
-
-      if (document.getElementById('roleSelector')) {
-        document.getElementById('roleSelector').value = role;
-      }
-      changeRole(role);
-      if (typeof lucide !== 'undefined') lucide.createIcons();
-    }
-
-    function signOutUser() {
-      const fb = window._firebase;
-      if (fb && fb.auth) fb.signOut(fb.auth);
-      window.currentUser = null;
-      window.currentUserRole = null;
-      document.getElementById('authBtnContainer').innerHTML = `
-        <button class="btn-primary" onclick="openAuthModal('signin')">
-          <i data-lucide="user" style="width: 16px; height: 16px;"></i> Sign In / Firebase
-        </button>
-      `;
-      changeRole('tourist');
-      showToast('Signed out successfully.', 'check');
-      if (typeof lucide !== 'undefined') lucide.createIcons();
-    }
-
-    window.handleUserAuthenticated = function(user, role) {
-      simulateAuthSuccess(user, role);
     };
 
-    window.handleUserSignedOut = function() {};
+    function App() {
+      const [lang, setLang] = useState('en');
+      const t = i18n[lang];
 
-    function closeModal(modalId) {
-      const el = document.getElementById(modalId);
-      if (el) el.classList.remove('active');
+      const [activeTab, setActiveTab] = useState('explore');
+      const [places, setPlaces] = useState(window.initialPlaces || []);
+      const [products, setProducts] = useState(window.initialProducts || []);
+      const [bookings, setBookings] = useState(window.initialBookings || []);
+      const [cart, setCart] = useState([]);
+
+      // Filters
+      const [searchQuery, setSearchQuery] = useState('');
+      const [selectedState, setSelectedState] = useState('all');
+      const [selectedBudget, setSelectedBudget] = useState('all');
+      const [selectedCategory, setSelectedCategory] = useState('all');
+
+      // Modals
+      const [selectedBiz, setSelectedBiz] = useState(null);
+      const [activeQRBooking, setActiveQRBooking] = useState(null);
+      const [isCartOpen, setIsCartOpen] = useState(false);
+      const [isAddListingOpen, setIsAddListingOpen] = useState(false);
+      const [toastMsg, setToastMsg] = useState('');
+
+      // Fetch live data from backend server if running
+      useEffect(() => {
+        async function fetchLivePlaces() {
+          try {
+            const res = await fetch('/api/places');
+            if (res.ok) {
+              const data = await res.json();
+              if (Array.isArray(data) && data.length) {
+                setPlaces(data);
+              }
+            }
+          } catch(e) {}
+        }
+        fetchLivePlaces();
+      }, []);
+
+      // Re-trigger Lucide icons on view change
+      useEffect(() => {
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+      }, [activeTab, places, cart, lang]);
+
+      const showToast = (msg) => {
+        setToastMsg(msg);
+        setTimeout(() => setToastMsg(''), 3500);
+      };
+
+      // Filtered places
+      const filteredPlaces = useMemo(() => {
+        return places.filter(p => {
+          const matchCat = (selectedCategory === 'all' || p.category === selectedCategory);
+          const matchState = (selectedState === 'all' || p.region.toLowerCase() === selectedState.toLowerCase());
+          const matchBudget = (selectedBudget === 'all' || p.price <= parseFloat(selectedBudget));
+          const q = searchQuery.toLowerCase().trim();
+          const matchSearch = !q || p.title.toLowerCase().includes(q) || p.location.toLowerCase().includes(q) || p.region.toLowerCase().includes(q);
+          return matchCat && matchState && matchBudget && matchSearch;
+        });
+      }, [places, selectedCategory, selectedState, selectedBudget, searchQuery]);
+
+      // Cart helpers
+      const addToCart = (product) => {
+        setCart(prev => {
+          const exist = prev.find(item => item.id === product.id);
+          if (exist) {
+            return prev.map(item => item.id === product.id ? { ...item, qty: item.qty + 1 } : item);
+          }
+          return [...prev, { ...product, qty: 1 }];
+        });
+        showToast(lang === 'hi' ? `${product.name} कार्ट में जोड़ा गया` : `Added ${product.name} to cart!`);
+      };
+
+      const updateCartQty = (id, delta) => {
+        setCart(prev => prev.map(item => {
+          if (item.id === id) {
+            const newQty = item.qty + delta;
+            return newQty > 0 ? { ...item, qty: newQty } : null;
+          }
+          return item;
+        }).filter(Boolean));
+      };
+
+      const cartTotal = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+
+      // Bookings helper
+      const handleConfirmBooking = async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const name = form.guestName.value.trim();
+        const email = form.guestEmail.value.trim();
+        const date = form.travelDate.value;
+        const guests = parseInt(form.guests.value, 10);
+        const total = selectedBiz.price * guests;
+        const bookingCode = `TOUR-IND-${Math.floor(1000 + Math.random() * 9000)}`;
+
+        const newBooking = {
+          id: bookingCode,
+          bizId: selectedBiz.id,
+          bizName: selectedBiz.title,
+          guestName: name,
+          guestEmail: email,
+          date,
+          guests,
+          totalPrice: total,
+          status: 'Confirmed'
+        };
+
+        setBookings(prev => [newBooking, ...prev]);
+        setSelectedBiz(null);
+        setActiveQRBooking(newBooking);
+
+        // Send to backend
+        try {
+          await fetch('/api/bookings', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newBooking)
+          });
+        } catch(e) {}
+
+        showToast(lang === 'hi' ? 'आरक्षण सफल! डिजिटल पास जारी हुआ।' : 'Reservation confirmed! Digital pass generated.');
+      };
+
+      // QR Code Rendering inside modal
+      useEffect(() => {
+        if (activeQRBooking && typeof QRCode !== 'undefined') {
+          setTimeout(() => {
+            const container = document.getElementById('reactQrCode');
+            if (container) {
+              container.innerHTML = '';
+              new QRCode(container, {
+                text: JSON.stringify({
+                  passId: activeQRBooking.id,
+                  place: activeQRBooking.bizName,
+                  traveler: activeQRBooking.guestName,
+                  guests: activeQRBooking.guests,
+                  date: activeQRBooking.date,
+                  country: 'India'
+                }),
+                width: 170,
+                height: 170,
+                colorDark: "#064e3b",
+                colorLight: "#ffffff"
+              });
+            }
+          }, 100);
+        }
+      }, [activeQRBooking]);
+
+      return (
+        <div>
+          {/* HEADER */}
+          <header className="app-header">
+            <div className="brand-box" onClick={() => setActiveTab('explore')}>
+              <div className="brand-icon">
+                <i data-lucide="compass"></i>
+              </div>
+              <div className="brand-text">
+                <h1>TourisMart India</h1>
+                <span>{t.brandSubtitle}</span>
+              </div>
+            </div>
+
+            {/* DESKTOP NAVIGATION */}
+            <nav className="desktop-nav">
+              <button className={`nav-btn ${activeTab === 'explore' ? 'active' : ''}`} onClick={() => setActiveTab('explore')}>
+                <i data-lucide="compass" style={{ width: 16, height: 16 }}></i> {lang === 'hi' ? 'पर्यटन स्थल' : 'Destinations'}
+              </button>
+              <button className={`nav-btn ${activeTab === 'itinerary' ? 'active' : ''}`} onClick={() => setActiveTab('itinerary')}>
+                <i data-lucide="calendar" style={{ width: 16, height: 16 }}></i> {lang === 'hi' ? 'यात्रा सर्किट' : 'AI Circuits'}
+              </button>
+              <button className={`nav-btn ${activeTab === 'crafts' ? 'active' : ''}`} onClick={() => setActiveTab('crafts')}>
+                <i data-lucide="shopping-bag" style={{ width: 16, height: 16 }}></i> {lang === 'hi' ? 'हस्तशिल्प' : 'GI Crafts'}
+              </button>
+              <button className={`nav-btn ${activeTab === 'passes' ? 'active' : ''}`} onClick={() => setActiveTab('passes')}>
+                <i data-lucide="ticket" style={{ width: 16, height: 16 }}></i> {lang === 'hi' ? 'डिजिटल पास' : 'Digital Passes'}
+              </button>
+            </nav>
+
+            {/* HEADER ACTIONS */}
+            <div className="header-actions">
+              {/* Language Switcher */}
+              <button className="lang-toggle-btn" onClick={() => setLang(l => l === 'en' ? 'hi' : 'en')} title="Toggle Language">
+                <i data-lucide="globe" style={{ width: 14, height: 14 }}></i>
+                <span>{lang === 'en' ? 'हिन्दी' : 'English'}</span>
+              </button>
+
+              {/* Cart Pill */}
+              <button className="cart-pill" onClick={() => setIsCartOpen(true)}>
+                <i data-lucide="shopping-cart" style={{ width: 18, height: 18 }}></i>
+                {cart.length > 0 && <span className="cart-badge">{cart.reduce((s, i) => s + i.qty, 0)}</span>}
+              </button>
+
+              {/* Host Submission Button */}
+              <button className="btn-main btn-sm" onClick={() => setIsAddListingOpen(true)}>
+                <i data-lucide="plus-circle" style={{ width: 14, height: 14 }}></i>
+                <span style={{ display: 'none' }} className="d-sm-inline">{lang === 'hi' ? 'स्थान जोड़ें' : 'Host Entry'}</span>
+              </button>
+            </div>
+          </header>
+
+          {/* VIEW 1: EXPLORE / DESTINATIONS */}
+          {activeTab === 'explore' && (
+            <div>
+              {/* Hero Banner */}
+              <section className="hero-box">
+                <div className="hero-badge">
+                  <i data-lucide="sparkles" style={{ width: 14, height: 14, color: '#fde047' }}></i>
+                  {t.tagline}
+                </div>
+                <h2 className="hero-title">{t.heroTitle1} <span>{t.heroTitle2}</span></h2>
+                <p className="hero-desc">{t.heroDesc}</p>
+              </section>
+
+              {/* Search & State Filter */}
+              <div className="search-wrapper">
+                <div className="search-container">
+                  <div className="input-field">
+                    <label>{t.searchPlaceholder.slice(0, 24)}</label>
+                    <input
+                      type="text"
+                      placeholder={t.searchPlaceholder}
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                  </div>
+                  <div className="input-field">
+                    <label>{t.allStates}</label>
+                    <select value={selectedState} onChange={(e) => setSelectedState(e.target.value)}>
+                      <option value="all">{t.allStates}</option>
+                      <option value="Rajasthan">Rajasthan</option>
+                      <option value="Kerala">Kerala</option>
+                      <option value="Himachal Pradesh">Himachal Pradesh</option>
+                      <option value="Uttarakhand">Uttarakhand</option>
+                      <option value="Karnataka">Karnataka</option>
+                      <option value="Goa">Goa</option>
+                      <option value="Tamil Nadu">Tamil Nadu</option>
+                      <option value="Maharashtra">Maharashtra</option>
+                      <option value="Jammu & Kashmir">Jammu & Kashmir</option>
+                      <option value="Ladakh">Ladakh</option>
+                      <option value="West Bengal">West Bengal</option>
+                      <option value="Uttar Pradesh">Uttar Pradesh</option>
+                      <option value="Gujarat">Gujarat</option>
+                      <option value="Meghalaya">Meghalaya</option>
+                      <option value="Assam">Assam</option>
+                      <option value="Madhya Pradesh">Madhya Pradesh</option>
+                      <option value="Punjab">Punjab</option>
+                      <option value="Odisha">Odisha</option>
+                      <option value="Sikkim">Sikkim</option>
+                      <option value="Andhra Pradesh">Andhra Pradesh</option>
+                      <option value="Telangana">Telangana</option>
+                      <option value="Bihar">Bihar</option>
+                      <option value="Delhi NCR">Delhi NCR</option>
+                      <option value="Andaman & Nicobar">Andaman & Nicobar</option>
+                    </select>
+                  </div>
+                  <div className="input-field">
+                    <label>Budget (₹ INR)</label>
+                    <select value={selectedBudget} onChange={(e) => setSelectedBudget(e.target.value)}>
+                      <option value="all">{t.anyPrice}</option>
+                      <option value="2000">Under ₹2,000</option>
+                      <option value="3500">Under ₹3,500</option>
+                      <option value="5000">Under ₹5,000</option>
+                    </select>
+                  </div>
+                  <div>
+                    <button className="btn-main" style={{ width: '100%', height: '100%', justifyContent: 'center' }}>
+                      <i data-lucide="filter" style={{ width: 16, height: 16 }}></i> {t.filterPlaces}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Category Pills */}
+              <div className="cat-bar">
+                {Object.keys(t.categories).map(catKey => (
+                  <button
+                    key={catKey}
+                    className={`cat-chip ${selectedCategory === catKey ? 'active' : ''}`}
+                    onClick={() => setSelectedCategory(catKey)}
+                  >
+                    {t.categories[catKey]}
+                  </button>
+                ))}
+              </div>
+
+              {/* Grid Content */}
+              <div className="main-wrap">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+                  <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#475569' }}>
+                    {t.showing} {filteredPlaces.length} {t.destinations}
+                  </span>
+                </div>
+
+                <div className="dest-grid">
+                  {filteredPlaces.map(biz => (
+                    <div key={biz.id} className="dest-card">
+                      <div className="dest-img-box">
+                        <img src={biz.image} alt={biz.title} loading="lazy" />
+                        <span className="tag-eco">
+                          <i data-lucide="leaf" style={{ width: 12, height: 12 }}></i> {biz.ecoTag}
+                        </span>
+                        <span className="tag-state">{biz.region}</span>
+                      </div>
+                      <div className="dest-body">
+                        <div className="dest-meta">
+                          <span className="dest-location">
+                            <i data-lucide="map-pin" style={{ width: 13, height: 13 }}></i> {biz.location}
+                          </span>
+                          <span className="dest-rating">
+                            <i data-lucide="star" style={{ width: 13, height: 13, fill: 'currentColor' }}></i> {biz.rating}
+                          </span>
+                        </div>
+                        <h3 className="dest-title">{biz.title}</h3>
+                        <p className="dest-desc">{biz.description}</p>
+                        <div className="dest-footer">
+                          <div>
+                            <div style={{ fontSize: '0.68rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 700 }}>{t.directRate}</div>
+                            <div className="price-value">₹{biz.price.toLocaleString('en-IN')} <span style={{ fontSize: '0.72rem', color: '#64748b' }}>/ {biz.priceUnit}</span></div>
+                          </div>
+                          <button className="btn-main btn-sm" onClick={() => setSelectedBiz(biz)}>
+                            <i data-lucide="calendar" style={{ width: 13, height: 13 }}></i> {t.reserve}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Macro Impact Banner */}
+                <div className="impact-box">
+                  <div className="impact-item">
+                    <h3>₹14.8 Cr+</h3>
+                    <p>{lang === 'hi' ? 'स्थानीय कारीगरों को प्रत्यक्ष आय' : 'Direct Revenue Channeled to Local Hosts'}</p>
+                  </div>
+                  <div className="impact-item">
+                    <h3>1,250+</h3>
+                    <p>{lang === 'hi' ? 'सत्यापित ग्रामीण होमस्टे' : 'Verified Village Homestays'}</p>
+                  </div>
+                  <div className="impact-item">
+                    <h3>48,000+</h3>
+                    <p>{lang === 'hi' ? 'सत्यापित डिजिटल क्यूआर पास जारी' : 'Indian Digital Passes Issued'}</p>
+                  </div>
+                  <div className="impact-item">
+                    <h3>100%</h3>
+                    <p>{lang === 'hi' ? 'जीआई शिल्प और सांस्कृतिक संरक्षण' : 'Protection of Indigenous GI Heritage'}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* VIEW 2: SMART AI CIRCUITS */}
+          {activeTab === 'itinerary' && (
+            <div className="main-wrap" style={{ maxWidth: 860 }}>
+              <div style={{ marginBottom: '1.5rem' }}>
+                <h2 style={{ fontSize: '1.6rem' }}>{t.circuitPlanner}</h2>
+                <p style={{ color: '#64748b', fontSize: '0.9rem' }}>{t.circuitDesc}</p>
+              </div>
+
+              <div style={{ background: 'white', border: '1px solid #e2e8f0', borderRadius: 16, padding: '1.5rem', marginBottom: '2rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
+                  <div className="form-row">
+                    <label>{lang === 'hi' ? 'अवधि' : 'Duration'}</label>
+                    <select id="itineraryDays">
+                      <option value="1">1 Day (Quick Immersion)</option>
+                      <option value="2">2 Days (State Weekend Trail)</option>
+                      <option value="3">3 Days (Deep Cultural Circuit)</option>
+                    </select>
+                  </div>
+                  <div className="form-row">
+                    <label>{lang === 'hi' ? 'पर्यटन सर्किट' : 'Circuit Theme'}</label>
+                    <select id="itineraryTheme">
+                      <option value="rajasthan">Rajasthan Royal Heritage & Desert Trail</option>
+                      <option value="kerala">Kerala Backwaters & High-Altitude Tea Estates</option>
+                      <option value="himalayas">Himachal & Uttarakhand Mountain Rivers</option>
+                      <option value="south">South India Temples & Coffee Plantations</option>
+                    </select>
+                  </div>
+                </div>
+                <button className="btn-main" style={{ width: '100%', justifyContent: 'center' }} onClick={() => showToast(lang === 'hi' ? 'स्मार्ट यात्रा सर्किट तैयार किया गया!' : 'Smart Indian Circuit Itinerary Generated!')}>
+                  <i data-lucide="sparkles" style={{ width: 16, height: 16 }}></i> {t.generateCircuit}
+                </button>
+              </div>
+
+              <div style={{ background: 'white', border: '1px solid #e2e8f0', borderRadius: 16, padding: '1.5rem', marginBottom: '1.5rem' }}>
+                <h3 style={{ fontSize: '1.15rem', color: '#047857', marginBottom: '1rem' }}>
+                  {lang === 'hi' ? 'दिवस १: प्रामाणिक विरासत और शिल्पकला' : 'Day 1: Royal Heritage & Native Artisan Immersion'}
+                </h3>
+                <div style={{ paddingLeft: '1rem', borderLeft: '2px solid #10b981' }}>
+                  <div style={{ marginBottom: '1rem' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#64748b' }}>08:30 AM</span>
+                    <h4 style={{ fontSize: '1rem' }}>Subah-e-Banaras Sunrise Boat & Silk Karkhana</h4>
+                    <p style={{ fontSize: '0.82rem', color: '#64748b' }}>Morning wooden rowing boat along sacred stone ghats, followed by real gold zari pit-looms.</p>
+                  </div>
+                  <div style={{ marginBottom: '1rem' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#64748b' }}>02:00 PM</span>
+                    <h4 style={{ fontSize: '1rem' }}>Jaipur Blue Pottery Master Artisan Workshop</h4>
+                    <p style={{ fontSize: '0.82rem', color: '#64748b' }}>Shape ground quartz clay plates with master artisans without a potters wheel.</p>
+                  </div>
+                  <div>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#64748b' }}>06:30 PM</span>
+                    <h4 style={{ fontSize: '1rem' }}>Sam Sand Dunes Desert Eco-Camp & Stargazing</h4>
+                    <p style={{ fontSize: '0.82rem', color: '#64748b' }}>Swiss tents under Thar desert starlight with woodfire Dal Baati Churma feast.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* VIEW 3: GI CRAFTS MARKETPLACE */}
+          {activeTab === 'crafts' && (
+            <div className="main-wrap">
+              <div style={{ marginBottom: '1.5rem' }}>
+                <h2 style={{ fontSize: '1.6rem' }}>{t.giCraftsTitle}</h2>
+                <p style={{ color: '#64748b', fontSize: '0.9rem' }}>{t.giCraftsSub}</p>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1.5rem' }}>
+                {products.map(prod => (
+                  <div key={prod.id} style={{ background: 'white', border: '1px solid #e2e8f0', borderRadius: 16, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                    <div style={{ height: 180, background: '#f1f5f9' }}>
+                      <img src={prod.image} alt={prod.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                    <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                      <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#f97316', marginBottom: '0.25rem' }}>
+                        <i data-lucide="sparkles" style={{ width: 12, height: 12, display: 'inline', marginRight: 4 }}></i>
+                        {prod.maker}
+                      </span>
+                      <h4 style={{ fontSize: '0.95rem', marginBottom: '0.35rem' }}>{prod.name}</h4>
+                      <p style={{ fontSize: '0.78rem', color: '#64748b', marginBottom: '0.75rem', flex: 1 }}>{prod.desc}</p>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #f1f5f9', paddingTop: '0.75rem' }}>
+                        <span style={{ fontSize: '1.15rem', fontWeight: 800, color: '#047857' }}>₹{prod.price.toLocaleString('en-IN')}</span>
+                        <button className="btn-main btn-sm" onClick={() => addToCart(prod)}>
+                          <i data-lucide="plus" style={{ width: 13, height: 13 }}></i> {t.addToCart}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* VIEW 4: MY BOOKINGS & PASSES */}
+          {activeTab === 'passes' && (
+            <div className="main-wrap" style={{ maxWidth: 860 }}>
+              <div style={{ marginBottom: '1.5rem' }}>
+                <h2 style={{ fontSize: '1.6rem' }}>{t.myPasses}</h2>
+                <p style={{ color: '#64748b', fontSize: '0.9rem' }}>{t.showPassNotice}</p>
+              </div>
+
+              {bookings.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '3rem', background: 'white', borderRadius: 16, border: '1px dashed #cbd5e1' }}>
+                  <i data-lucide="ticket" style={{ width: 44, height: 44, color: '#94a3b8', marginBottom: '0.75rem' }}></i>
+                  <h3>{t.noPassesYet}</h3>
+                  <p style={{ color: '#64748b', fontSize: '0.85rem', marginTop: 4 }}>{t.noPassesSub}</p>
+                </div>
+              ) : (
+                bookings.map(b => (
+                  <div key={b.id} style={{ background: 'white', border: '1px solid #e2e8f0', borderRadius: 14, padding: '1.25rem', marginBottom: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+                        <span style={{ background: '#dcfce7', color: '#15803d', padding: '0.2rem 0.55rem', borderRadius: 9999, fontSize: '0.72rem', fontWeight: 700 }}>{b.status}</span>
+                        <span style={{ fontFamily: 'monospace', fontWeight: 700, fontSize: '0.82rem', color: '#64748b' }}>{b.id}</span>
+                      </div>
+                      <h4 style={{ fontSize: '1.1rem' }}>{b.bizName}</h4>
+                      <p style={{ fontSize: '0.82rem', color: '#64748b' }}>
+                        {b.date} • {b.guests} {lang === 'hi' ? 'यात्री' : 'Travelers'} • <strong>₹{b.totalPrice.toLocaleString('en-IN')}</strong>
+                      </p>
+                    </div>
+                    <button className="btn-main btn-sm" onClick={() => setActiveQRBooking(b)}>
+                      <i data-lucide="qr-code" style={{ width: 14, height: 14 }}></i> {lang === 'hi' ? 'डिजिटल पास देखें' : 'View QR Pass'}
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
+
+          {/* MOBILE BOTTOM NAVIGATION BAR */}
+          <div className="mobile-bottom-bar">
+            <button className={`mobile-tab ${activeTab === 'explore' ? 'active' : ''}`} onClick={() => setActiveTab('explore')}>
+              <i data-lucide="compass" style={{ width: 20, height: 20 }}></i>
+              <span>{lang === 'hi' ? 'स्थल' : 'Places'}</span>
+            </button>
+            <button className={`mobile-tab ${activeTab === 'itinerary' ? 'active' : ''}`} onClick={() => setActiveTab('itinerary')}>
+              <i data-lucide="calendar" style={{ width: 20, height: 20 }}></i>
+              <span>{lang === 'hi' ? 'सर्किट' : 'Circuits'}</span>
+            </button>
+            <button className={`mobile-tab ${activeTab === 'crafts' ? 'active' : ''}`} onClick={() => setActiveTab('crafts')}>
+              <i data-lucide="shopping-bag" style={{ width: 20, height: 20 }}></i>
+              <span>{lang === 'hi' ? 'शिल्प' : 'Crafts'}</span>
+            </button>
+            <button className={`mobile-tab ${activeTab === 'passes' ? 'active' : ''}`} onClick={() => setActiveTab('passes')}>
+              <i data-lucide="ticket" style={{ width: 20, height: 20 }}></i>
+              <span>{lang === 'hi' ? 'पास' : 'Passes'}</span>
+            </button>
+            <button className="mobile-tab" onClick={() => setIsCartOpen(true)}>
+              <i data-lucide="shopping-cart" style={{ width: 20, height: 20 }}></i>
+              <span>{lang === 'hi' ? 'कार्ट' : 'Cart'} ({cart.reduce((s, i) => s + i.qty, 0)})</span>
+            </button>
+          </div>
+
+          {/* BOOKING MODAL */}
+          {selectedBiz && (
+            <div className="modal-backdrop" onClick={() => setSelectedBiz(null)}>
+              <div className="modal-window" onClick={e => e.stopPropagation()}>
+                <div className="modal-top">
+                  <h3>{t.reserveTitle}</h3>
+                  <button onClick={() => setSelectedBiz(null)}><i data-lucide="x"></i></button>
+                </div>
+                <div className="modal-content">
+                  <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', background: '#f8fafc', padding: '0.75rem', borderRadius: 10, marginBottom: '1rem' }}>
+                    <img src={selectedBiz.image} style={{ width: 60, height: 60, borderRadius: 8, objectFit: 'cover' }} />
+                    <div>
+                      <h4 style={{ fontSize: '0.95rem' }}>{selectedBiz.title}</h4>
+                      <p style={{ fontSize: '0.8rem', color: '#047857', fontWeight: 700 }}>₹{selectedBiz.price.toLocaleString('en-IN')} / {selectedBiz.priceUnit}</p>
+                    </div>
+                  </div>
+
+                  <form onSubmit={handleConfirmBooking}>
+                    <div className="form-row">
+                      <label>{lang === 'hi' ? 'पूरा नाम' : 'Full Name'}</label>
+                      <input type="text" name="guestName" required placeholder="Your Name" />
+                    </div>
+                    <div className="form-row">
+                      <label>{lang === 'hi' ? 'ईमेल पता' : 'Email Address'}</label>
+                      <input type="email" name="guestEmail" required placeholder="name@domain.com" />
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                      <div className="form-row">
+                        <label>{t.travelDate}</label>
+                        <input type="date" name="travelDate" required defaultValue={new Date(Date.now() + 86400000).toISOString().split('T')[0]} />
+                      </div>
+                      <div className="form-row">
+                        <label>{t.travelers}</label>
+                        <input type="number" name="guests" min="1" max="10" defaultValue="2" required />
+                      </div>
+                    </div>
+                    <div className="form-row">
+                      <label>{t.specialReqs}</label>
+                      <textarea rows="2" placeholder="e.g. Vegetarian, early arrival..."></textarea>
+                    </div>
+                    <button type="submit" className="btn-main" style={{ width: '100%', justifyContent: 'center', padding: '0.75rem' }}>
+                      <i data-lucide="check-circle" style={{ width: 16, height: 16 }}></i> {t.confirmPassBtn}
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* QR PASS MODAL */}
+          {activeQRBooking && (
+            <div className="modal-backdrop" onClick={() => setActiveQRBooking(null)}>
+              <div className="modal-window" style={{ maxWidth: 420 }} onClick={e => e.stopPropagation()}>
+                <div className="modal-top">
+                  <h3>{t.digitalPassTitle}</h3>
+                  <button onClick={() => setActiveQRBooking(null)}><i data-lucide="x"></i></button>
+                </div>
+                <div className="modal-content" style={{ textAlign: 'center' }}>
+                  <div style={{ background: '#f8fafc', border: '2px dashed #059669', borderRadius: 16, padding: '1.5rem', marginBottom: '1rem' }}>
+                    <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', color: '#059669' }}>
+                      TourisMart India • Verified Pass
+                    </div>
+                    <h4 style={{ fontSize: '1.15rem', margin: '0.35rem 0' }}>{activeQRBooking.bizName}</h4>
+                    <p style={{ fontSize: '0.8rem', color: '#64748b' }}>{activeQRBooking.guestName} • {activeQRBooking.guests} Travelers • {activeQRBooking.date}</p>
+                    
+                    <div id="reactQrCode" style={{ display: 'flex', justifyContent: 'center', margin: '1rem auto' }}></div>
+
+                    <div style={{ background: '#f1f5f9', padding: '0.4rem 0.9rem', borderRadius: 9999, display: 'inline-block', fontFamily: 'monospace', fontWeight: 700 }}>
+                      {activeQRBooking.id}
+                    </div>
+                    <p style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '0.5rem' }}>{t.showPassNotice}</p>
+                  </div>
+                  <button className="btn-main" style={{ width: '100%', justifyContent: 'center' }} onClick={() => window.print()}>
+                    <i data-lucide="printer" style={{ width: 16, height: 16 }}></i> {t.printPass}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* CART SLIDE DRAWER */}
+          {isCartOpen && (
+            <div>
+              <div className="cart-overlay" onClick={() => setIsCartOpen(false)}></div>
+              <div className="cart-slider">
+                <div style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <h3 style={{ fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <i data-lucide="shopping-bag" style={{ width: 18, height: 18, color: '#f97316' }}></i> {t.cartTitle}
+                  </h3>
+                  <button onClick={() => setIsCartOpen(false)}><i data-lucide="x"></i></button>
+                </div>
+                <div style={{ flex: 1, overflowY: 'auto', padding: '1rem' }}>
+                  {cart.length === 0 ? (
+                    <p style={{ color: '#94a3b8', textAlign: 'center', marginTop: '2rem' }}>{t.cartEmpty}</p>
+                  ) : (
+                    cart.map(item => (
+                      <div key={item.id} style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', padding: '0.65rem 0', borderBottom: '1px solid #f1f5f9' }}>
+                        <img src={item.image} style={{ width: 48, height: 48, borderRadius: 8, objectFit: 'cover' }} />
+                        <div style={{ flex: 1 }}>
+                          <h5 style={{ fontSize: '0.85rem' }}>{item.name}</h5>
+                          <span style={{ fontSize: '0.78rem', color: '#047857', fontWeight: 700 }}>₹{item.price.toLocaleString('en-IN')}</span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                          <button className="btn-outline btn-sm" style={{ padding: '0.15rem 0.45rem' }} onClick={() => updateCartQty(item.id, -1)}>-</button>
+                          <span style={{ fontWeight: 700, fontSize: '0.82rem' }}>{item.qty}</span>
+                          <button className="btn-outline btn-sm" style={{ padding: '0.15rem 0.45rem' }} onClick={() => updateCartQty(item.id, 1)}>+</button>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+                <div style={{ padding: '1rem', borderTop: '1px solid #e2e8f0', background: '#f8fafc' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem', fontWeight: 700 }}>
+                    <span>Total:</span>
+                    <span style={{ fontSize: '1.2rem', color: '#047857' }}>₹{cartTotal.toLocaleString('en-IN')}</span>
+                  </div>
+                  <button className="btn-main" style={{ width: '100%', justifyContent: 'center' }} onClick={() => { setCart([]); setIsCartOpen(false); showToast(lang === 'hi' ? 'ऑर्डर सफल! प्रत्यक्ष भुगतान कारीगरों को भेजा गया।' : 'Order confirmed! 100% direct payment channeled to artisans.'); }}>
+                    <i data-lucide="credit-card" style={{ width: 16, height: 16 }}></i> {t.checkoutBtn}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* HOST ADD LISTING MODAL */}
+          {isAddListingOpen && (
+            <div className="modal-backdrop" onClick={() => setIsAddListingOpen(false)}>
+              <div className="modal-window" onClick={e => e.stopPropagation()}>
+                <div className="modal-top">
+                  <h3>{t.addListingBtn}</h3>
+                  <button onClick={() => setIsAddListingOpen(false)}><i data-lucide="x"></i></button>
+                </div>
+                <div className="modal-content">
+                  <form onSubmit={async (e) => {
+                    e.preventDefault();
+                    const form = e.target;
+                    const newPlace = {
+                      id: `ind_${Date.now()}`,
+                      title: form.title.value.trim(),
+                      category: form.category.value,
+                      region: form.region.value,
+                      location: form.location.value.trim(),
+                      price: parseFloat(form.price.value),
+                      priceUnit: 'night',
+                      rating: 5.0,
+                      reviewsCount: 1,
+                      image: form.image.value.trim() || 'https://images.unsplash.com/photo-1548013146-72479768bada?w=800&q=80',
+                      ecoTag: 'Verified State Host',
+                      description: form.desc.value.trim()
+                    };
+
+                    setPlaces(prev => [newPlace, ...prev]);
+                    setIsAddListingOpen(false);
+
+                    try {
+                      await fetch('/api/places', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(newPlace)
+                      });
+                    } catch(e) {}
+
+                    showToast(lang === 'hi' ? 'नई भारतीय पेशकश प्रकाशित हुई!' : 'New Indian destination published!');
+                  }}>
+                    <div className="form-row">
+                      <label>Title</label>
+                      <input type="text" name="title" required placeholder="e.g. Heritage Haveli Stay & Kathakali" />
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                      <div className="form-row">
+                        <label>State</label>
+                        <select name="region">
+                          <option value="Rajasthan">Rajasthan</option>
+                          <option value="Kerala">Kerala</option>
+                          <option value="Himachal Pradesh">Himachal Pradesh</option>
+                          <option value="Karnataka">Karnataka</option>
+                          <option value="Goa">Goa</option>
+                          <option value="Uttarakhand">Uttarakhand</option>
+                        </select>
+                      </div>
+                      <div className="form-row">
+                        <label>Category</label>
+                        <select name="category">
+                          <option value="stay">Heritage Stay</option>
+                          <option value="tours">Heritage Walk</option>
+                          <option value="food">Culinary Trail</option>
+                          <option value="adventure">Trek / Safari</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                      <div className="form-row">
+                        <label>Location</label>
+                        <input type="text" name="location" required placeholder="City, State" />
+                      </div>
+                      <div className="form-row">
+                        <label>Price (₹)</label>
+                        <input type="number" name="price" required placeholder="3200" />
+                      </div>
+                    </div>
+                    <div className="form-row">
+                      <label>Photo URL</label>
+                      <input type="url" name="image" placeholder="https://images.unsplash.com/..." />
+                    </div>
+                    <div className="form-row">
+                      <label>Description</label>
+                      <textarea name="desc" rows="3" required placeholder="Describe what authentic local experience travelers will enjoy..."></textarea>
+                    </div>
+                    <button type="submit" className="btn-main" style={{ width: '100%', justifyContent: 'center' }}>
+                      <i data-lucide="check" style={{ width: 16, height: 16 }}></i> {t.addListingBtn}
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TOAST PILL */}
+          {toastMsg && (
+            <div className="toast-pill">
+              <i data-lucide="info" style={{ width: 16, height: 16 }}></i>
+              <span>{toastMsg}</span>
+            </div>
+          )}
+
+          {/* FOOTER */}
+          <footer className="app-footer">
+            <div className="footer-inner">
+              <div>
+                <h4 style={{ color: 'white', marginBottom: '0.5rem' }}>TourisMart India</h4>
+                <p style={{ lineHeight: 1.6, maxWidth: 360 }}>{t.footerDesc}</p>
+              </div>
+              <div>
+                <h5 style={{ color: 'white', marginBottom: '0.5rem' }}>{lang === 'hi' ? 'प्रमुख राज्य' : 'Popular States'}</h5>
+                <p style={{ color: '#94a3b8', lineHeight: 1.8 }}>Rajasthan • Kerala • Himachal Pradesh • Karnataka • Goa • Ladakh • Uttarakhand • West Bengal</p>
+              </div>
+              <div>
+                <h5 style={{ color: 'white', marginBottom: '0.5rem' }}>{lang === 'hi' ? 'सुरक्षित नेटवर्क' : 'Security & Trust'}</h5>
+                <p style={{ color: '#94a3b8', lineHeight: 1.8 }}>100% Direct Local Payments • Verified Community Hosts • Paperless Digital QR Passes</p>
+              </div>
+            </div>
+            <div style={{ maxWidth: 1240, margin: '2rem auto 0', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.1)', textAlign: 'center', fontSize: '0.78rem', color: '#64748b' }}>
+              {t.footerBottom}
+            </div>
+          </footer>
+        </div>
+      );
     }
 
-    function showToast(msg, icon = 'info') {
-      const toast = document.getElementById('toastNotice');
-      const text = document.getElementById('toastMessage');
-      if (toast && text) {
-        text.innerText = msg;
-        toast.classList.add('active');
-        clearTimeout(window._toastTimeout);
-        window._toastTimeout = setTimeout(() => {
-          toast.classList.remove('active');
-        }, 3500);
-      }
-    }
+    ReactDOM.render(<App />, document.getElementById('root'));
   </script>
 </body>
 </html>

@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#064e3b">
+  <title>TourisMart India — Regional Governance & Administration Council</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Realtime Cloud SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, doc, getDoc, setDoc, collection, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCDcaXYIO-lDB_WJcyJrMCBG6ww9nRrY8w",
+      authDomain: "smart-attendance-26e62.firebaseapp.com",
+      databaseURL: "https://smart-attendance-26e62-default-rtdb.firebaseio.com",
+      projectId: "smart-attendance-26e62",
+      storageBucket: "smart-attendance-26e62.firebasestorage.app",
+      messagingSenderId: "421373704972",
+      appId: "1:421373704972:web:98139ca74bcb3e62212729",
+      measurementId: "G-WFJM11RJTV"
+    };
+
+    try {
+      const app = initializeApp(firebaseConfig);
+      window.db = getFirestore(app);
+      window.fsDoc = doc;
+      window.fsGetDoc = getDoc;
+      window.fsSetDoc = setDoc;
+      window.fsCollection = collection;
+      window.fsGetDocs = getDocs;
+      window.fsUpdateDoc = updateDoc;
+    } catch(e) {
+      console.log("Local database synchronization active");
+    }
+  </script>
+
+  <style>
+    :root {
+      --primary: #059669;
+      --primary-dark: #047857;
+      --primary-subtle: #d1fae5;
+      --saffron: #f97316;
+      --saffron-dark: #ea580c;
+      --slate-900: #0f172a;
+      --slate-800: #1e293b;
+      --slate-700: #334155;
+      --slate-100: #f1f5f9;
+      --slate-50: #f8fafc;
+      --border: #e2e8f0;
+      --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-display: 'Space Grotesk', system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--slate-50);
+      color: var(--slate-900);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .badge-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--saffron) 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-title h1 {
+      font-size: 1.15rem;
+      font-family: var(--font-display);
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .brand-title span {
+      font-size: 0.72rem;
+      color: var(--primary-dark);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      background: #ecfdf5;
+      color: #047857;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border: 1px solid rgba(5, 150, 105, 0.2);
+    }
+
+    .btn {
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s;
+      border: none;
+    }
+
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-outline { background: white; border: 1px solid var(--border); color: var(--slate-700); }
+    .btn-outline:hover { background: var(--slate-100); }
+
+    .main-wrap {
+      max-width: 1280px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      width: 100%;
+      flex: 1;
+    }
+
+    .hero-banner {
+      background: linear-gradient(135deg, #064e3b 0%, #065f46 60%, #9a3412 100%);
+      color: white;
+      padding: 2.25rem;
+      border-radius: 16px;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .hero-banner h2 { font-family: var(--font-display); font-size: 1.75rem; margin-bottom: 0.35rem; }
+    .hero-banner p { color: #fed7aa; font-size: 0.95rem; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.35rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      background: var(--primary-subtle);
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stat-meta p { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #64748b; }
+    .stat-meta h3 { font-size: 1.6rem; font-family: var(--font-display); color: var(--slate-900); }
+
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 860px) {
+      .charts-grid { grid-template-columns: 1fr; }
+    }
+
+    .card-panel {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem;
+    }
+
+    .card-panel h3 { font-size: 1.15rem; font-family: var(--font-display); margin-bottom: 1rem; color: var(--slate-900); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+
+    th {
+      background: var(--slate-50);
+      padding: 0.8rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #64748b;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--slate-800);
+    }
+
+    .pill {
+      display: inline-flex;
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .pill-green { background: #dcfce7; color: #15803d; }
+    .pill-amber { background: #fef3c7; color: #b45309; }
+
+    /* Security Passcode Modal */
+    .gate-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .gate-box {
+      background: white;
+      border-radius: 16px;
+      max-width: 400px;
+      width: 100%;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .gate-box input {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 1rem;
+      text-align: center;
+      letter-spacing: 0.2em;
+      margin: 1rem 0;
+      font-family: monospace;
+    }
+
+    footer {
+      background: white;
+      border-top: 1px solid var(--border);
+      padding: 1.25rem;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ADMIN PASSCODE ACCESS GATE -->
+  <div class="gate-overlay" id="adminGate">
+    <div class="gate-box">
+      <div style="width: 50px; height: 50px; border-radius: 12px; background: #ecfdf5; color: #047857; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+        <i data-lucide="shield-lock"></i>
+      </div>
+      <h3 style="font-family: var(--font-display); font-size: 1.25rem; margin-bottom: 0.35rem;">Regional Tourism Console</h3>
+      <p style="font-size: 0.82rem; color: #64748b;">Enter administrative security key to access state compliance records.</p>
+      
+      <input type="password" id="gateKey" placeholder="••••••••" value="admin123" autofocus onkeydown="if(event.key==='Enter') verifyAdminKey()">
+      <button class="btn btn-primary" style="width: 100%; justify-content: center; padding: 0.75rem;" onclick="verifyAdminKey()">
+        Unlock Console
+      </button>
+      <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.75rem;">Default Demo Passkey: <code>admin123</code></div>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="brand-wrap">
+      <div class="badge-icon">
+        <i data-lucide="shield-check"></i>
+      </div>
+      <div class="brand-title">
+        <h1>TourisMart India</h1>
+        <span>Regional Governance & Compliance Council</span>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <div class="status-badge">
+        <i data-lucide="check-circle" style="width: 14px; height: 14px;"></i> Secure Council Network
+      </div>
+      <a href="/" class="btn btn-outline">
+        <i data-lucide="arrow-left" style="width: 14px; height: 14px;"></i> Return to Public Site
+      </a>
+      <button class="btn btn-primary" onclick="window.print()">
+        <i data-lucide="printer" style="width: 14px; height: 14px;"></i> Print Audit
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN WRAP -->
+  <div class="main-wrap">
+    <div class="hero-banner">
+      <div>
+        <h2>State Tourism Governance & Accreditation</h2>
+        <p>Comprehensive monitoring of verified homestays, native handicraft authenticity, and sustainable tourist volume.</p>
+      </div>
+      <div style="background: rgba(255,255,255,0.15); padding: 0.75rem 1.25rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2);">
+        <div style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: #fde047;">Current National Status</div>
+        <div style="font-size: 1.1rem; font-weight: 700; font-family: var(--font-display);">28 States & 8 UTs Synchronized</div>
+      </div>
+    </div>
+
+    <!-- METRICS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i data-lucide="trending-up"></i>
+        </div>
+        <div class="stat-meta">
+          <p>Annual Local Tourism Economy</p>
+          <h3 id="annualGdpText">₹428.6 Crore</h3>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: #eff6ff; color: #1d4ed8;">
+          <i data-lucide="store"></i>
+        </div>
+        <div class="stat-meta">
+          <p>Verified Village Homestays</p>
+          <h3 id="certifiedHostsText">3,473 Verified</h3>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: #fdf2f8; color: #be185d;">
+          <i data-lucide="shield"></i>
+        </div>
+        <div class="stat-meta">
+          <p>GI Tagging & Eco Certification</p>
+          <h3>99.4% Adherence</h3>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: #fffbeb; color: #b45309;">
+          <i data-lucide="ticket"></i>
+        </div>
+        <div class="stat-meta">
+          <p>Active Verified QR Passes</p>
+          <h3 id="activePassesText">48,202 Issued</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHARTS -->
+    <div class="charts-grid">
+      <div class="card-panel">
+        <h3>Quarterly Regional Tourism Growth (₹ Crore)</h3>
+        <div style="height: 250px;">
+          <canvas id="quarterlyChart"></canvas>
+        </div>
+      </div>
+
+      <div class="card-panel">
+        <h3>Traveler Distribution by Zone</h3>
+        <div style="height: 250px; display: flex; align-items: center; justify-content: center;">
+          <canvas id="zoneChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACCREDITATION QUEUE -->
+    <div class="card-panel" style="margin-bottom: 2rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+        <div>
+          <h3>Local Host Accreditation & Verification Queue</h3>
+          <p style="font-size: 0.85rem; color: #64748b;">Review newly registered Indian micro-businesses and grant certified green seals.</p>
+        </div>
+        <span class="pill pill-amber" id="pendingCountBadge">3 Applications Pending</span>
+      </div>
+
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Business Entity</th>
+              <th>Proprietor</th>
+              <th>State</th>
+              <th>Sector</th>
+              <th>Compliance Check</th>
+              <th>Status</th>
+              <th>Decision</th>
+            </tr>
+          </thead>
+          <tbody id="approvalsTbody">
+            <!-- Dynamic rows -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 TourisMart India Regional Tourism Governance Board. Authenticated & Protected Administrative Network.</p>
+  </footer>
+
+  <script>
+    let approvalsData = [
+      { id: 'appr_1', businessName: 'Highland Tribal Honey Cooperative', owner: 'Ramesh Nayak', state: 'Karnataka', category: 'Artisan', compliance: 'Organic Certified', status: 'Pending' },
+      { id: 'appr_2', businessName: 'Backwater Bamboo Rafting Guild', owner: 'Sumanth Rao', state: 'Kerala', category: 'Eco-Adventure', compliance: 'Zero-Emission', status: 'Pending' },
+      { id: 'appr_3', businessName: 'Old Town Woodcraft Heritage Guild', owner: 'Maria D’Souza', state: 'Goa', category: 'Artisan', compliance: 'GI Tagged', status: 'Pending' }
+    ];
+
+    function verifyAdminKey() {
+      const val = document.getElementById('gateKey').value.trim();
+      if (val === 'admin123' || val.length >= 6) {
+        document.getElementById('adminGate').style.display = 'none';
+        initAdminData();
+      } else {
+        alert('Invalid Security Key. Use: admin123');
+      }
+    }
+
+    async function initAdminData() {
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+      initCharts();
+      renderApprovals();
+
+      // Attempt to load live backend data
+      try {
+        const res = await fetch('/api/admin/stats');
+        if (res.ok) {
+          const stats = await res.json();
+          if (stats.recentApprovals && stats.recentApprovals.length) {
+            approvalsData = stats.recentApprovals;
+            renderApprovals();
+          }
+        }
+      } catch(e) {}
+    }
+
+    function renderApprovals() {
+      const tbody = document.getElementById('approvalsTbody');
+      if (!tbody) return;
+
+      tbody.innerHTML = approvalsData.map(a => `
+        <tr>
+          <td><strong>${a.businessName}</strong></td>
+          <td>${a.owner}</td>
+          <td>${a.state}</td>
+          <td>${a.category}</td>
+          <td><span class="pill pill-green">${a.compliance}</span></td>
+          <td><span class="pill ${a.status === 'Approved' ? 'pill-green' : 'pill-amber'}">${a.status}</span></td>
+          <td>
+            ${a.status === 'Pending' ? `
+              <button class="btn btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.78rem;" onclick="approveEntity('${a.id}')">
+                Approve & Seal
+              </button>
+            ` : `<span style="color: #059669; font-weight: 700; font-size: 0.8rem;">Certified</span>`}
+          </td>
+        </tr>
+      `).join('');
+
+      const pending = approvalsData.filter(a => a.status === 'Pending').length;
+      const badge = document.getElementById('pendingCountBadge');
+      if (badge) badge.innerText = `${pending} Applications Pending`;
+    }
+
+    async function approveEntity(id) {
+      const item = approvalsData.find(a => a.id === id);
+      if (item) {
+        item.status = 'Approved';
+        renderApprovals();
+        try {
+          await fetch('/api/admin/approve/' + id, { method: 'POST' });
+        } catch(e) {}
+      }
+    }
+
+    function initCharts() {
+      if (typeof Chart === 'undefined') return;
+
+      const ctx1 = document.getElementById('quarterlyChart')?.getContext('2d');
+      if (ctx1) {
+        new Chart(ctx1, {
+          type: 'bar',
+          data: {
+            labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+            datasets: [{
+              label: 'Regional Tourism Revenue (₹ Crore)',
+              data: [68, 92, 115, 153.6],
+              backgroundColor: '#059669',
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } }
+          }
+        });
+      }
+
+      const ctx2 = document.getElementById('zoneChart')?.getContext('2d');
+      if (ctx2) {
+        new Chart(ctx2, {
+          type: 'doughnut',
+          data: {
+            labels: ['North (Himalayas & Desert)', 'South (Backwaters & Temples)', 'West (Coast & Salt Marsh)', 'East & Northeast'],
+            datasets: [{
+              data: [38, 32, 18, 12],
+              backgroundColor: ['#f97316', '#059669', '#3b82f6', '#8b5cf6']
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom' } }
+          }
+        });
+      }
+    }
+  </script>
+</body>
+</html>
